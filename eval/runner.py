@@ -10,15 +10,25 @@ Without OPENROUTER_API_KEY, or with `--fake`, nothing calls a model: the graph r
 the fake model, the catalog store fake embeddings; the report says so, and its numbers only check the pipeline runs.
 
 Each run gets the deterministic metrics (metrics/), the grades of `--judge module:function` when given (a `Judge`), its cost and
-tokens (the run's usage in its state: no LangSmith key, so not from traces) and its wall time. The runs go to `<out>/runs.csv`, the
+tokens (the run's usage in its state: no LangSmith key, so not from traces) and its wall time; offline, those three are left blank
+(they would be the fixtures' and the fake model's, not a measurement). The runs go to `<out>/runs.csv`, the
 means per case to `<out>/report.md` (report/), each run's final state and row to `<out>/cases/<case>-<repeat>.json`; `<out>` defaults
 to eval/results/<variant>-<time>. Exits 1 when a run failed (CI runs a 3-case smoke).
+
+Importing this module turns LangSmith tracing off (before langchain is imported: langsmith caches the variables) and object storage
+(the photos are read from the repo), so nothing but the model calls leaves the process, however the runner is called.
 """
+
+# ruff: noqa: E402
+import os
+
+os.environ["LANGSMITH_TRACING"] = "false"
+os.environ["LANGCHAIN_TRACING_V2"] = "false"
+os.environ.pop("STORAGE_ENDPOINT_URL", None)
 
 import argparse
 import asyncio
 import json
-import os
 import pkgutil
 import time
 from collections.abc import Callable, Mapping, Sequence
@@ -53,6 +63,7 @@ from app.schemas.layout import LAYOUT_EXAMPLE
 
 RESULTS = Path(__file__).resolve().parent / "results"
 VARIANTS = ["baseline", "full", *RunConfigurable.model_fields]
+MEASURED = ("latency_s", "cost_usd", "input_tokens", "output_tokens")  # blank offline: not real numbers then
 
 Row = dict[str, Any]
 Judge = Callable[[Case, RunState], Mapping[str, float]]  # a run's grades by name, e.g. an LLM judge's (E-04)
@@ -127,11 +138,11 @@ def run(variant: str, cases: Mapping[str, Case], repeats: int, out: Path, judge:
         with ThreadPoolExecutor(workers) as pool:
             jobs = [pool.submit(evaluate, pipe, name, case, n, judge) for n in range(1, repeats + 1) for name, case in cases.items()]
             results = [job.result() for job in jobs]
+    rows = [row if live else row | dict.fromkeys(MEASURED) for row, _ in results]
     (out / "cases").mkdir(parents=True, exist_ok=True)
-    for row, state in results:
+    for row, (_, state) in zip(rows, results, strict=True):
         artifact = {"row": row, "state": state}
         (out / "cases" / f"{row['case']}-{row['repeat']}.json").write_bytes(pydantic_core.to_json(artifact, indent=2) + b"\n")
-    rows = [row for row, _ in results]
     mode = "live models" if live else "fake models and fixture replay (offline): the numbers only check that the pipeline runs"
     report.write(rows, out, f"`{variant}`, {len(cases)} cases x {repeats} repeats, {mode}")
     return rows

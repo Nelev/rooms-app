@@ -20,12 +20,13 @@ def markdown(rows: Sequence[dict[str, Any]], columns: Sequence[str], title: str)
     by_case: dict[str, list[dict[str, Any]]] = {}
     for row in rows:
         by_case.setdefault(row["case"], []).append(row)
-    cost = sum(r.get("cost_usd") or 0 for r in rows)
+    costs = [c for r in rows if isinstance(c := r.get("cost_usd"), int | float)]
+    cost = f"total model cost ${sum(costs):.4f}" if costs else "model cost not measured"
     lines = [
         "# Eval report",
         "",
         title + ".",
-        f"{len(rows)} runs, {sum(bool(r['error']) for r in rows)} failed; total model cost ${cost:.4f}. Means over each case's runs:",
+        f"{len(rows)} runs, {sum(bool(r['error']) for r in rows)} failed; {cost}. Means over each case's runs:",
         "",
         "| " + " | ".join(["case", "runs", "failed", *metrics]) + " |",
         "|" + " --- |" * (len(metrics) + 3),
