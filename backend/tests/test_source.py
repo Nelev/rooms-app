@@ -10,7 +10,8 @@ from pydantic import TypeAdapter
 
 from app.catalog.embed import index_config, seed
 from app.catalog.loader import load_catalog
-from app.graph.nodes.source import footprint, source_scene
+from app.graph.nodes.critic import critic
+from app.graph.nodes.source import footprint, source_scene, within
 from app.graph.state import RunState
 from app.graph.stub import CASE
 from app.schemas import Brief, Critique, DesignBrief, SceneGraph
@@ -129,3 +130,35 @@ def test_a_stale_or_impossible_swap_keeps_the_item(store: BaseStore) -> None:
     first = source_scene(store, state)
     assert swap(store, state, first, "desk", "cheaper desk", round_=2)["scene_graph"] == first["scene_graph"]  # an earlier run's
     assert swap(None, state, first, "desk", "cheaper desk")["scene_graph"] == first["scene_graph"]  # no store: no other desk
+
+
+def test_the_critics_swap_is_current_for_the_sourcer_after_it(store: BaseStore) -> None:
+    """The staleness check against the critic's own round numbering: its critique, as it leaves it, is the round that just ended."""
+    state = case_state("small-bedroom")
+    first = source_scene(store, state)
+    update = critic.__wrapped__({**state, **first, "mode": "design"})  # type: ignore[attr-defined]
+    actions = [CritiqueAction(target="sourcer", node_id="desk", instruction="cheaper desk")]
+    after: Any = {**state, **first, **update, "critique": update["critique"].model_copy(update={"actions": actions})}
+    desk = {n.id: n.item_id for n in source_scene(store, after)["scene_graph"].nodes}["desk"]
+    assert desk != {n.id: n.item_id for n in first["scene_graph"].nodes}["desk"]
+
+
+def with_box(state: RunState, node_id: str, scale: float) -> RunState:
+    """`state` with the node's box scaled in width and depth: no item of its category has that size."""
+    nodes = [
+        n.model_copy(update={"size": n.size.model_copy(update={"width": n.size.width * scale, "depth": n.size.depth * scale})})
+        if n.id == node_id and n.size
+        else n
+        for n in state["scene_graph"].nodes
+    ]
+    return {**state, "scene_graph": state["scene_graph"].model_copy(update={"nodes": nodes})}
+
+
+def test_an_item_of_another_shape_must_fit_in_the_box(store: BaseStore) -> None:
+    state = with_box(case_state("small-bedroom"), "bed", 1.6)
+    bed = next(n for n in check(state, source_scene(store, state)).nodes if n.id == "bed")
+    box = next(n.size for n in state["scene_graph"].nodes if n.id == "bed")
+    assert bed.item_id and box and bed.size != box and within(load_catalog()[bed.item_id], box)
+
+    state = with_box(case_state("small-bedroom"), "bed", 0.3)  # smaller than any bed: it stays a box
+    assert next(n for n in check(state, source_scene(store, state)).nodes if n.id == "bed").item_id is None
