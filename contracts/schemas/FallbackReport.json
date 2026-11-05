@@ -1,0 +1,92 @@
+{
+  "title": "FallbackReport",
+  "$defs": {
+    "FallbackChange": {
+      "additionalProperties": false,
+      "properties": {
+        "node_id": {
+          "title": "Node Id",
+          "type": "string"
+        },
+        "action": {
+          "enum": [
+            "dropped",
+            "resized"
+          ],
+          "title": "Action",
+          "type": "string"
+        },
+        "code": {
+          "description": "Why: too big for the room on its own, no space left beside the items kept, its parent was dropped, never tried",
+          "enum": [
+            "too_big",
+            "no_space",
+            "depends_on_dropped",
+            "out_of_time"
+          ],
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "description": "One short sentence the Critic and the Presenter can pass on",
+          "title": "Message",
+          "type": "string"
+        },
+        "item_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "For resized: the smaller catalog item placed instead",
+          "title": "Item Id"
+        }
+      },
+      "required": [
+        "node_id",
+        "action",
+        "code",
+        "message"
+      ],
+      "title": "FallbackChange",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "What the solver fallback dropped or swapped for a smaller item to find a layout, and why; no changes means none were needed.",
+  "examples": [
+    {
+      "changes": [
+        {
+          "action": "dropped",
+          "code": "no_space",
+          "message": "upright piano does not fit beside king-size bed, desk",
+          "node_id": "piano"
+        }
+      ],
+      "summary": "Placed 2 of 3 items; dropped: upright piano"
+    }
+  ],
+  "properties": {
+    "changes": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/FallbackChange"
+      },
+      "title": "Changes",
+      "type": "array"
+    },
+    "summary": {
+      "title": "Summary",
+      "type": "string"
+    }
+  },
+  "required": [
+    "summary"
+  ],
+  "type": "object"
+}

@@ -68,6 +68,41 @@ class ValidationReport(Model):
     issues: list[ValidationIssue] = []
 
 
+class FallbackChange(Model):
+    node_id: str
+    action: Literal["dropped", "resized"]
+    code: Literal["too_big", "no_space", "depends_on_dropped", "out_of_time"] = Field(
+        description="Why: too big for the room on its own, no space left beside the items kept, its parent was dropped, never tried"
+    )
+    message: str = Field(description="One short sentence the Critic and the Presenter can pass on")
+    item_id: str | None = Field(default=None, description="For resized: the smaller catalog item placed instead")
+
+
+class FallbackReport(Model):
+    """What the solver fallback dropped or swapped for a smaller item to find a layout, and why; no changes means none were needed."""
+
+    model_config = ConfigDict(
+        json_schema_extra={
+            "examples": [
+                {
+                    "changes": [
+                        {
+                            "node_id": "piano",
+                            "action": "dropped",
+                            "code": "no_space",
+                            "message": "upright piano does not fit beside king-size bed, desk",
+                        }
+                    ],
+                    "summary": "Placed 2 of 3 items; dropped: upright piano",
+                }
+            ]
+        }
+    )
+
+    changes: list[FallbackChange] = []
+    summary: str
+
+
 class RuleResult(Model):
     rule: str
     passed: bool
