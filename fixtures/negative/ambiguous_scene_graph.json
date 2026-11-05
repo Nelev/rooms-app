@@ -1,0 +1,114 @@
+{
+  "nodes": [
+    {
+      "id": "wall_A",
+      "kind": "wall",
+      "name": "wall A"
+    },
+    {
+      "id": "wall_C",
+      "kind": "wall",
+      "name": "wall C"
+    },
+    {
+      "id": "desk",
+      "name": "desk",
+      "size": {
+        "width": 1.4,
+        "depth": 0.7,
+        "height": 0.75
+      }
+    },
+    {
+      "id": "monitor",
+      "name": "monitor",
+      "size": {
+        "width": 0.6,
+        "depth": 0.2,
+        "height": 0.45
+      }
+    },
+    {
+      "id": "desk_lamp",
+      "name": "desk lamp",
+      "size": {
+        "width": 0.2,
+        "depth": 0.2,
+        "height": 0.45
+      }
+    },
+    {
+      "id": "plant",
+      "name": "plant",
+      "size": {
+        "width": 0.2,
+        "depth": 0.2,
+        "height": 0.3
+      }
+    },
+    {
+      "id": "table",
+      "name": "dining table",
+      "size": {
+        "width": 1.2,
+        "depth": 0.8,
+        "height": 0.75
+      }
+    },
+    {
+      "id": "chair_1",
+      "name": "dining chair",
+      "size": {
+        "width": 0.45,
+        "depth": 0.5,
+        "height": 0.9
+      }
+    },
+    {
+      "id": "chair_2",
+      "name": "dining chair",
+      "size": {
+        "width": 0.45,
+        "depth": 0.5,
+        "height": 0.9
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source": "desk",
+      "relation": "against_wall",
+      "target": "wall_A"
+    },
+    {
+      "source": "monitor",
+      "relation": "on",
+      "target": "desk"
+    },
+    {
+      "source": "desk_lamp",
+      "relation": "on",
+      "target": "desk"
+    },
+    {
+      "source": "plant",
+      "relation": "on",
+      "target": "desk"
+    },
+    {
+      "source": "table",
+      "relation": "against_wall",
+      "target": "wall_C"
+    },
+    {
+      "source": "chair_1",
+      "relation": "in_front",
+      "target": "table"
+    },
+    {
+      "source": "chair_2",
+      "relation": "in_front",
+      "target": "table"
+    }
+  ]
+}
