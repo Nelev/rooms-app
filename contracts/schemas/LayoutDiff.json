@@ -1,0 +1,43 @@
+{
+  "title": "LayoutDiff",
+  "description": "What a chat edit changed, by node id, so the views can highlight it.",
+  "examples": [
+    {
+      "added": [],
+      "changed": [
+        "desk"
+      ],
+      "removed": [
+        "nightstand"
+      ]
+    }
+  ],
+  "properties": {
+    "added": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Added",
+      "type": "array"
+    },
+    "removed": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Removed",
+      "type": "array"
+    },
+    "changed": {
+      "default": [],
+      "description": "Moved, rotated or swapped",
+      "items": {
+        "type": "string"
+      },
+      "title": "Changed",
+      "type": "array"
+    }
+  },
+  "type": "object"
+}

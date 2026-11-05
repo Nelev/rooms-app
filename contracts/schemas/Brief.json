@@ -1,0 +1,78 @@
+{
+  "title": "Brief",
+  "description": "What the user asks for in the new-project wizard.",
+  "examples": [
+    {
+      "budget": 1500,
+      "keep": [
+        "wardrobe"
+      ],
+      "must_haves": [
+        "double bed",
+        "desk"
+      ],
+      "notes": "I work from home two days a week",
+      "remove": [
+        "old armchair"
+      ],
+      "room_use": "bedroom",
+      "styles": [
+        "scandinavian"
+      ]
+    }
+  ],
+  "properties": {
+    "room_use": {
+      "title": "Room Use",
+      "type": "string"
+    },
+    "styles": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Styles",
+      "type": "array"
+    },
+    "budget": {
+      "description": "EUR",
+      "minimum": 0,
+      "title": "Budget",
+      "type": "number"
+    },
+    "must_haves": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Must Haves",
+      "type": "array"
+    },
+    "keep": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Keep",
+      "type": "array"
+    },
+    "remove": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Remove",
+      "type": "array"
+    },
+    "notes": {
+      "default": "",
+      "title": "Notes",
+      "type": "string"
+    }
+  },
+  "required": [
+    "room_use",
+    "budget"
+  ],
+  "type": "object"
+}

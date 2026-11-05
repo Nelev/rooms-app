@@ -1,0 +1,119 @@
+{
+  "title": "Critique",
+  "$defs": {
+    "CritiqueAction": {
+      "properties": {
+        "target": {
+          "enum": [
+            "architect",
+            "sourcer"
+          ],
+          "title": "Target",
+          "type": "string"
+        },
+        "node_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Node Id"
+        },
+        "instruction": {
+          "title": "Instruction",
+          "type": "string"
+        }
+      },
+      "required": [
+        "target",
+        "instruction"
+      ],
+      "title": "CritiqueAction",
+      "type": "object"
+    },
+    "RuleResult": {
+      "properties": {
+        "rule": {
+          "title": "Rule",
+          "type": "string"
+        },
+        "passed": {
+          "title": "Passed",
+          "type": "boolean"
+        },
+        "message": {
+          "default": "",
+          "title": "Message",
+          "type": "string"
+        }
+      },
+      "required": [
+        "rule",
+        "passed"
+      ],
+      "title": "RuleResult",
+      "type": "object"
+    }
+  },
+  "examples": [
+    {
+      "actions": [
+        {
+          "instruction": "Put the bed against wall D",
+          "node_id": "bed",
+          "target": "architect"
+        }
+      ],
+      "round": 1,
+      "rules": [
+        {
+          "passed": true,
+          "rule": "desk_near_light"
+        },
+        {
+          "message": "The bed faces the door",
+          "passed": false,
+          "rule": "bed_not_facing_door"
+        }
+      ],
+      "summary": "One rule fails: the bed faces the door"
+    }
+  ],
+  "properties": {
+    "round": {
+      "minimum": 1,
+      "title": "Round",
+      "type": "integer"
+    },
+    "rules": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/RuleResult"
+      },
+      "title": "Rules",
+      "type": "array"
+    },
+    "actions": {
+      "default": [],
+      "description": "Empty when the layout is accepted",
+      "items": {
+        "$ref": "#/$defs/CritiqueAction"
+      },
+      "title": "Actions",
+      "type": "array"
+    },
+    "summary": {
+      "title": "Summary",
+      "type": "string"
+    }
+  },
+  "required": [
+    "round",
+    "summary"
+  ],
+  "type": "object"
+}

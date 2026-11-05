@@ -1,0 +1,200 @@
+{
+  "title": "DesignBrief",
+  "$defs": {
+    "DesignObject": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "category": {
+          "title": "Category",
+          "type": "string"
+        },
+        "style": {
+          "title": "Style",
+          "type": "string"
+        },
+        "material": {
+          "title": "Material",
+          "type": "string"
+        },
+        "size": {
+          "$ref": "#/$defs/Size"
+        },
+        "quantity": {
+          "default": 1,
+          "minimum": 1,
+          "title": "Quantity",
+          "type": "integer"
+        },
+        "priority": {
+          "enum": [
+            "must",
+            "nice"
+          ],
+          "title": "Priority",
+          "type": "string"
+        },
+        "zone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Zone"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "category",
+        "style",
+        "material",
+        "size",
+        "priority"
+      ],
+      "title": "DesignObject",
+      "type": "object"
+    },
+    "Size": {
+      "properties": {
+        "width": {
+          "minimum": 0,
+          "title": "Width",
+          "type": "number"
+        },
+        "depth": {
+          "minimum": 0,
+          "title": "Depth",
+          "type": "number"
+        },
+        "height": {
+          "minimum": 0,
+          "title": "Height",
+          "type": "number"
+        }
+      },
+      "required": [
+        "width",
+        "depth",
+        "height"
+      ],
+      "title": "Size",
+      "type": "object"
+    },
+    "Zone": {
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "purpose": {
+          "title": "Purpose",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "purpose"
+      ],
+      "title": "Zone",
+      "type": "object"
+    }
+  },
+  "description": "The Designer's plan: zones, palette and the objects to place.",
+  "examples": [
+    {
+      "objects": [
+        {
+          "category": "bed",
+          "id": "bed",
+          "material": "oak",
+          "name": "double bed",
+          "priority": "must",
+          "size": {
+            "depth": 2.1,
+            "height": 1.0,
+            "width": 1.6
+          },
+          "style": "scandinavian",
+          "zone": "sleep"
+        },
+        {
+          "category": "nightstand",
+          "id": "nightstand",
+          "material": "oak",
+          "name": "nightstand",
+          "priority": "nice",
+          "quantity": 2,
+          "size": {
+            "depth": 0.4,
+            "height": 0.5,
+            "width": 0.45
+          },
+          "style": "scandinavian",
+          "zone": "sleep"
+        }
+      ],
+      "palette": [
+        "#f2efe9",
+        "#c8b49a",
+        "#3d4a3d"
+      ],
+      "summary": "Calm Scandinavian bedroom with a small work corner by the window",
+      "zones": [
+        {
+          "name": "sleep",
+          "purpose": "bed and nightstands"
+        },
+        {
+          "name": "work",
+          "purpose": "desk by the window"
+        }
+      ]
+    }
+  ],
+  "properties": {
+    "zones": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Zone"
+      },
+      "title": "Zones",
+      "type": "array"
+    },
+    "palette": {
+      "default": [],
+      "description": "Hex colors",
+      "items": {
+        "type": "string"
+      },
+      "title": "Palette",
+      "type": "array"
+    },
+    "objects": {
+      "items": {
+        "$ref": "#/$defs/DesignObject"
+      },
+      "title": "Objects",
+      "type": "array"
+    },
+    "summary": {
+      "default": "",
+      "title": "Summary",
+      "type": "string"
+    }
+  },
+  "required": [
+    "objects"
+  ],
+  "type": "object"
+}

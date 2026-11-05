@@ -1,0 +1,247 @@
+{
+  "title": "SceneGraph",
+  "$defs": {
+    "SceneEdge": {
+      "properties": {
+        "source": {
+          "description": "The node placed relative to target",
+          "title": "Source",
+          "type": "string"
+        },
+        "relation": {
+          "enum": [
+            "left_of",
+            "right_of",
+            "in_front",
+            "behind",
+            "on",
+            "against_wall",
+            "in_corner",
+            "adjacent",
+            "facing"
+          ],
+          "title": "Relation",
+          "type": "string"
+        },
+        "target": {
+          "title": "Target",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source",
+        "relation",
+        "target"
+      ],
+      "title": "SceneEdge",
+      "type": "object"
+    },
+    "SceneNode": {
+      "properties": {
+        "id": {
+          "description": "For fixed nodes: the RoomSpec feature id, or wall_A to wall_D",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "default": "object",
+          "enum": [
+            "object",
+            "wall",
+            "door",
+            "window"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "style": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Style"
+        },
+        "material": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Material"
+        },
+        "size": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Size"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Bounding box; None for fixed nodes"
+        },
+        "quantity": {
+          "default": 1,
+          "minimum": 1,
+          "title": "Quantity",
+          "type": "integer"
+        },
+        "priority": {
+          "default": "must",
+          "enum": [
+            "must",
+            "nice"
+          ],
+          "title": "Priority",
+          "type": "string"
+        },
+        "item_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The CatalogItem chosen by the Sourcer",
+          "title": "Item Id"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "title": "SceneNode",
+      "type": "object"
+    },
+    "Size": {
+      "properties": {
+        "width": {
+          "minimum": 0,
+          "title": "Width",
+          "type": "number"
+        },
+        "depth": {
+          "minimum": 0,
+          "title": "Depth",
+          "type": "number"
+        },
+        "height": {
+          "minimum": 0,
+          "title": "Height",
+          "type": "number"
+        }
+      },
+      "required": [
+        "width",
+        "depth",
+        "height"
+      ],
+      "title": "Size",
+      "type": "object"
+    }
+  },
+  "description": "Objects and the relations between them; the solver turns it into a Layout.",
+  "examples": [
+    {
+      "edges": [
+        {
+          "relation": "against_wall",
+          "source": "bed",
+          "target": "wall_B"
+        },
+        {
+          "relation": "adjacent",
+          "source": "nightstand",
+          "target": "bed"
+        },
+        {
+          "relation": "in_front",
+          "source": "desk",
+          "target": "window_1"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "wall_B",
+          "kind": "wall",
+          "name": "wall B"
+        },
+        {
+          "id": "window_1",
+          "kind": "window",
+          "name": "window"
+        },
+        {
+          "id": "bed",
+          "material": "oak",
+          "name": "double bed",
+          "size": {
+            "depth": 2.1,
+            "height": 1.0,
+            "width": 1.6
+          },
+          "style": "scandinavian"
+        },
+        {
+          "id": "nightstand",
+          "item_id": "ikea-hemnes-nightstand",
+          "name": "nightstand",
+          "priority": "nice",
+          "quantity": 2,
+          "size": {
+            "depth": 0.4,
+            "height": 0.5,
+            "width": 0.45
+          }
+        },
+        {
+          "id": "desk",
+          "name": "desk",
+          "size": {
+            "depth": 0.6,
+            "height": 0.75,
+            "width": 1.2
+          }
+        }
+      ]
+    }
+  ],
+  "properties": {
+    "nodes": {
+      "items": {
+        "$ref": "#/$defs/SceneNode"
+      },
+      "title": "Nodes",
+      "type": "array"
+    },
+    "edges": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/SceneEdge"
+      },
+      "title": "Edges",
+      "type": "array"
+    }
+  },
+  "required": [
+    "nodes"
+  ],
+  "type": "object"
+}

@@ -1,0 +1,437 @@
+{
+  "title": "ConfirmRoom",
+  "$defs": {
+    "Dimensions": {
+      "properties": {
+        "width": {
+          "description": "Length of walls A and C (x)",
+          "minimum": 0,
+          "title": "Width",
+          "type": "number"
+        },
+        "length": {
+          "description": "Length of walls B and D (y)",
+          "minimum": 0,
+          "title": "Length",
+          "type": "number"
+        },
+        "height": {
+          "description": "Ceiling height",
+          "minimum": 0,
+          "title": "Height",
+          "type": "number"
+        }
+      },
+      "required": [
+        "width",
+        "length",
+        "height"
+      ],
+      "title": "Dimensions",
+      "type": "object"
+    },
+    "Feature": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "window",
+            "door",
+            "radiator",
+            "outlet",
+            "built_in",
+            "column",
+            "other"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "wall": {
+          "enum": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "title": "Wall",
+          "type": "string"
+        },
+        "offset": {
+          "description": "Feature center as a fraction of the wall length from the wall's start corner",
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Offset",
+          "type": "number"
+        },
+        "width": {
+          "minimum": 0,
+          "title": "Width",
+          "type": "number"
+        },
+        "height": {
+          "minimum": 0,
+          "title": "Height",
+          "type": "number"
+        },
+        "sill_height": {
+          "default": 0,
+          "description": "Height of the feature's bottom edge above the floor; 0 for doors",
+          "minimum": 0,
+          "title": "Sill Height",
+          "type": "number"
+        },
+        "confidence": {
+          "default": 1,
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Confidence",
+          "type": "number"
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "wall",
+        "offset",
+        "width",
+        "height"
+      ],
+      "title": "Feature",
+      "type": "object"
+    },
+    "KeptItem": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "x": {
+          "title": "X",
+          "type": "number"
+        },
+        "y": {
+          "title": "Y",
+          "type": "number"
+        },
+        "rotation": {
+          "default": 0,
+          "description": "Counterclockwise about z, 0 = front faces +y",
+          "exclusiveMaximum": 360,
+          "minimum": 0,
+          "title": "Rotation",
+          "type": "number"
+        },
+        "size": {
+          "$ref": "#/$defs/Size"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "x",
+        "y",
+        "size"
+      ],
+      "title": "KeptItem",
+      "type": "object"
+    },
+    "RoomSpec": {
+      "description": "The room as analyzed from the photos and confirmed by the user.",
+      "examples": [
+        {
+          "dimensions": {
+            "height": 2.6,
+            "length": 4.0,
+            "width": 3.2
+          },
+          "features": [
+            {
+              "confidence": 0.95,
+              "height": 2.1,
+              "id": "door_1",
+              "offset": 0.15,
+              "type": "door",
+              "wall": "A",
+              "width": 0.8
+            },
+            {
+              "confidence": 0.9,
+              "height": 1.4,
+              "id": "window_1",
+              "offset": 0.5,
+              "sill_height": 0.9,
+              "type": "window",
+              "wall": "C",
+              "width": 1.2
+            },
+            {
+              "confidence": 0.7,
+              "height": 0.6,
+              "id": "radiator_1",
+              "offset": 0.5,
+              "sill_height": 0.1,
+              "type": "radiator",
+              "wall": "C",
+              "width": 1.0
+            }
+          ],
+          "floor_material": "oak",
+          "kept_furniture": [
+            {
+              "id": "kept_1",
+              "name": "wardrobe",
+              "rotation": 270,
+              "size": {
+                "depth": 0.6,
+                "height": 2.0,
+                "width": 1.2
+              },
+              "x": 0.3,
+              "y": 2.0
+            }
+          ],
+          "walls": [
+            {
+              "color": "#f2efe9",
+              "wall": "A"
+            },
+            {
+              "color": "#f2efe9",
+              "wall": "B"
+            },
+            {
+              "color": "#f2efe9",
+              "wall": "C"
+            },
+            {
+              "color": "#f2efe9",
+              "wall": "D"
+            }
+          ],
+          "warnings": [
+            "Radiator width estimated from one photo"
+          ]
+        }
+      ],
+      "properties": {
+        "dimensions": {
+          "$ref": "#/$defs/Dimensions"
+        },
+        "walls": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/WallSpec"
+          },
+          "title": "Walls",
+          "type": "array"
+        },
+        "floor_material": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Floor Material"
+        },
+        "features": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Feature"
+          },
+          "title": "Features",
+          "type": "array"
+        },
+        "kept_furniture": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/KeptItem"
+          },
+          "title": "Kept Furniture",
+          "type": "array"
+        },
+        "warnings": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "dimensions"
+      ],
+      "title": "RoomSpec",
+      "type": "object"
+    },
+    "Size": {
+      "properties": {
+        "width": {
+          "minimum": 0,
+          "title": "Width",
+          "type": "number"
+        },
+        "depth": {
+          "minimum": 0,
+          "title": "Depth",
+          "type": "number"
+        },
+        "height": {
+          "minimum": 0,
+          "title": "Height",
+          "type": "number"
+        }
+      },
+      "required": [
+        "width",
+        "depth",
+        "height"
+      ],
+      "title": "Size",
+      "type": "object"
+    },
+    "WallSpec": {
+      "properties": {
+        "wall": {
+          "enum": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "title": "Wall",
+          "type": "string"
+        },
+        "color": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Hex color, e.g. #f2efe9",
+          "title": "Color"
+        }
+      },
+      "required": [
+        "wall"
+      ],
+      "title": "WallSpec",
+      "type": "object"
+    }
+  },
+  "description": "The confirm_room interrupt payload; the run resumes with the corrected RoomSpec (ConfirmRoomResume).",
+  "examples": [
+    {
+      "overlay_keys": [
+        "overlays/3f2a/photo-1.png"
+      ],
+      "room": {
+        "dimensions": {
+          "height": 2.6,
+          "length": 4.0,
+          "width": 3.2
+        },
+        "features": [
+          {
+            "confidence": 0.95,
+            "height": 2.1,
+            "id": "door_1",
+            "offset": 0.15,
+            "type": "door",
+            "wall": "A",
+            "width": 0.8
+          },
+          {
+            "confidence": 0.9,
+            "height": 1.4,
+            "id": "window_1",
+            "offset": 0.5,
+            "sill_height": 0.9,
+            "type": "window",
+            "wall": "C",
+            "width": 1.2
+          },
+          {
+            "confidence": 0.7,
+            "height": 0.6,
+            "id": "radiator_1",
+            "offset": 0.5,
+            "sill_height": 0.1,
+            "type": "radiator",
+            "wall": "C",
+            "width": 1.0
+          }
+        ],
+        "floor_material": "oak",
+        "kept_furniture": [
+          {
+            "id": "kept_1",
+            "name": "wardrobe",
+            "rotation": 270,
+            "size": {
+              "depth": 0.6,
+              "height": 2.0,
+              "width": 1.2
+            },
+            "x": 0.3,
+            "y": 2.0
+          }
+        ],
+        "walls": [
+          {
+            "color": "#f2efe9",
+            "wall": "A"
+          },
+          {
+            "color": "#f2efe9",
+            "wall": "B"
+          },
+          {
+            "color": "#f2efe9",
+            "wall": "C"
+          },
+          {
+            "color": "#f2efe9",
+            "wall": "D"
+          }
+        ],
+        "warnings": [
+          "Radiator width estimated from one photo"
+        ]
+      }
+    }
+  ],
+  "properties": {
+    "room": {
+      "$ref": "#/$defs/RoomSpec"
+    },
+    "overlay_keys": {
+      "default": [],
+      "description": "Detection overlay image per photo",
+      "items": {
+        "type": "string"
+      },
+      "title": "Overlay Keys",
+      "type": "array"
+    }
+  },
+  "required": [
+    "room"
+  ],
+  "type": "object"
+}

@@ -1,0 +1,212 @@
+{
+  "title": "RunInput",
+  "$defs": {
+    "Brief": {
+      "description": "What the user asks for in the new-project wizard.",
+      "examples": [
+        {
+          "budget": 1500,
+          "keep": [
+            "wardrobe"
+          ],
+          "must_haves": [
+            "double bed",
+            "desk"
+          ],
+          "notes": "I work from home two days a week",
+          "remove": [
+            "old armchair"
+          ],
+          "room_use": "bedroom",
+          "styles": [
+            "scandinavian"
+          ]
+        }
+      ],
+      "properties": {
+        "room_use": {
+          "title": "Room Use",
+          "type": "string"
+        },
+        "styles": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Styles",
+          "type": "array"
+        },
+        "budget": {
+          "description": "EUR",
+          "minimum": 0,
+          "title": "Budget",
+          "type": "number"
+        },
+        "must_haves": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Must Haves",
+          "type": "array"
+        },
+        "keep": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Keep",
+          "type": "array"
+        },
+        "remove": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Remove",
+          "type": "array"
+        },
+        "notes": {
+          "default": "",
+          "title": "Notes",
+          "type": "string"
+        }
+      },
+      "required": [
+        "room_use",
+        "budget"
+      ],
+      "title": "Brief",
+      "type": "object"
+    },
+    "Dimensions": {
+      "properties": {
+        "width": {
+          "description": "Length of walls A and C (x)",
+          "minimum": 0,
+          "title": "Width",
+          "type": "number"
+        },
+        "length": {
+          "description": "Length of walls B and D (y)",
+          "minimum": 0,
+          "title": "Length",
+          "type": "number"
+        },
+        "height": {
+          "description": "Ceiling height",
+          "minimum": 0,
+          "title": "Height",
+          "type": "number"
+        }
+      },
+      "required": [
+        "width",
+        "length",
+        "height"
+      ],
+      "title": "Dimensions",
+      "type": "object"
+    }
+  },
+  "description": "The graph's input: a new design (photos, dimensions and brief) or a chat message on an existing design.",
+  "examples": [
+    {
+      "brief": {
+        "budget": 1500,
+        "keep": [
+          "wardrobe"
+        ],
+        "must_haves": [
+          "double bed",
+          "desk"
+        ],
+        "notes": "I work from home two days a week",
+        "remove": [
+          "old armchair"
+        ],
+        "room_use": "bedroom",
+        "styles": [
+          "scandinavian"
+        ]
+      },
+      "dimensions": {
+        "height": 2.6,
+        "length": 4.0,
+        "width": 3.2
+      },
+      "photo_keys": [
+        "uploads/3f2a/photo-1.jpg"
+      ]
+    },
+    {
+      "chat_message": "Move the desk closer to the window"
+    }
+  ],
+  "oneOf": [
+    {
+      "required": [
+        "photo_keys",
+        "dimensions",
+        "brief"
+      ]
+    },
+    {
+      "properties": {
+        "photo_keys": false,
+        "dimensions": false,
+        "brief": false
+      },
+      "required": [
+        "chat_message"
+      ]
+    }
+  ],
+  "properties": {
+    "photo_keys": {
+      "default": [],
+      "description": "Object-storage keys of the uploaded photos",
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 3,
+      "title": "Photo Keys",
+      "type": "array"
+    },
+    "dimensions": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Dimensions"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "brief": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Brief"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "chat_message": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Chat Message"
+    }
+  },
+  "type": "object"
+}

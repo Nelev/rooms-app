@@ -1,0 +1,170 @@
+{
+  "title": "CatalogItem",
+  "$defs": {
+    "Size": {
+      "properties": {
+        "width": {
+          "minimum": 0,
+          "title": "Width",
+          "type": "number"
+        },
+        "depth": {
+          "minimum": 0,
+          "title": "Depth",
+          "type": "number"
+        },
+        "height": {
+          "minimum": 0,
+          "title": "Height",
+          "type": "number"
+        }
+      },
+      "required": [
+        "width",
+        "depth",
+        "height"
+      ],
+      "title": "Size",
+      "type": "object"
+    }
+  },
+  "examples": [
+    {
+      "category": "nightstand",
+      "color": "white",
+      "description": "Solid pine nightstand with one drawer",
+      "front": "+z",
+      "glb_url": "https://example.com/models/hemnes-nightstand.glb",
+      "id": "ikea-hemnes-nightstand",
+      "license": "CC-BY-4.0",
+      "name": "HEMNES nightstand",
+      "price": 89.0,
+      "size": {
+        "depth": 0.35,
+        "height": 0.7,
+        "width": 0.46
+      },
+      "style_tags": [
+        "scandinavian",
+        "traditional"
+      ]
+    }
+  ],
+  "properties": {
+    "id": {
+      "title": "Id",
+      "type": "string"
+    },
+    "name": {
+      "title": "Name",
+      "type": "string"
+    },
+    "category": {
+      "title": "Category",
+      "type": "string"
+    },
+    "size": {
+      "$ref": "#/$defs/Size"
+    },
+    "price": {
+      "description": "EUR",
+      "minimum": 0,
+      "title": "Price",
+      "type": "number"
+    },
+    "style_tags": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Style Tags",
+      "type": "array"
+    },
+    "color": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Color"
+    },
+    "front": {
+      "default": "+z",
+      "description": "The GLB's local axis the item's front faces (glTF is y-up)",
+      "enum": [
+        "+x",
+        "-x",
+        "+z",
+        "-z"
+      ],
+      "title": "Front",
+      "type": "string"
+    },
+    "glb_url": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Glb Url"
+    },
+    "license": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "License"
+    },
+    "url": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Product page",
+      "title": "Url"
+    },
+    "image_url": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Image Url"
+    },
+    "description": {
+      "default": "",
+      "title": "Description",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "category",
+    "size",
+    "price"
+  ],
+  "type": "object"
+}

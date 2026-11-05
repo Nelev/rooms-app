@@ -1,0 +1,159 @@
+{
+  "title": "StreamEvent",
+  "$defs": {
+    "StepEvent": {
+      "description": "Emitted by a node when it starts and ends, for the run timeline.",
+      "examples": [
+        {
+          "cost": 0.003,
+          "duration_s": 4.2,
+          "node": "critic",
+          "round": 1,
+          "status": "done",
+          "summary": "1 rule fails",
+          "type": "step"
+        }
+      ],
+      "properties": {
+        "type": {
+          "const": "step",
+          "default": "step",
+          "title": "Type",
+          "type": "string"
+        },
+        "node": {
+          "enum": [
+            "route_input",
+            "analyze_room",
+            "confirm_room",
+            "design",
+            "architect",
+            "refine",
+            "source",
+            "solve",
+            "critic",
+            "present",
+            "chat_edit"
+          ],
+          "title": "Node",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "started",
+            "done",
+            "error"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "round": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Critic loop round, for nodes inside the loop",
+          "title": "Round"
+        },
+        "summary": {
+          "default": "",
+          "title": "Summary",
+          "type": "string"
+        },
+        "duration_s": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Duration S"
+        },
+        "cost": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "USD",
+          "title": "Cost"
+        }
+      },
+      "required": [
+        "node",
+        "status"
+      ],
+      "title": "StepEvent",
+      "type": "object"
+    },
+    "ToolEvent": {
+      "description": "Emitted by chat_edit for each tool it runs, shown as a step chip in the chat.",
+      "examples": [
+        {
+          "ok": true,
+          "summary": "moved desk",
+          "tool": "move_item",
+          "type": "tool"
+        }
+      ],
+      "properties": {
+        "type": {
+          "const": "tool",
+          "default": "tool",
+          "title": "Type",
+          "type": "string"
+        },
+        "tool": {
+          "title": "Tool",
+          "type": "string"
+        },
+        "summary": {
+          "title": "Summary",
+          "type": "string"
+        },
+        "ok": {
+          "default": true,
+          "description": "False when the edit was refused; summary then says why",
+          "title": "Ok",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "tool",
+        "summary"
+      ],
+      "title": "ToolEvent",
+      "type": "object"
+    }
+  },
+  "discriminator": {
+    "mapping": {
+      "step": "#/$defs/StepEvent",
+      "tool": "#/$defs/ToolEvent"
+    },
+    "propertyName": "type"
+  },
+  "oneOf": [
+    {
+      "$ref": "#/$defs/StepEvent"
+    },
+    {
+      "$ref": "#/$defs/ToolEvent"
+    }
+  ]
+}

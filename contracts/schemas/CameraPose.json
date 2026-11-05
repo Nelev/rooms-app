@@ -1,0 +1,115 @@
+{
+  "title": "CameraPose",
+  "description": "A camera in the three.js convention (y-up: room (x, y, z) is three.js (x, z, -y)), e.g. the one that took a photo.",
+  "examples": [
+    {
+      "fov": 55.0,
+      "image_height": 3024,
+      "image_width": 4032,
+      "photo_key": "uploads/3f2a/photo-1.jpg",
+      "position": [
+        0.4,
+        1.5,
+        -0.3
+      ],
+      "quaternion": [
+        0.0,
+        0.9239,
+        0.0,
+        0.3827
+      ],
+      "reprojection_error": 3.2
+    }
+  ],
+  "properties": {
+    "photo_key": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Photo Key"
+    },
+    "position": {
+      "maxItems": 3,
+      "minItems": 3,
+      "prefixItems": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "title": "Position",
+      "type": "array"
+    },
+    "quaternion": {
+      "description": "x, y, z, w",
+      "maxItems": 4,
+      "minItems": 4,
+      "prefixItems": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "title": "Quaternion",
+      "type": "array"
+    },
+    "fov": {
+      "description": "Vertical field of view in degrees",
+      "exclusiveMaximum": 180,
+      "exclusiveMinimum": 0,
+      "title": "Fov",
+      "type": "number"
+    },
+    "image_width": {
+      "exclusiveMinimum": 0,
+      "title": "Image Width",
+      "type": "integer"
+    },
+    "image_height": {
+      "exclusiveMinimum": 0,
+      "title": "Image Height",
+      "type": "integer"
+    },
+    "reprojection_error": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Pixels",
+      "title": "Reprojection Error"
+    }
+  },
+  "required": [
+    "position",
+    "quaternion",
+    "fov",
+    "image_width",
+    "image_height"
+  ],
+  "type": "object"
+}

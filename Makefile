@@ -25,5 +25,6 @@ lint:
 	cd backend && uv run ruff format --check . && uv run ruff check . && uv run mypy
 	cd frontend && pnpm check && pnpm typecheck
 
+# JSON Schema of the domain models in contracts/schemas/; TODO(S-03): also generate frontend/src/lib/api/generated/ from the OpenAPI schema
 gen:
-	@echo "TODO(S-03): generate frontend/src/lib/api/generated/ from the backend's OpenAPI schema" && exit 1
+	cd backend && uv run python -m app.schemas.export

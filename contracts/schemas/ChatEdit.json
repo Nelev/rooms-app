@@ -1,0 +1,361 @@
+{
+  "title": "ChatEdit",
+  "$defs": {
+    "AddOp": {
+      "examples": [
+        {
+          "edges": [
+            {
+              "relation": "in_front",
+              "source": "desk",
+              "target": "window_1"
+            }
+          ],
+          "node": {
+            "id": "desk",
+            "name": "desk",
+            "size": {
+              "depth": 0.6,
+              "height": 0.75,
+              "width": 1.2
+            }
+          },
+          "op": "add"
+        }
+      ],
+      "properties": {
+        "op": {
+          "const": "add",
+          "default": "add",
+          "title": "Op",
+          "type": "string"
+        },
+        "node": {
+          "$ref": "#/$defs/SceneNode"
+        },
+        "edges": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/SceneEdge"
+          },
+          "title": "Edges",
+          "type": "array"
+        }
+      },
+      "required": [
+        "node"
+      ],
+      "title": "AddOp",
+      "type": "object"
+    },
+    "MoveOp": {
+      "examples": [
+        {
+          "node_id": "desk",
+          "op": "move",
+          "x": 1.2,
+          "y": 3.7
+        }
+      ],
+      "properties": {
+        "op": {
+          "const": "move",
+          "default": "move",
+          "title": "Op",
+          "type": "string"
+        },
+        "node_id": {
+          "title": "Node Id",
+          "type": "string"
+        },
+        "x": {
+          "title": "X",
+          "type": "number"
+        },
+        "y": {
+          "title": "Y",
+          "type": "number"
+        }
+      },
+      "required": [
+        "node_id",
+        "x",
+        "y"
+      ],
+      "title": "MoveOp",
+      "type": "object"
+    },
+    "RemoveOp": {
+      "examples": [
+        {
+          "node_id": "nightstand",
+          "op": "remove"
+        }
+      ],
+      "properties": {
+        "op": {
+          "const": "remove",
+          "default": "remove",
+          "title": "Op",
+          "type": "string"
+        },
+        "node_id": {
+          "title": "Node Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "node_id"
+      ],
+      "title": "RemoveOp",
+      "type": "object"
+    },
+    "RotateOp": {
+      "examples": [
+        {
+          "node_id": "desk",
+          "op": "rotate",
+          "rotation": 90
+        }
+      ],
+      "properties": {
+        "op": {
+          "const": "rotate",
+          "default": "rotate",
+          "title": "Op",
+          "type": "string"
+        },
+        "node_id": {
+          "title": "Node Id",
+          "type": "string"
+        },
+        "rotation": {
+          "description": "Counterclockwise about z, 0 = front faces +y",
+          "exclusiveMaximum": 360,
+          "minimum": 0,
+          "title": "Rotation",
+          "type": "number"
+        }
+      },
+      "required": [
+        "node_id",
+        "rotation"
+      ],
+      "title": "RotateOp",
+      "type": "object"
+    },
+    "SceneEdge": {
+      "properties": {
+        "source": {
+          "description": "The node placed relative to target",
+          "title": "Source",
+          "type": "string"
+        },
+        "relation": {
+          "enum": [
+            "left_of",
+            "right_of",
+            "in_front",
+            "behind",
+            "on",
+            "against_wall",
+            "in_corner",
+            "adjacent",
+            "facing"
+          ],
+          "title": "Relation",
+          "type": "string"
+        },
+        "target": {
+          "title": "Target",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source",
+        "relation",
+        "target"
+      ],
+      "title": "SceneEdge",
+      "type": "object"
+    },
+    "SceneNode": {
+      "properties": {
+        "id": {
+          "description": "For fixed nodes: the RoomSpec feature id, or wall_A to wall_D",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "default": "object",
+          "enum": [
+            "object",
+            "wall",
+            "door",
+            "window"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "style": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Style"
+        },
+        "material": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Material"
+        },
+        "size": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Size"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Bounding box; None for fixed nodes"
+        },
+        "quantity": {
+          "default": 1,
+          "minimum": 1,
+          "title": "Quantity",
+          "type": "integer"
+        },
+        "priority": {
+          "default": "must",
+          "enum": [
+            "must",
+            "nice"
+          ],
+          "title": "Priority",
+          "type": "string"
+        },
+        "item_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The CatalogItem chosen by the Sourcer",
+          "title": "Item Id"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "title": "SceneNode",
+      "type": "object"
+    },
+    "Size": {
+      "properties": {
+        "width": {
+          "minimum": 0,
+          "title": "Width",
+          "type": "number"
+        },
+        "depth": {
+          "minimum": 0,
+          "title": "Depth",
+          "type": "number"
+        },
+        "height": {
+          "minimum": 0,
+          "title": "Height",
+          "type": "number"
+        }
+      },
+      "required": [
+        "width",
+        "depth",
+        "height"
+      ],
+      "title": "Size",
+      "type": "object"
+    },
+    "SwapOp": {
+      "examples": [
+        {
+          "item_id": "ikea-lagkapten-desk",
+          "node_id": "desk",
+          "op": "swap"
+        }
+      ],
+      "properties": {
+        "op": {
+          "const": "swap",
+          "default": "swap",
+          "title": "Op",
+          "type": "string"
+        },
+        "node_id": {
+          "title": "Node Id",
+          "type": "string"
+        },
+        "item_id": {
+          "title": "Item Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "node_id",
+        "item_id"
+      ],
+      "title": "SwapOp",
+      "type": "object"
+    }
+  },
+  "discriminator": {
+    "mapping": {
+      "add": "#/$defs/AddOp",
+      "move": "#/$defs/MoveOp",
+      "remove": "#/$defs/RemoveOp",
+      "rotate": "#/$defs/RotateOp",
+      "swap": "#/$defs/SwapOp"
+    },
+    "propertyName": "op"
+  },
+  "oneOf": [
+    {
+      "$ref": "#/$defs/MoveOp"
+    },
+    {
+      "$ref": "#/$defs/RotateOp"
+    },
+    {
+      "$ref": "#/$defs/SwapOp"
+    },
+    {
+      "$ref": "#/$defs/AddOp"
+    },
+    {
+      "$ref": "#/$defs/RemoveOp"
+    }
+  ]
+}
