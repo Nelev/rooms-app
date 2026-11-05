@@ -4,12 +4,13 @@ The whole graph is tried first. If it is Unsolvable, items are added back one at
 group in graph order (the Designer's order of importance), re-solving the kept set each time: an item whose addition makes the
 kept set unsolvable blocks placement. It is replaced by the next smaller catalog item of its category (same height within
 SIZE_TOLERANCE, no wider and no deeper) until one fits, else dropped. An item placed relative only to dropped items is dropped
-with them (parents are always tried before their children). Every solve gets `attempt` seconds, capped at what is left of one overall
-`budget`; when that runs out, the last layout found is returned and the items not yet finished are reported. solve() checks its
-own deadline before each group of items it places, so the fallback overshoots `budget` by at most one such step (about 10 ms on
-the impossible brief). A typical run takes a few `attempt`s per item that does not fit (3-4 s for the impossible brief's five
-items), so the 10 s default leaves room for larger rooms; callers with a latency target (B-18's solve node) should pass their
-own `budget`. The scene graph is not changed: the caller applies a resized item's item_id and size (from its placement).
+with them (parents are always tried before their children). Every solve stops after solver.STEPS sampled positions, so the outcome is
+the same on any machine (0.1-0.4 s per solve that fails, 2-3 s for the impossible brief's five items on an idle one). The time caps
+are only a safety net, over 20 times what an idle machine needs: `attempt` seconds per solve, capped at what is left of one
+overall `budget`; when that runs out, the last layout found is returned and the items not yet finished are reported (out_of_time),
+so the outcome then depends on the machine's speed. solve() checks its deadline before each group of items it places, so the
+fallback overshoots `budget` by at most one such step (about 10 ms on the impossible brief). The scene graph is not changed: the
+caller applies a resized item's item_id and size (from its placement).
 """
 
 from time import monotonic
@@ -44,7 +45,7 @@ def smaller_variants(item_id: str | None) -> list[CatalogItem]:
 
 
 def solve_with_fallback(
-    graph: SceneGraph, spec: RoomSpec, seed: int = 0, budget: float = 10.0, attempt: float = 0.5
+    graph: SceneGraph, spec: RoomSpec, seed: int = 0, budget: float = 60.0, attempt: float = 10.0
 ) -> tuple[Layout, FallbackReport]:
     """The layout of the whole graph, or of the most important items that fit, and what was dropped or shrunk; at most ~`budget` s."""
     deadline = monotonic() + budget

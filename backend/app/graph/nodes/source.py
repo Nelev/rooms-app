@@ -122,6 +122,6 @@ def source_scene(store: BaseStore | None, state: RunState) -> dict[str, Any]:
     return {"scene_graph": scene_graph, "candidates": candidates}
 
 
-@stub_node  # only for the run timeline's step events and cost: the fixture's, until real nodes emit their own
+@stub_node  # only for the run timeline's step events (the fixture's) and, in the stub graph, the fixture's cost
 def source(state: RunState) -> dict[str, Any]:
     return source_scene(get_store(), state)

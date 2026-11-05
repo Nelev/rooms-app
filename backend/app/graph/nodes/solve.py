@@ -2,8 +2,9 @@
 
 The fallback drops or shrinks what does not fit; a resized item's catalog item and size are applied to the scene graph (and put
 first among its candidates, the Sourcer's convention for the chosen item), so the next rounds and the results see the real item.
-The seed is the critic round (1, 2, 3), not the thread id: the same input always gives the same layouts (up to the time
-budgets, which B-12 owns), so runs and evals are reproducible, and a graph the Critic sends back unchanged is still sampled anew.
+The seed is the critic round (1, 2, 3), not the thread id: the same input always gives the same layouts (the solver stops on a
+step limit, the time budget is only a safety net), so runs and evals are reproducible, and a graph the Critic sends back
+unchanged is still sampled anew.
 The validation combines the B-07 graph check, the B-04 layout checks and a check of every
 relation of the graph against the layout: the solver only places each node by its first placing edge (B-11), so the others
 (the Refiner's ordering edges, a second relation, `facing`) may be broken.
@@ -29,8 +30,7 @@ from app.graph.stub import chat_turn, stub_node
 from app.schemas import Layout, RoomSpec, RunOutput, SceneGraph, ValidationReport
 from app.schemas.layout import Placement, ValidationIssue
 
-BUDGET = 8.0  # s for the whole fallback: the impossible brief takes 3-4 s, a graph that fits a few ms
-ATTEMPT = 0.5  # s per solve inside it (B-12's default)
+BUDGET = 30.0  # s, the user-facing worst case: a safety net only, the step limit decides (impossible brief: 2-3 s idle)
 WALKWAY = 0.6  # m, the narrowest walkway a person passes through (as eval/metrics/layout.py)
 TOL = 0.05  # m a placement may miss its relation's box by and still keep it (the solver rounds positions to 1 mm)
 
@@ -96,7 +96,7 @@ def validate(graph: SceneGraph, spec: RoomSpec, layout: Layout) -> ValidationRep
 def solve_scene(state: RunState) -> dict[str, Any]:
     """The run's layout, its fallback report and validation, and the scene graph and candidates with the resized items applied."""
     graph, spec = state["scene_graph"], state["room_spec"]
-    layout, report = solve_with_fallback(graph, spec, seed=state.get("round", 1), budget=BUDGET, attempt=ATTEMPT)
+    layout, report = solve_with_fallback(graph, spec, seed=state.get("round", 1), budget=BUDGET)
     placed = {p.node_id: p for p in layout.placements}
     candidates = dict(state.get("candidates", {}))
     nodes = []

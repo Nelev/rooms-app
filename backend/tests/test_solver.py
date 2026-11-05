@@ -115,8 +115,23 @@ def test_gives_up_after_the_budget() -> None:
     g = graph([node(f"box_{i}", 1.0, 1.0, 1.0) for i in range(20)], [])
     start = monotonic()
     with pytest.raises(Unsolvable):
-        solve(g, BEDROOM, budget=0.3)
+        solve(g, BEDROOM, budget=0.3, steps=10**9)  # the safety net, when the step limit is far off
     assert monotonic() - start < 1
+
+
+def test_gives_up_after_the_step_limit_whatever_the_time(monkeypatch: pytest.MonkeyPatch) -> None:
+    sampled = 0
+
+    def counting_solid(p: Placement) -> Solid:
+        nonlocal sampled
+        sampled += 1
+        return solid(p)
+
+    monkeypatch.setattr(solver, "solid", counting_solid)
+    g = graph([node(f"box_{i}", 1.0, 1.0, 1.0) for i in range(20)], [])
+    with pytest.raises(Unsolvable, match="in 300 sampled positions"):
+        solve(g, BEDROOM, budget=1e6, steps=300)
+    assert 300 <= sampled < 300 + 20 * TRIES  # checked before each group: it overshoots by at most one group
 
 
 def test_an_adjacent_edge_closing_a_loop_is_not_followed() -> None:
@@ -132,7 +147,7 @@ def test_an_adjacent_edge_closing_a_loop_is_not_followed() -> None:
 def test_beside_a_window_stands_flush_against_its_wall(seed: int) -> None:
     window = {"id": "window_1", "kind": "window", "name": "window"}
     g = graph([window, node("shelf", 0.6, 0.3, 0.8)], [edge("shelf", "left_of", "window_1")])
-    shelf = solve(g, BEDROOM, seed=seed, budget=0.2).placements[0]
+    shelf = solve(g, BEDROOM, seed=seed).placements[0]
     assert shelf.y == pytest.approx(BEDROOM.dimensions.length - 0.15) and shelf.rotation == 180
 
 
