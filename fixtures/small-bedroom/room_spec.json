@@ -1,0 +1,74 @@
+{
+  "dimensions": {
+    "width": 3.2,
+    "length": 3.4,
+    "height": 2.6
+  },
+  "walls": [
+    {
+      "wall": "A",
+      "color": "#f2efe9"
+    },
+    {
+      "wall": "B",
+      "color": "#f2efe9"
+    },
+    {
+      "wall": "C",
+      "color": "#f2efe9"
+    },
+    {
+      "wall": "D",
+      "color": "#f2efe9"
+    }
+  ],
+  "floor_material": "oak",
+  "features": [
+    {
+      "id": "door_1",
+      "type": "door",
+      "wall": "A",
+      "offset": 0.75,
+      "width": 0.8,
+      "height": 2.1,
+      "confidence": 0.95
+    },
+    {
+      "id": "window_1",
+      "type": "window",
+      "wall": "C",
+      "offset": 0.5,
+      "width": 1.0,
+      "height": 1.3,
+      "confidence": 0.9,
+      "sill_height": 0.9
+    },
+    {
+      "id": "radiator_1",
+      "type": "radiator",
+      "wall": "C",
+      "offset": 0.5,
+      "width": 0.8,
+      "height": 0.6,
+      "confidence": 0.7,
+      "sill_height": 0.1
+    }
+  ],
+  "kept_furniture": [
+    {
+      "id": "kept_1",
+      "name": "wardrobe",
+      "x": 0.3,
+      "y": 0.9,
+      "rotation": 270,
+      "size": {
+        "width": 1.0,
+        "depth": 0.6,
+        "height": 2.0
+      }
+    }
+  ],
+  "warnings": [
+    "Radiator width estimated from one photo"
+  ]
+}

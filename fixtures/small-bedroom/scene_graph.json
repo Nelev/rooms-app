@@ -1,0 +1,98 @@
+{
+  "nodes": [
+    {
+      "id": "wall_B",
+      "kind": "wall",
+      "name": "wall B"
+    },
+    {
+      "id": "wall_D",
+      "kind": "wall",
+      "name": "wall D"
+    },
+    {
+      "id": "door_1",
+      "kind": "door",
+      "name": "door"
+    },
+    {
+      "id": "window_1",
+      "kind": "window",
+      "name": "window"
+    },
+    {
+      "id": "bed",
+      "name": "double bed",
+      "style": "scandinavian",
+      "material": "oak",
+      "size": {
+        "width": 1.4,
+        "depth": 2.0,
+        "height": 0.9
+      },
+      "priority": "must",
+      "item_id": "oak-double-bed-140"
+    },
+    {
+      "id": "nightstand",
+      "name": "nightstand",
+      "style": "scandinavian",
+      "material": "oak",
+      "size": {
+        "width": 0.4,
+        "depth": 0.35,
+        "height": 0.5
+      },
+      "priority": "nice",
+      "item_id": "oak-nightstand"
+    },
+    {
+      "id": "desk",
+      "name": "desk",
+      "style": "scandinavian",
+      "material": "birch",
+      "size": {
+        "width": 1.0,
+        "depth": 0.5,
+        "height": 0.75
+      },
+      "priority": "must",
+      "item_id": "birch-desk-100"
+    },
+    {
+      "id": "desk_chair",
+      "name": "desk chair",
+      "style": "scandinavian",
+      "material": "fabric",
+      "size": {
+        "width": 0.45,
+        "depth": 0.45,
+        "height": 0.85
+      },
+      "priority": "must",
+      "item_id": "grey-desk-chair"
+    }
+  ],
+  "edges": [
+    {
+      "source": "bed",
+      "relation": "against_wall",
+      "target": "wall_B"
+    },
+    {
+      "source": "nightstand",
+      "relation": "adjacent",
+      "target": "bed"
+    },
+    {
+      "source": "desk",
+      "relation": "against_wall",
+      "target": "wall_D"
+    },
+    {
+      "source": "desk_chair",
+      "relation": "in_front",
+      "target": "desk"
+    }
+  ]
+}

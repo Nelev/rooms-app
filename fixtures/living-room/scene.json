@@ -1,0 +1,253 @@
+{
+  "room": {
+    "dimensions": {
+      "width": 4.5,
+      "length": 5.0,
+      "height": 2.7
+    },
+    "walls": [
+      {
+        "wall": "A",
+        "color": "#efe7da"
+      },
+      {
+        "wall": "B",
+        "color": "#efe7da"
+      },
+      {
+        "wall": "C",
+        "color": "#efe7da"
+      },
+      {
+        "wall": "D",
+        "color": "#efe7da"
+      }
+    ],
+    "floor_material": "walnut",
+    "features": [
+      {
+        "id": "door_1",
+        "type": "door",
+        "wall": "D",
+        "offset": 0.2,
+        "width": 0.9,
+        "height": 2.1,
+        "confidence": 0.95
+      },
+      {
+        "id": "window_1",
+        "type": "window",
+        "wall": "B",
+        "offset": 0.5,
+        "width": 1.6,
+        "height": 1.5,
+        "confidence": 0.9,
+        "sill_height": 0.6
+      },
+      {
+        "id": "outlet_1",
+        "type": "outlet",
+        "wall": "A",
+        "offset": 0.5,
+        "width": 0.1,
+        "height": 0.1,
+        "confidence": 0.6,
+        "sill_height": 0.3
+      }
+    ],
+    "kept_furniture": [
+      {
+        "id": "kept_1",
+        "name": "bookcase",
+        "x": 0.2,
+        "y": 1.5,
+        "rotation": 270,
+        "size": {
+          "width": 1.2,
+          "depth": 0.4,
+          "height": 2.0
+        }
+      }
+    ],
+    "warnings": []
+  },
+  "items": [
+    {
+      "node_id": "sofa",
+      "item_id": "teal-sofa-3",
+      "x": 2.25,
+      "y": 4.55,
+      "rotation": 180,
+      "size": {
+        "width": 2.2,
+        "depth": 0.9,
+        "height": 0.85
+      },
+      "item": {
+        "id": "teal-sofa-3",
+        "name": "Teal three-seat sofa",
+        "category": "sofa",
+        "size": {
+          "width": 2.2,
+          "depth": 0.9,
+          "height": 0.85
+        },
+        "price": 899.0,
+        "style_tags": [
+          "mid-century"
+        ],
+        "color": "teal",
+        "front": "+z",
+        "license": "CC0-1.0",
+        "description": "Velvet sofa"
+      }
+    },
+    {
+      "node_id": "coffee_table",
+      "item_id": "walnut-coffee-table",
+      "x": 2.25,
+      "y": 3.4,
+      "rotation": 0,
+      "size": {
+        "width": 1.1,
+        "depth": 0.6,
+        "height": 0.45
+      },
+      "item": {
+        "id": "walnut-coffee-table",
+        "name": "Walnut coffee table",
+        "category": "table",
+        "size": {
+          "width": 1.1,
+          "depth": 0.6,
+          "height": 0.45
+        },
+        "price": 229.0,
+        "style_tags": [
+          "mid-century"
+        ],
+        "color": "walnut",
+        "front": "+z",
+        "license": "CC0-1.0",
+        "description": "Oval top"
+      }
+    },
+    {
+      "node_id": "tv_stand",
+      "item_id": "walnut-tv-stand",
+      "x": 2.25,
+      "y": 0.2,
+      "rotation": 0,
+      "size": {
+        "width": 1.6,
+        "depth": 0.4,
+        "height": 0.5
+      },
+      "item": {
+        "id": "walnut-tv-stand",
+        "name": "Walnut TV stand",
+        "category": "tv_stand",
+        "size": {
+          "width": 1.6,
+          "depth": 0.4,
+          "height": 0.5
+        },
+        "price": 319.0,
+        "style_tags": [
+          "mid-century"
+        ],
+        "color": "walnut",
+        "front": "+z",
+        "license": "CC0-1.0",
+        "description": "Two doors"
+      }
+    },
+    {
+      "node_id": "armchair",
+      "item_id": "leather-armchair",
+      "x": 3.7,
+      "y": 3.4,
+      "rotation": 90,
+      "size": {
+        "width": 0.8,
+        "depth": 0.8,
+        "height": 0.8
+      },
+      "item": {
+        "id": "leather-armchair",
+        "name": "Leather armchair",
+        "category": "armchair",
+        "size": {
+          "width": 0.8,
+          "depth": 0.8,
+          "height": 0.8
+        },
+        "price": 449.0,
+        "style_tags": [
+          "mid-century"
+        ],
+        "color": "cognac",
+        "front": "+z",
+        "license": "CC0-1.0",
+        "description": "Lounge chair"
+      }
+    },
+    {
+      "node_id": "floor_lamp",
+      "item_id": "brass-floor-lamp",
+      "x": 0.3,
+      "y": 4.75,
+      "rotation": 0,
+      "size": {
+        "width": 0.35,
+        "depth": 0.35,
+        "height": 1.5
+      },
+      "item": {
+        "id": "brass-floor-lamp",
+        "name": "Brass floor lamp",
+        "category": "lamp",
+        "size": {
+          "width": 0.35,
+          "depth": 0.35,
+          "height": 1.5
+        },
+        "price": 129.0,
+        "style_tags": [
+          "mid-century"
+        ],
+        "color": "brass",
+        "front": "+z",
+        "license": "CC0-1.0",
+        "description": "Arc lamp"
+      }
+    }
+  ],
+  "lights": [
+    {
+      "kind": "area",
+      "window_id": "window_1",
+      "intensity": 5.0
+    }
+  ],
+  "cameras": [
+    {
+      "photo_key": "fixtures/living-room/photo-1.jpg",
+      "position": [
+        4.2,
+        1.5,
+        -0.3
+      ],
+      "quaternion": [
+        0.0,
+        0.3827,
+        0.0,
+        0.9239
+      ],
+      "fov": 65.0,
+      "image_width": 640,
+      "image_height": 480,
+      "reprojection_error": 4.1
+    }
+  ]
+}

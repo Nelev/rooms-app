@@ -1,0 +1,76 @@
+{
+  "zones": [
+    {
+      "name": "sleep",
+      "purpose": "bed and nightstand"
+    },
+    {
+      "name": "work",
+      "purpose": "desk near the window"
+    }
+  ],
+  "palette": [
+    "#f2efe9",
+    "#c8b49a",
+    "#3d4a3d"
+  ],
+  "objects": [
+    {
+      "id": "bed",
+      "name": "double bed",
+      "category": "bed",
+      "style": "scandinavian",
+      "material": "oak",
+      "size": {
+        "width": 1.4,
+        "depth": 2.0,
+        "height": 0.9
+      },
+      "priority": "must",
+      "zone": "sleep"
+    },
+    {
+      "id": "nightstand",
+      "name": "nightstand",
+      "category": "nightstand",
+      "style": "scandinavian",
+      "material": "oak",
+      "size": {
+        "width": 0.4,
+        "depth": 0.35,
+        "height": 0.5
+      },
+      "priority": "nice",
+      "zone": "sleep"
+    },
+    {
+      "id": "desk",
+      "name": "desk",
+      "category": "desk",
+      "style": "scandinavian",
+      "material": "birch",
+      "size": {
+        "width": 1.0,
+        "depth": 0.5,
+        "height": 0.75
+      },
+      "priority": "must",
+      "zone": "work"
+    },
+    {
+      "id": "desk_chair",
+      "name": "desk chair",
+      "category": "chair",
+      "style": "scandinavian",
+      "material": "fabric",
+      "size": {
+        "width": 0.45,
+        "depth": 0.45,
+        "height": 0.85
+      },
+      "priority": "must",
+      "zone": "work"
+    }
+  ],
+  "summary": "Calm Scandinavian bedroom with a compact work corner"
+}

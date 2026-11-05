@@ -1,0 +1,103 @@
+{
+  "nodes": [
+    {
+      "id": "wall_A",
+      "kind": "wall",
+      "name": "wall A"
+    },
+    {
+      "id": "wall_B",
+      "kind": "wall",
+      "name": "wall B"
+    },
+    {
+      "id": "wall_C",
+      "kind": "wall",
+      "name": "wall C"
+    },
+    {
+      "id": "door_1",
+      "kind": "door",
+      "name": "door"
+    },
+    {
+      "id": "window_1",
+      "kind": "window",
+      "name": "window"
+    },
+    {
+      "id": "desk",
+      "name": "desk",
+      "style": "modern",
+      "material": "white laminate",
+      "size": {
+        "width": 1.4,
+        "depth": 0.7,
+        "height": 0.75
+      },
+      "priority": "must",
+      "item_id": "white-desk-140"
+    },
+    {
+      "id": "desk_chair",
+      "name": "ergonomic chair",
+      "style": "modern",
+      "material": "mesh",
+      "size": {
+        "width": 0.6,
+        "depth": 0.6,
+        "height": 1.1
+      },
+      "priority": "must",
+      "item_id": "mesh-office-chair"
+    },
+    {
+      "id": "bookshelf",
+      "name": "bookshelf",
+      "style": "modern",
+      "material": "white laminate",
+      "size": {
+        "width": 0.8,
+        "depth": 0.35,
+        "height": 1.8
+      },
+      "priority": "must",
+      "item_id": "white-bookshelf-80"
+    },
+    {
+      "id": "floor_lamp",
+      "name": "floor lamp",
+      "style": "modern",
+      "material": "steel",
+      "size": {
+        "width": 0.3,
+        "depth": 0.3,
+        "height": 1.6
+      },
+      "priority": "nice",
+      "item_id": "steel-floor-lamp"
+    }
+  ],
+  "edges": [
+    {
+      "source": "desk",
+      "relation": "in_front",
+      "target": "window_1"
+    },
+    {
+      "source": "desk_chair",
+      "relation": "in_front",
+      "target": "desk"
+    },
+    {
+      "source": "bookshelf",
+      "relation": "against_wall",
+      "target": "wall_C"
+    },
+    {
+      "source": "floor_lamp",
+      "relation": "in_corner",
+      "target": "wall_B"
+    }
+  ]
+}

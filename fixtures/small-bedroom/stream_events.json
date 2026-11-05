@@ -1,0 +1,219 @@
+{
+  "first_run": [
+    {
+      "type": "step",
+      "node": "route_input",
+      "status": "started"
+    },
+    {
+      "type": "step",
+      "node": "route_input",
+      "status": "done",
+      "summary": "new design",
+      "duration_s": 0.01
+    },
+    {
+      "type": "step",
+      "node": "analyze_room",
+      "status": "started"
+    },
+    {
+      "type": "step",
+      "node": "analyze_room",
+      "status": "done",
+      "summary": "found 1 door, 1 window, 1 radiator",
+      "duration_s": 9.8,
+      "cost": 0.012
+    },
+    {
+      "type": "step",
+      "node": "confirm_room",
+      "status": "started"
+    }
+  ],
+  "resumed_run": [
+    {
+      "type": "step",
+      "node": "confirm_room",
+      "status": "started"
+    },
+    {
+      "type": "step",
+      "node": "confirm_room",
+      "status": "done",
+      "summary": "room confirmed",
+      "duration_s": 0.02
+    },
+    {
+      "type": "step",
+      "node": "design",
+      "status": "started"
+    },
+    {
+      "type": "step",
+      "node": "design",
+      "status": "done",
+      "summary": "4 objects in 2 zones",
+      "duration_s": 6.1,
+      "cost": 0.008
+    },
+    {
+      "type": "step",
+      "node": "architect",
+      "status": "started",
+      "round": 1
+    },
+    {
+      "type": "step",
+      "node": "architect",
+      "status": "done",
+      "round": 1,
+      "summary": "scene graph with 4 objects",
+      "duration_s": 7.4,
+      "cost": 0.011
+    },
+    {
+      "type": "step",
+      "node": "refine",
+      "status": "started",
+      "round": 1
+    },
+    {
+      "type": "step",
+      "node": "refine",
+      "status": "done",
+      "round": 1,
+      "summary": "no ambiguous siblings",
+      "duration_s": 0.03
+    },
+    {
+      "type": "step",
+      "node": "source",
+      "status": "started",
+      "round": 1
+    },
+    {
+      "type": "step",
+      "node": "source",
+      "status": "done",
+      "round": 1,
+      "summary": "4 items, all in budget",
+      "duration_s": 3.2,
+      "cost": 0.004
+    },
+    {
+      "type": "step",
+      "node": "solve",
+      "status": "started",
+      "round": 1
+    },
+    {
+      "type": "step",
+      "node": "solve",
+      "status": "done",
+      "round": 1,
+      "summary": "placed 4 objects",
+      "duration_s": 0.6
+    },
+    {
+      "type": "step",
+      "node": "critic",
+      "status": "started",
+      "round": 1
+    },
+    {
+      "type": "step",
+      "node": "critic",
+      "status": "done",
+      "round": 1,
+      "summary": "1 rule fails: the desk is far from the window",
+      "duration_s": 4.2,
+      "cost": 0.003
+    },
+    {
+      "type": "step",
+      "node": "architect",
+      "status": "started",
+      "round": 2
+    },
+    {
+      "type": "step",
+      "node": "architect",
+      "status": "done",
+      "round": 2,
+      "summary": "moved the desk next to the window wall",
+      "duration_s": 5.0,
+      "cost": 0.007
+    },
+    {
+      "type": "step",
+      "node": "refine",
+      "status": "started",
+      "round": 2
+    },
+    {
+      "type": "step",
+      "node": "refine",
+      "status": "done",
+      "round": 2,
+      "summary": "no ambiguous siblings",
+      "duration_s": 0.02
+    },
+    {
+      "type": "step",
+      "node": "source",
+      "status": "started",
+      "round": 2
+    },
+    {
+      "type": "step",
+      "node": "source",
+      "status": "done",
+      "round": 2,
+      "summary": "kept all items",
+      "duration_s": 0.4
+    },
+    {
+      "type": "step",
+      "node": "solve",
+      "status": "started",
+      "round": 2
+    },
+    {
+      "type": "step",
+      "node": "solve",
+      "status": "done",
+      "round": 2,
+      "summary": "placed 4 objects",
+      "duration_s": 0.5
+    },
+    {
+      "type": "step",
+      "node": "critic",
+      "status": "started",
+      "round": 2
+    },
+    {
+      "type": "step",
+      "node": "critic",
+      "status": "done",
+      "round": 2,
+      "summary": "all rules pass",
+      "duration_s": 3.9,
+      "cost": 0.003
+    },
+    {
+      "type": "step",
+      "node": "present",
+      "status": "started"
+    },
+    {
+      "type": "step",
+      "node": "present",
+      "status": "done",
+      "summary": "small bedroom ready",
+      "duration_s": 5.5,
+      "cost": 0.006
+    }
+  ]
+}

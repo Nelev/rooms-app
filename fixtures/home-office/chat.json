@@ -1,0 +1,161 @@
+[
+  {
+    "input": {
+      "chat_message": "Add a plant in the corner by the window"
+    },
+    "edits": [
+      {
+        "op": "add",
+        "node": {
+          "id": "plant",
+          "name": "potted plant",
+          "style": "modern",
+          "material": "ceramic",
+          "size": {
+            "width": 0.4,
+            "depth": 0.4,
+            "height": 1.0
+          },
+          "priority": "nice",
+          "item_id": "potted-plant"
+        },
+        "edges": [
+          {
+            "source": "plant",
+            "relation": "in_corner",
+            "target": "wall_A"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "type": "step",
+        "node": "route_input",
+        "status": "started"
+      },
+      {
+        "type": "step",
+        "node": "route_input",
+        "status": "done",
+        "summary": "chat message",
+        "duration_s": 0.01
+      },
+      {
+        "type": "step",
+        "node": "chat_edit",
+        "status": "started"
+      },
+      {
+        "type": "tool",
+        "tool": "add_item",
+        "summary": "added potted plant",
+        "ok": true
+      },
+      {
+        "type": "step",
+        "node": "chat_edit",
+        "status": "done",
+        "summary": "edit applied",
+        "duration_s": 2.1,
+        "cost": 0.002
+      },
+      {
+        "type": "step",
+        "node": "solve",
+        "status": "started"
+      },
+      {
+        "type": "step",
+        "node": "solve",
+        "status": "done",
+        "summary": "re-validated",
+        "duration_s": 0.3
+      },
+      {
+        "type": "step",
+        "node": "present",
+        "status": "started"
+      },
+      {
+        "type": "step",
+        "node": "present",
+        "status": "done",
+        "summary": "updated design",
+        "duration_s": 0.8
+      }
+    ],
+    "output": {
+      "layout": {
+        "placements": [
+          {
+            "node_id": "desk",
+            "item_id": "white-desk-140",
+            "x": 2.65,
+            "y": 1.5,
+            "rotation": 90,
+            "size": {
+              "width": 1.4,
+              "depth": 0.7,
+              "height": 0.75
+            }
+          },
+          {
+            "node_id": "desk_chair",
+            "item_id": "mesh-office-chair",
+            "x": 1.9,
+            "y": 1.5,
+            "rotation": 270,
+            "size": {
+              "width": 0.6,
+              "depth": 0.6,
+              "height": 1.1
+            }
+          },
+          {
+            "node_id": "bookshelf",
+            "item_id": "white-bookshelf-80",
+            "x": 0.6,
+            "y": 2.825,
+            "rotation": 180,
+            "size": {
+              "width": 0.8,
+              "depth": 0.35,
+              "height": 1.8
+            }
+          },
+          {
+            "node_id": "floor_lamp",
+            "item_id": "steel-floor-lamp",
+            "x": 2.75,
+            "y": 2.75,
+            "rotation": 0,
+            "size": {
+              "width": 0.3,
+              "depth": 0.3,
+              "height": 1.6
+            }
+          },
+          {
+            "node_id": "plant",
+            "item_id": "potted-plant",
+            "x": 2.75,
+            "y": 0.25,
+            "rotation": 0,
+            "size": {
+              "width": 0.4,
+              "depth": 0.4,
+              "height": 1.0
+            }
+          }
+        ]
+      },
+      "layout_diff": {
+        "added": [
+          "plant"
+        ]
+      },
+      "rationale": "I added a potted plant in the corner between the window and wall A."
+    }
+  }
+]

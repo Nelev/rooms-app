@@ -1,0 +1,90 @@
+{
+  "zones": [
+    {
+      "name": "lounge",
+      "purpose": "sofa, armchair and coffee table"
+    },
+    {
+      "name": "media",
+      "purpose": "TV on wall A"
+    }
+  ],
+  "palette": [
+    "#efe7da",
+    "#8a5a3c",
+    "#2e4b4f"
+  ],
+  "objects": [
+    {
+      "id": "sofa",
+      "name": "three-seat sofa",
+      "category": "sofa",
+      "style": "mid-century",
+      "material": "velvet",
+      "size": {
+        "width": 2.2,
+        "depth": 0.9,
+        "height": 0.85
+      },
+      "priority": "must",
+      "zone": "lounge"
+    },
+    {
+      "id": "coffee_table",
+      "name": "coffee table",
+      "category": "table",
+      "style": "mid-century",
+      "material": "walnut",
+      "size": {
+        "width": 1.1,
+        "depth": 0.6,
+        "height": 0.45
+      },
+      "priority": "must",
+      "zone": "lounge"
+    },
+    {
+      "id": "tv_stand",
+      "name": "tv stand",
+      "category": "tv_stand",
+      "style": "mid-century",
+      "material": "walnut",
+      "size": {
+        "width": 1.6,
+        "depth": 0.4,
+        "height": 0.5
+      },
+      "priority": "must",
+      "zone": "media"
+    },
+    {
+      "id": "armchair",
+      "name": "armchair",
+      "category": "armchair",
+      "style": "mid-century",
+      "material": "leather",
+      "size": {
+        "width": 0.8,
+        "depth": 0.8,
+        "height": 0.8
+      },
+      "priority": "nice",
+      "zone": "lounge"
+    },
+    {
+      "id": "floor_lamp",
+      "name": "floor lamp",
+      "category": "lamp",
+      "style": "mid-century",
+      "material": "brass",
+      "size": {
+        "width": 0.35,
+        "depth": 0.35,
+        "height": 1.5
+      },
+      "priority": "nice",
+      "zone": "lounge"
+    }
+  ],
+  "summary": "Warm mid-century living room arranged around the TV"
+}
