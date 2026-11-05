@@ -50,11 +50,14 @@ async function follow(
   threadId: string,
   open: (signal: AbortSignal) => Promise<Response>,
   signal: AbortSignal,
-  set: (update: (run: Run) => Run) => void,
+  setState: (update: (run: Run) => Run) => void,
 ) {
+  // tokens come often: a transition keeps the page responsive while they do. The end of the stream (its error) is in a transition
+  // too, so it never shows before the parts read until then: an error without the run's `run_id` would have Retry start the run
+  // again rather than rejoin it.
+  const set = (update: (run: Run) => Run) => startTransition(() => setState(update));
   try {
-    // tokens come often: a transition keeps the page responsive while they do
-    for await (const part of streamParts(await open(signal))) startTransition(() => set((run) => reduce(run, part)));
+    for await (const part of streamParts(await open(signal))) set((run) => reduce(run, part));
   } catch (error) {
     if (signal.aborted) return;
     if (error instanceof ApiError && error.status === 404) return set(() => idle(threadId));
