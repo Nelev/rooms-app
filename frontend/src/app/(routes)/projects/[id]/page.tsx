@@ -1,8 +1,8 @@
-import { MessageSquare } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { WorkspaceProvider } from "@/components/workspace/sync/store";
+import { WorkspaceChat, WorkspaceResults, WorkspaceScene } from "@/components/workspace/sync/views";
 
 export const metadata: Metadata = { title: "Project" };
 
@@ -13,11 +13,11 @@ const TABS = [
   { value: "photo", label: "Photo" },
 ];
 
-// Placeholder workspace: the tabs and the chat panel get their content from later tasks.
+// The project's workspace: the design, its 3D view and the chat share one store (F-13); the other tabs get their content later.
 export default async function ProjectPage({ params }: PageProps<"/projects/[id]">) {
   const { id } = await params;
   return (
-    <>
+    <WorkspaceProvider threadId={id}>
       <h1 className="font-heading text-2xl font-semibold">Project {id}</h1>
       <div className="grid flex-1 gap-5 lg:grid-cols-[1fr_22rem]">
         <Tabs defaultValue="room">
@@ -29,8 +29,14 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[id]"
             ))}
           </TabsList>
           {TABS.map(({ value, label }) => (
-            <TabsContent key={value} value={value} className="rounded-lg border p-4 text-muted-foreground">
-              {label} view
+            <TabsContent key={value} value={value} className="rounded-lg border p-4">
+              {value === "design" ? (
+                <WorkspaceResults />
+              ) : value === "3d" ? (
+                <WorkspaceScene />
+              ) : (
+                <span className="text-muted-foreground">{label} view</span>
+              )}
               {value === "room" && (
                 <Link href={`/projects/${id}/room`} className="ml-2 text-primary underline-offset-4 hover:underline">
                   Confirm the room
@@ -41,17 +47,9 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[id]"
         </Tabs>
         <aside aria-label="Chat" className="flex flex-col rounded-lg border">
           <h2 className="border-b px-4 py-3 font-medium">Chat</h2>
-          <Empty>
-            <EmptyHeader>
-              <EmptyMedia variant="icon">
-                <MessageSquare aria-hidden />
-              </EmptyMedia>
-              <EmptyTitle>No messages yet</EmptyTitle>
-              <EmptyDescription>Ask the assistant about your room.</EmptyDescription>
-            </EmptyHeader>
-          </Empty>
+          <WorkspaceChat />
         </aside>
       </div>
-    </>
+    </WorkspaceProvider>
   );
 }

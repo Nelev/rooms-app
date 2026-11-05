@@ -14,6 +14,7 @@ type View = "orbit" | "eye" | Corner | number; // a number is the index of a pho
 const WALL_COLOR = "#f2efe9";
 const FLOOR_COLOR = "#c8b49a";
 const ITEM_COLOR = "#a8a29e";
+const HIGHLIGHT_COLOR = "#f59e0b";
 
 const shape = (points: [number, number][]) => points.map(([u, v]) => new Vector2(u, v));
 
@@ -78,12 +79,31 @@ class Fallback extends Component<{ fallback: ReactNode; children: ReactNode }, {
   }
 }
 
-function Item({ item }: { item: Scene["items"][number] }) {
+// `highlighted`: outlined in its box; `onPick`: a click on it calls it with its node id
+function Item({ item, highlighted, onPick }: { item: Scene["items"][number]; highlighted: boolean; onPick?: (id: string) => void }) {
   const { position, rotation } = itemPose(item);
   const box = <Box size={item.size} />;
   const url = item.item?.glb_url;
+  const { width, depth, height } = item.size;
   return (
-    <group position={position} rotation={rotation}>
+    // biome-ignore lint/a11y/noStaticElementInteractions: a three.js object, not a DOM element (the plan is the keyboard's way to pick)
+    <group
+      position={position}
+      rotation={rotation}
+      onClick={
+        onPick &&
+        ((event) => {
+          event.stopPropagation(); // only the nearest item
+          onPick(item.node_id);
+        })
+      }
+    >
+      {highlighted && (
+        <mesh position={[0, height / 2, 0]}>
+          <boxGeometry args={[width, height, depth]} />
+          <meshBasicMaterial color={HIGHLIGHT_COLOR} wireframe />
+        </mesh>
+      )}
       {url ? (
         <Fallback fallback={box}>
           <Suspense fallback={box}>
@@ -126,7 +146,22 @@ function Camera({ view, scene }: { view: View; scene: Scene }) {
 // Renders on demand only. Load it through `SceneViewer` (index.tsx), which skips server rendering.
 // `lights` replace the default lights and `floor` the floor's plain material: see scene3d/look.
 // With `corner`, it shows only that fixed view, without buttons or credits (the headless render, F-14).
-export function Viewer({ scene, corner, floor, lights }: { scene: Scene; corner?: Corner; floor?: ReactNode; lights?: ReactNode }) {
+// `highlighted` items are outlined, and a click on an item calls `onPick` with its node id (F-13).
+export function Viewer({
+  scene,
+  corner,
+  floor,
+  lights,
+  highlighted = [],
+  onPick,
+}: {
+  scene: Scene;
+  corner?: Corner;
+  floor?: ReactNode;
+  lights?: ReactNode;
+  highlighted?: string[];
+  onPick?: (id: string) => void;
+}) {
   const [picked, setView] = useState<View>("orbit");
   const view = corner ?? picked;
   const credits = scene.items.flatMap(({ item }) => (item?.glb_url ? [`${item.name}: ${item.description}`] : []));
@@ -147,7 +182,7 @@ export function Viewer({ scene, corner, floor, lights }: { scene: Scene; corner?
           )}
           <Room room={scene.room} floor={floor} />
           {scene.items.map((item) => (
-            <Item key={item.node_id} item={item} />
+            <Item key={item.node_id} item={item} highlighted={highlighted.includes(item.node_id)} onPick={onPick} />
           ))}
           {scene.room.kept_furniture.map((kept) => (
             <group key={kept.id} {...itemPose(kept)}>

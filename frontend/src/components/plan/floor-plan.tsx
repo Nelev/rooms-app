@@ -18,12 +18,13 @@ type Props = {
   report?: ValidationReport;
   selectedId?: string;
   onSelect?: (id: string) => void;
+  highlighted?: string[]; // items a chat edit just changed (F-13)
   className?: string;
 };
 
 // The room seen from above, read-only: walls, openings and door swings, clearance zones, kept furniture and the layout's items,
 // with whatever the report names (items or features) in a warning color.
-export function FloorPlan({ room, layout, report, selectedId, onSelect, className }: Props) {
+export function FloorPlan({ room, layout, report, selectedId, onSelect, highlighted = [], className }: Props) {
   const dims = room.dimensions;
   const pad = Math.max(PAD, ...room.features.map((f) => (f.type === "door" && f.swing === "out" ? f.width + 0.1 : 0)));
   const px = (m: number) => Math.round(m * SCALE * 10) / 10;
@@ -71,6 +72,7 @@ export function FloorPlan({ room, layout, report, selectedId, onSelect, classNam
           <g
             key={item.id}
             data-id={item.id}
+            data-highlighted={highlighted.includes(item.id) || undefined}
             {...(select && {
               role: "button",
               tabIndex: 0,
@@ -93,6 +95,7 @@ export function FloorPlan({ room, layout, report, selectedId, onSelect, classNam
                   "fill-background stroke-foreground",
                   item.kept && "[stroke-dasharray:6_3]",
                   problems.has(item.id) && WARNING,
+                  highlighted.includes(item.id) && "animate-pulse fill-primary/20 stroke-primary",
                   select && "group-focus-visible:stroke-primary",
                   item.id === selectedId && "stroke-primary",
                 )}
