@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/button";
 import { type CameraPose, type Front, glbFit, itemPose, type Scene, toThree, viewpoints, WALL_THICKNESS, wallMeshes } from "./geometry";
 
 type Size = Scene["items"][number]["size"];
-type View = "orbit" | "eye" | number; // a number is the index of a photo's camera in scene.cameras
+export type Corner = "cornerA" | "cornerC";
+type View = "orbit" | "eye" | Corner | number; // a number is the index of a photo's camera in scene.cameras
 
 const WALL_COLOR = "#f2efe9";
 const FLOOR_COLOR = "#c8b49a";
@@ -102,6 +103,10 @@ function Camera({ view, scene }: { view: View; scene: Scene }) {
     return <PerspectiveCamera key={view} makeDefault position={pose.position} quaternion={pose.quaternion} fov={pose.fov} near={0.05} />;
   }
   const { position, target } = viewpoints(scene.room.dimensions)[view];
+  if (view === "cornerA" || view === "cornerC") {
+    // a fixed view, for the headless render: no controls
+    return <PerspectiveCamera key={view} makeDefault position={position} fov={75} near={0.05} ref={(camera) => camera?.lookAt(...target)} />;
+  }
   const eye = view === "eye";
   return (
     <>
@@ -119,8 +124,10 @@ function Camera({ view, scene }: { view: View; scene: Scene }) {
 
 // The design in 3D: the room with its openings and every item, a GLB where the catalog has one and a box otherwise.
 // Renders on demand only. Load it through `SceneViewer` (index.tsx), which skips server rendering.
-export function Viewer({ scene }: { scene: Scene }) {
-  const [view, setView] = useState<View>("orbit");
+// With `corner`, it shows only that fixed view, without buttons or credits (the headless render, F-14).
+export function Viewer({ scene, corner }: { scene: Scene; corner?: Corner }) {
+  const [picked, setView] = useState<View>("orbit");
+  const view = corner ?? picked;
   const credits = scene.items.flatMap(({ item }) => (item?.glb_url ? [`${item.name}: ${item.description}`] : []));
   // a photo's view is letterboxed to the photo's aspect, so its vertical fov frames the scene as the photo does
   const pose = typeof view === "number" ? scene.cameras[view] : undefined;
@@ -144,14 +151,18 @@ export function Viewer({ scene }: { scene: Scene }) {
           ))}
         </Canvas>
       </div>
-      <div className="absolute top-2 left-2 flex flex-wrap gap-1">
-        {(["orbit", "eye", ...scene.cameras.map((_, i) => i)] as View[]).map((v) => (
-          <Button key={v} size="sm" variant={v === view ? "default" : "outline"} aria-pressed={v === view} onClick={() => setView(v)}>
-            {v === "orbit" ? "Orbit" : v === "eye" ? "Eye level" : `Photo ${v + 1}`}
-          </Button>
-        ))}
-      </div>
-      {credits.length > 0 ? <p className="absolute bottom-2 left-2 max-w-prose text-muted-foreground text-xs">{credits.join(" · ")}</p> : null}
+      {corner ? null : (
+        <div className="absolute top-2 left-2 flex flex-wrap gap-1">
+          {(["orbit", "eye", ...scene.cameras.map((_, i) => i)] as ("orbit" | "eye" | number)[]).map((v) => (
+            <Button key={v} size="sm" variant={v === view ? "default" : "outline"} aria-pressed={v === view} onClick={() => setView(v)}>
+              {v === "orbit" ? "Orbit" : v === "eye" ? "Eye level" : `Photo ${v + 1}`}
+            </Button>
+          ))}
+        </div>
+      )}
+      {credits.length > 0 && !corner ? (
+        <p className="absolute bottom-2 left-2 max-w-prose text-muted-foreground text-xs">{credits.join(" · ")}</p>
+      ) : null}
     </div>
   );
 }

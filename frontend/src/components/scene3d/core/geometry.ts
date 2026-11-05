@@ -104,9 +104,14 @@ export function wallMeshes(room: RoomSpec): WallMesh[] {
 
 export type Viewpoint = { position: Vec3; target: Vec3 };
 
+export const CORNER_INSET = 0.15; // m from both walls and the ceiling
+const CORNER_TARGET_HEIGHT = 0.6; // m: the corner views look at the room's center at this height, so the far walls stay in view
+
 // The orbit camera looks at the room's center from above a corner. The eye-level one stands just inside wall A's
 // start corner at EYE_HEIGHT, facing the room's center; its target is 1 cm ahead so orbit controls turn it in place.
-export function viewpoints({ width, length, height }: RoomSpec["dimensions"]): { orbit: Viewpoint; eye: Viewpoint } {
+// cornerA and cornerC are the fixed views of the headless render (F-14, I-Design's two opposite corners): just under the
+// ceiling in the corner where wall A, or wall C, starts, looking down at the room's center.
+export function viewpoints({ width, length, height }: RoomSpec["dimensions"]): Record<"orbit" | "eye" | "cornerA" | "cornerC", Viewpoint> {
   const reach = Math.max(width, length);
   const [ex, ey] = [0.3, 0.3];
   const [dx, dy] = [width / 2 - ex, length / 2 - ey];
@@ -114,5 +119,10 @@ export function viewpoints({ width, length, height }: RoomSpec["dimensions"]): {
   return {
     orbit: { position: toThree(width + reach * 0.6, -reach * 0.6, height + reach), target: toThree(width / 2, length / 2, 0) },
     eye: { position: toThree(ex, ey, EYE_HEIGHT), target: toThree(ex + dx * step, ey + dy * step, EYE_HEIGHT) },
+    cornerA: { position: toThree(CORNER_INSET, CORNER_INSET, height - CORNER_INSET), target: toThree(width / 2, length / 2, CORNER_TARGET_HEIGHT) },
+    cornerC: {
+      position: toThree(width - CORNER_INSET, length - CORNER_INSET, height - CORNER_INSET),
+      target: toThree(width / 2, length / 2, CORNER_TARGET_HEIGHT),
+    },
   };
 }

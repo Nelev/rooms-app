@@ -2,7 +2,19 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { Box3, BoxGeometry, ExtrudeGeometry, Group, Mesh, Object3D, Shape, Vector2, Vector3 } from "three";
 import { describe, expect, it } from "vitest";
-import { type Front, glbFit, itemPose, type Scene, toRoom, toThree, type Vec3, viewpoints, WALL_THICKNESS, wallMeshes } from "./geometry";
+import {
+  CORNER_INSET,
+  type Front,
+  glbFit,
+  itemPose,
+  type Scene,
+  toRoom,
+  toThree,
+  type Vec3,
+  viewpoints,
+  WALL_THICKNESS,
+  wallMeshes,
+} from "./geometry";
 
 const CM = 0.01;
 const cases = ["small-bedroom", "home-office", "living-room"];
@@ -91,6 +103,15 @@ describe.each(cases)("%s", (name) => {
     // orbit controls circle the target, so a target 1 cm away keeps the camera where it stands
     expect(Math.hypot(...position.map((p, i) => p - target[i]))).toBeCloseTo(0.01);
     expect(x > 0 && x < scene.room.dimensions.width && y > 0 && y < scene.room.dimensions.length).toBe(true);
+  });
+
+  it("puts the two render corners under the ceiling in opposite corners, both looking at the room's center", () => {
+    const { width, length, height } = scene.room.dimensions;
+    const { cornerA, cornerC } = viewpoints(scene.room.dimensions);
+    const [a, c] = [toRoom(cornerA.position), toRoom(cornerC.position)];
+    expect(a).toEqual([CORNER_INSET, CORNER_INSET, height - CORNER_INSET].map((v) => expect.closeTo(v)));
+    expect(c).toEqual([width - CORNER_INSET, length - CORNER_INSET, height - CORNER_INSET].map((v) => expect.closeTo(v)));
+    for (const { target } of [cornerA, cornerC]) expect(toRoom(target).slice(0, 2)).toEqual([expect.closeTo(width / 2), expect.closeTo(length / 2)]);
   });
 });
 
