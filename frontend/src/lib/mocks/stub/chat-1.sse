@@ -1,0 +1,45 @@
+event: metadata
+data: {"run_id":"96ba03152d2d4a638e8fc4b18debb459"}
+
+event: custom
+data: {"type": "step", "node": "route_input", "status": "started"}
+
+event: custom
+data: {"type": "step", "node": "route_input", "status": "done", "summary": "chat message", "duration_s": 0.01}
+
+event: updates
+data: {"route_input": {"mode": "chat", "chat_message": null, "messages": [{"role": "user", "content": "Swap the desk chair for a cheaper one"}], "cost": 0.0}}
+
+event: custom
+data: {"type": "step", "node": "chat_edit", "status": "started"}
+
+event: messages
+data: [{"id": "lc_run--01a1ac08-764b-7445-9179-2472e8d6c9be-0", "content": "\"I swapped the desk chair for a white one that costs 70 EUR less.\""}, {"langgraph_node": "chat_edit"}]
+
+event: custom
+data: {"type": "tool", "tool": "swap_item", "summary": "swapped desk chair", "ok": true}
+
+event: custom
+data: {"type": "step", "node": "chat_edit", "status": "done", "summary": "edit applied", "duration_s": 2.1, "cost": 0.002}
+
+event: updates
+data: {"chat_edit": {"layout_diff": {"added": [], "removed": [], "changed": ["desk_chair"]}, "rationale": "I swapped the desk chair for a white one that costs 70 EUR less.", "messages": [{"role": "assistant", "content": "I swapped the desk chair for a white one that costs 70 EUR less."}], "cost": 0.002}}
+
+event: custom
+data: {"type": "step", "node": "solve", "status": "started"}
+
+event: custom
+data: {"type": "step", "node": "solve", "status": "done", "summary": "re-validated", "duration_s": 0.3}
+
+event: updates
+data: {"solve": {"layout": {"placements": [{"node_id": "bed", "item_id": "oak-double-bed-140", "x": 2.2, "y": 2.25, "z": 0.0, "rotation": 90.0, "size": {"width": 1.4, "depth": 2.0, "height": 0.9}}, {"node_id": "nightstand", "item_id": "oak-nightstand", "x": 3.025, "y": 3.2, "z": 0.0, "rotation": 90.0, "size": {"width": 0.4, "depth": 0.35, "height": 0.5}}, {"node_id": "desk", "item_id": "birch-desk-100", "x": 0.25, "y": 2.7, "z": 0.0, "rotation": 270.0, "size": {"width": 1.0, "depth": 0.5, "height": 0.75}}, {"node_id": "desk_chair", "item_id": "white-desk-chair", "x": 0.8, "y": 2.7, "z": 0.0, "rotation": 90.0, "size": {"width": 0.45, "depth": 0.45, "height": 0.85}}]}, "validation": {"issues": []}, "cost": 0.0}}
+
+event: custom
+data: {"type": "step", "node": "present", "status": "started"}
+
+event: custom
+data: {"type": "step", "node": "present", "status": "done", "summary": "updated design", "duration_s": 0.8}
+
+event: updates
+data: {"present": {"scene": {"room": {"dimensions": {"width": 3.2, "length": 3.4, "height": 2.6}, "walls": [{"wall": "A", "color": "#f2efe9"}, {"wall": "B", "color": "#f2efe9"}, {"wall": "C", "color": "#f2efe9"}, {"wall": "D", "color": "#f2efe9"}], "floor_material": "oak", "features": [{"id": "door_1", "type": "door", "wall": "A", "offset": 0.75, "width": 0.8, "height": 2.1, "sill_height": 0.0, "swing": null, "hinge": null, "confidence": 0.95}, {"id": "window_1", "type": "window", "wall": "C", "offset": 0.5, "width": 1.0, "height": 1.3, "sill_height": 0.9, "swing": null, "hinge": null, "confidence": 0.9}, {"id": "radiator_1", "type": "radiator", "wall": "C", "offset": 0.5, "width": 0.8, "height": 0.6, "sill_height": 0.1, "swing": null, "hinge": null, "confidence": 0.7}], "kept_furniture": [{"id": "kept_1", "name": "wardrobe", "x": 0.3, "y": 0.9, "rotation": 270.0, "size": {"width": 1.0, "depth": 0.6, "height": 2.0}}], "warnings": ["Radiator width estimated from one photo"]}, "items": [{"node_id": "bed", "item_id": "oak-double-bed-140", "x": 2.2, "y": 2.25, "z": 0.0, "rotation": 90.0, "size": {"width": 1.4, "depth": 2.0, "height": 0.9}, "item": {"id": "oak-double-bed-140", "name": "Oak double bed 140", "category": "bed", "size": {"width": 1.4, "depth": 2.0, "height": 0.9}, "price": 449.0, "style_tags": ["scandinavian"], "color": "oak", "front": "+z", "glb_url": null, "license": "CC0-1.0", "url": null, "image_url": null, "description": "Solid oak frame"}}, {"node_id": "nightstand", "item_id": "oak-nightstand", "x": 3.025, "y": 3.2, "z": 0.0, "rotation": 90.0, "size": {"width": 0.4, "depth": 0.35, "height": 0.5}, "item": {"id": "oak-nightstand", "name": "Oak nightstand", "category": "nightstand", "size": {"width": 0.4, "depth": 0.35, "height": 0.5}, "price": 79.0, "style_tags": ["scandinavian"], "color": "oak", "front": "+z", "glb_url": null, "license": "CC0-1.0", "url": null, "image_url": null, "description": "One drawer"}}, {"node_id": "desk", "item_id": "birch-desk-100", "x": 0.25, "y": 2.7, "z": 0.0, "rotation": 270.0, "size": {"width": 1.0, "depth": 0.5, "height": 0.75}, "item": {"id": "birch-desk-100", "name": "Birch desk 100", "category": "desk", "size": {"width": 1.0, "depth": 0.5, "height": 0.75}, "price": 149.0, "style_tags": ["scandinavian"], "color": "birch", "front": "+z", "glb_url": null, "license": "CC0-1.0", "url": null, "image_url": null, "description": "Compact desk"}}, {"node_id": "desk_chair", "item_id": "white-desk-chair", "x": 0.8, "y": 2.7, "z": 0.0, "rotation": 90.0, "size": {"width": 0.45, "depth": 0.45, "height": 0.85}, "item": null}], "lights": [{"kind": "area", "window_id": "window_1", "intensity": 5.0}], "cameras": [{"photo_key": "fixtures/small-bedroom/photo-1.jpg", "position": [0.3, 1.5, -0.3], "quaternion": [0.0, -0.3827, 0.0, 0.9239], "fov": 60.0, "image_width": 640, "image_height": 480, "reprojection_error": 2.8}]}, "cost": 0.0}}
+
