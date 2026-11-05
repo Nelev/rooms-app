@@ -88,7 +88,7 @@ def stub_node(fn: Callable[[RunState], dict[str, Any]]) -> Callable[..., dict[st
         time.sleep(PACE * events[end].get("duration_s", 0))
         for event in events[start + 1 : end + 1]:
             write(event)
-        return {**update, "cost": events[end].get("cost", 0.0)}
+        return {"cost": events[end].get("cost", 0.0), **update}  # a real node's own usage wins over the fixture's
 
     return node
 
