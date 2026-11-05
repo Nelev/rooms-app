@@ -24,6 +24,7 @@ from langgraph.config import get_stream_writer
 from pydantic import Field
 
 from app import llm
+from app.graph import stub
 from app.graph.routing import flags
 from app.graph.state import RunState
 from app.graph.stub import ask, load, stub_node
@@ -227,7 +228,7 @@ replay = stub_node(_replay)
 
 def analyze_room(state: RunState, config: RunnableConfig) -> dict[str, Any]:
     """Read the room from the photos: RUNS readings voted, or one when the run has `analyst_mode` (the single-pass ablation)."""
-    if not os.environ.get("OPENROUTER_API_KEY"):
+    if not stub.live("analyze_room"):
         logger.warning("OPENROUTER_API_KEY is not set: analyze_room replays the fixture room")
         return replay(state)  # the stub graph: the fixture room
     write, start = get_stream_writer(), time.monotonic()

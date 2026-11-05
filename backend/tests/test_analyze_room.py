@@ -1,6 +1,5 @@
 """The Room Analyst, offline: the fake model replies readings of the E-01 cases' labeled rooms. The live test reads the real photos."""
 
-import os
 from collections.abc import Callable
 from typing import Any
 
@@ -143,7 +142,7 @@ def test_image_urls_reads_fixture_photos_only() -> None:
         image_urls(["fixtures/nope.jpg"])
 
 
-@pytest.mark.skipif(not os.environ.get("OPENROUTER_API_KEY"), reason="needs OPENROUTER_API_KEY: calls the real vision model")
+@pytest.mark.live
 def test_live_feature_scores() -> None:
     """Feature precision and recall of the real model on the E-01 cases (run with -s to see them); one analysis per photo set."""
     rooms: dict[tuple[str, ...], RoomSpec] = {}

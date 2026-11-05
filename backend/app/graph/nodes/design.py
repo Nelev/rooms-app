@@ -4,7 +4,6 @@ The model plans the design; code then makes sure that every must-have of the bri
 I-Design's main failure: objects other than the must-haves are dropped until the objects fit the free floor area.
 """
 
-import os
 import re
 from collections import Counter
 from functools import cache
@@ -13,6 +12,7 @@ from typing import Any
 
 from app import llm
 from app.catalog.loader import load_catalog
+from app.graph import stub
 from app.graph.state import RunState
 from app.graph.stub import ask, load, stub_node
 from app.schemas import Brief, DesignBrief, RoomSpec, coords
@@ -145,7 +145,7 @@ def plan(brief: Brief, room: RoomSpec) -> tuple[DesignBrief, llm.Usage]:
 
 @stub_node
 def design(state: RunState) -> dict[str, Any]:
-    if not os.environ.get("OPENROUTER_API_KEY"):  # the stub graph (`make dev-stub`, the graph and API tests): the fixture's design
+    if not stub.live("design"):  # the stub graph (`make dev-stub`, the graph and API tests): the fixture's design
         return {"design_brief": ask(DesignBrief, load("design_brief", DesignBrief)), "round": 1}
     design_brief, usage = plan(Brief.model_validate(state["brief"]), state["room_spec"])  # a graph input may be plain JSON
     return {"design_brief": design_brief, "round": 1, **usage}
