@@ -12,6 +12,7 @@ from app.graph.nodes.solve import kept, solve_scene, unmet_relations, validate
 from app.graph.routing import MAX_ROUNDS, keep_best
 from app.schemas import FallbackReport, Layout, SceneGraph, ValidationReport
 from app.schemas.coords import Size
+from app.schemas.design import SceneEdge
 from app.schemas.layout import Placement
 from tests.test_fallback import impossible_graph
 from tests.test_fixtures import CASES, case
@@ -47,7 +48,7 @@ def test_the_fixture_designs_are_accepted_in_one_round(name: str) -> None:
     critique, hard, soft = judge(state)  # type: ignore[arg-type]
     assert (critique.actions, hard, soft, critique.summary) == ([], 0, 0, "all rules pass")
     assert [r.rule for r in critique.rules] == [
-        *("graph_valid", "relations_kept", "no_collisions", "openings_clear", "reachable", "everything_fits"),
+        *("graph_valid", "relations_kept", "no_collisions", "openings_clear", "reachable", "everything_fits", "siblings_ordered"),
         *("desk_near_light", "bed_not_facing_door", "visual_balance"),
     ]
     assert state["fallback"] == FallbackReport(summary="Every item fits") and state["scene_graph"] == case(name)["scene_graph"]
@@ -89,17 +90,27 @@ def test_a_planted_blocked_door_is_sent_to_the_architect_and_fixed_in_the_next_r
     assert failed(solved("small-bedroom", round_=2)) == {}
 
 
-def test_unmet_relations_of_the_ambiguous_graph_go_to_the_architect_and_a_fix_keeps_them() -> None:
-    state = solved("living-room", graph=refine_graph(AMBIGUOUS))  # the Refiner's ordering edges, which the solver does not place by
-    unmet = [i for i in state["validation"].issues if i.code == "relation_unmet"]
-    assert unmet and {i.node_ids[0] for i in unmet} <= {"desk_lamp", "plant", "chair_2"}
-    critique, *_ = judge(state)  # type: ignore[arg-type]
-    assert {(a.target, a.node_id) for a in critique.actions if "is not right of" in a.instruction} == {
-        ("architect", i.node_ids[0]) for i in unmet
-    }
-    # the Architect's fix: the unmet relations dropped (the Refiner adds none back: the siblings are linked)
-    fixed = SceneGraph(nodes=AMBIGUOUS.nodes, edges=[e for e in refine_graph(AMBIGUOUS).edges if e.relation != "right_of"])
-    assert "relations_kept" not in failed(solved("living-room", round_=2, graph=fixed))
+@pytest.mark.parametrize("round_", range(1, MAX_ROUNDS + 1))
+def test_unmet_sibling_ordering_edges_are_soft_and_ask_for_nothing(round_: int) -> None:
+    state = solved("living-room", round_=round_, graph=refine_graph(AMBIGUOUS))  # the Refiner's edges, which the solver does not place by
+    unmet = [i.message for i in state["validation"].issues if i.code == "relation_unmet"]
+    assert unmet and {m.split()[0] for m in unmet} <= {"desk_lamp", "plant", "chair_2"}
+    critique, hard, soft = judge(state)  # type: ignore[arg-type]
+    assert failed(state)["siblings_ordered"] == "; ".join(unmet) and "relations_kept" not in failed(state)
+    assert hard == 0 and soft >= 1
+    # the only actions left are soft-rule ones (here visual_balance), none for the ordering edges
+    soft_rules = ("desk_near_light", "bed_not_facing_door", "visual_balance")
+    assert len(critique.actions) == sum(bool(failed(state).get(r)) for r in soft_rules)
+    assert not any("is not right of" in a.instruction for a in critique.actions)
+
+
+def test_a_non_ordering_unmet_relation_stays_hard_and_goes_to_the_architect() -> None:
+    graph = refine_graph(AMBIGUOUS)
+    graph = graph.model_copy(update={"edges": [*graph.edges, SceneEdge(source="plant", relation="in_front", target="table")]})
+    state = solved("living-room", graph=graph)
+    critique, hard, _ = judge(state)  # type: ignore[arg-type]
+    assert failed(state)["relations_kept"] == "plant is not in front table in the layout" and hard == 1
+    assert [(a.target, a.node_id) for a in critique.actions if "is not in front" in a.instruction] == [("architect", "plant")]
 
 
 def test_the_impossible_brief_is_explained_and_the_sourcer_asked_for_smaller_items() -> None:
