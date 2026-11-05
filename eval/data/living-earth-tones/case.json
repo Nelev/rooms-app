@@ -1,0 +1,31 @@
+{
+  "photo_keys": [
+    "fixtures/living-room/photo-1.jpg",
+    "fixtures/living-room/photo-2.jpg"
+  ],
+  "dimensions": {
+    "width": 4.5,
+    "length": 5.0,
+    "height": 2.7
+  },
+  "room_spec": "fixtures/living-room/room_spec.json",
+  "brief": {
+    "room_use": "living room",
+    "styles": [
+      "bohemian"
+    ],
+    "budget": 2500,
+    "must_haves": [
+      "sofa",
+      "coffee table",
+      "rug",
+      "armchair"
+    ],
+    "keep": [
+      "bookcase"
+    ],
+    "remove": [],
+    "notes": "Earth tones (terracotta, ochre, rust) and natural fibers"
+  },
+  "category": "color_scheme"
+}

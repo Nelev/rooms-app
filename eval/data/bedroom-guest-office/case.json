@@ -1,0 +1,30 @@
+{
+  "photo_keys": [
+    "fixtures/small-bedroom/photo-1.jpg",
+    "fixtures/small-bedroom/photo-2.jpg"
+  ],
+  "dimensions": {
+    "width": 3.2,
+    "length": 3.4,
+    "height": 2.6
+  },
+  "room_spec": "fixtures/small-bedroom/room_spec.json",
+  "brief": {
+    "room_use": "guest room and office",
+    "styles": [
+      "modern"
+    ],
+    "budget": 1400,
+    "must_haves": [
+      "sofa bed",
+      "desk",
+      "desk chair"
+    ],
+    "keep": [
+      "wardrobe"
+    ],
+    "remove": [],
+    "notes": "Guests stay a few nights a month; the rest of the time it is my office"
+  },
+  "category": "functionality"
+}

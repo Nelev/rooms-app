@@ -14,7 +14,7 @@ from app.api.uploads import MAX_UPLOAD_BYTES
 from app.graph.graph import build_graph
 from app.graph.stub import fixture
 from app.main import app
-from app.schemas import CameraPose, CatalogItem, ConfirmRoom, Layout, LayoutDiff, Scene
+from app.schemas import CatalogItem, ConfirmRoom, Layout, LayoutDiff, Scene
 from app.schemas.run import NodeName
 
 PARTS = TypeAdapter(list[StreamPart])
@@ -77,10 +77,6 @@ def test_design_run_interrupt_resume_and_chat(client: TestClient) -> None:
     assert state["values"]["scene"] == as_sent(Scene, fixture("scene"))
     assert state["values"]["cost"] == pytest.approx(sum(e.get("cost", 0) for e in events["first_run"] + events["resumed_run"]))
 
-    pose = client.post(f"{url}/camera-pose", json=fixture("camera_pose")).json()
-    assert as_sent(CameraPose, fixture("camera_pose")) in pose["cameras"]
-    assert client.get(f"{url}/state").json()["values"]["scene"] == pose
-
     for turn in chat:  # an applied edit, then a refused one
         parts = stream(client, f"{url}/runs/stream", {"input": turn["input"]})
         assert custom(parts) == turn["events"]
@@ -114,10 +110,9 @@ def test_errors(client: TestClient) -> None:
     assert client.get(f"{url}/runs/current/stream").status_code == 404
     assert client.post(f"{url}/runs/stream", json={}).status_code == 422
     assert client.post(f"{url}/runs/stream", json={"command": {"resume": fixture("room_spec")}}).status_code == 409
-    assert client.post(f"{url}/camera-pose", json=fixture("camera_pose")).status_code == 409
 
 
-def test_catalog_upload_and_camera_pose(client: TestClient) -> None:
+def test_catalog_and_upload(client: TestClient) -> None:
     item = fixture("scene")["items"][0]["item"]
     assert client.get(f"/catalog/items/{item['id']}").json() == as_sent(CatalogItem, item)
     assert client.get("/catalog/items/nope").status_code == 404

@@ -1,0 +1,252 @@
+[
+  {
+    "id": "ash-nightstand",
+    "name": "Light ash nightstand",
+    "category": "nightstand",
+    "size": {
+      "width": 0.4,
+      "depth": 0.35,
+      "height": 0.5
+    },
+    "price": 89.0,
+    "style_tags": [
+      "japandi",
+      "minimalist"
+    ],
+    "color": "ash",
+    "front": "+z",
+    "description": "One drawer"
+  },
+  {
+    "id": "ash-nightstand-2",
+    "name": "Light ash two-drawer nightstand",
+    "category": "nightstand",
+    "size": {
+      "width": 0.45,
+      "depth": 0.38,
+      "height": 0.6
+    },
+    "price": 129.0,
+    "style_tags": [
+      "japandi",
+      "minimalist"
+    ],
+    "color": "ash",
+    "front": "+z",
+    "description": "Two drawers"
+  },
+  {
+    "id": "black-nightstand",
+    "name": "Black steel nightstand",
+    "category": "nightstand",
+    "size": {
+      "width": 0.4,
+      "depth": 0.35,
+      "height": 0.5
+    },
+    "price": 79.0,
+    "style_tags": [
+      "industrial",
+      "modern"
+    ],
+    "color": "black",
+    "front": "+z",
+    "description": "One drawer"
+  },
+  {
+    "id": "black-nightstand-2",
+    "name": "Black steel two-drawer nightstand",
+    "category": "nightstand",
+    "size": {
+      "width": 0.45,
+      "depth": 0.38,
+      "height": 0.6
+    },
+    "price": 99.0,
+    "style_tags": [
+      "industrial",
+      "modern"
+    ],
+    "color": "black",
+    "front": "+z",
+    "description": "Two drawers"
+  },
+  {
+    "id": "oak-nightstand",
+    "name": "Oak nightstand",
+    "category": "nightstand",
+    "size": {
+      "width": 0.4,
+      "depth": 0.35,
+      "height": 0.5
+    },
+    "price": 79.0,
+    "style_tags": [
+      "scandinavian"
+    ],
+    "color": "oak",
+    "front": "+z",
+    "license": "CC0-1.0",
+    "description": "One drawer"
+  },
+  {
+    "id": "oak-nightstand-2",
+    "name": "Oak two-drawer nightstand",
+    "category": "nightstand",
+    "size": {
+      "width": 0.45,
+      "depth": 0.38,
+      "height": 0.6
+    },
+    "price": 109.0,
+    "style_tags": [
+      "scandinavian",
+      "japandi"
+    ],
+    "color": "oak",
+    "front": "+z",
+    "description": "Two drawers"
+  },
+  {
+    "id": "pine-nightstand",
+    "name": "Solid pine nightstand",
+    "category": "nightstand",
+    "size": {
+      "width": 0.4,
+      "depth": 0.35,
+      "height": 0.5
+    },
+    "price": 59.0,
+    "style_tags": [
+      "traditional",
+      "scandinavian"
+    ],
+    "color": "pine",
+    "front": "+z",
+    "description": "One drawer"
+  },
+  {
+    "id": "pine-nightstand-2",
+    "name": "Solid pine two-drawer nightstand",
+    "category": "nightstand",
+    "size": {
+      "width": 0.45,
+      "depth": 0.38,
+      "height": 0.6
+    },
+    "price": 89.0,
+    "style_tags": [
+      "traditional",
+      "scandinavian"
+    ],
+    "color": "pine",
+    "front": "+z",
+    "description": "Two drawers"
+  },
+  {
+    "id": "rattan-nightstand",
+    "name": "Rattan nightstand",
+    "category": "nightstand",
+    "size": {
+      "width": 0.4,
+      "depth": 0.35,
+      "height": 0.5
+    },
+    "price": 79.0,
+    "style_tags": [
+      "boho"
+    ],
+    "color": "natural",
+    "front": "+z",
+    "description": "One drawer"
+  },
+  {
+    "id": "rattan-nightstand-2",
+    "name": "Rattan two-drawer nightstand",
+    "category": "nightstand",
+    "size": {
+      "width": 0.45,
+      "depth": 0.38,
+      "height": 0.6
+    },
+    "price": 109.0,
+    "style_tags": [
+      "boho"
+    ],
+    "color": "natural",
+    "front": "+z",
+    "description": "Two drawers"
+  },
+  {
+    "id": "walnut-nightstand",
+    "name": "Walnut nightstand",
+    "category": "nightstand",
+    "size": {
+      "width": 0.4,
+      "depth": 0.35,
+      "height": 0.5
+    },
+    "price": 109.0,
+    "style_tags": [
+      "mid-century"
+    ],
+    "color": "walnut",
+    "front": "+z",
+    "description": "One drawer"
+  },
+  {
+    "id": "walnut-nightstand-2",
+    "name": "Walnut two-drawer nightstand",
+    "category": "nightstand",
+    "size": {
+      "width": 0.45,
+      "depth": 0.38,
+      "height": 0.6
+    },
+    "price": 149.0,
+    "style_tags": [
+      "mid-century"
+    ],
+    "color": "walnut",
+    "front": "+z",
+    "description": "Two drawers"
+  },
+  {
+    "id": "white-nightstand",
+    "name": "White lacquered nightstand",
+    "category": "nightstand",
+    "size": {
+      "width": 0.4,
+      "depth": 0.35,
+      "height": 0.5
+    },
+    "price": 69.0,
+    "style_tags": [
+      "modern",
+      "minimalist",
+      "scandinavian"
+    ],
+    "color": "white",
+    "front": "+z",
+    "description": "One drawer"
+  },
+  {
+    "id": "white-nightstand-2",
+    "name": "White lacquered two-drawer nightstand",
+    "category": "nightstand",
+    "size": {
+      "width": 0.45,
+      "depth": 0.38,
+      "height": 0.6
+    },
+    "price": 89.0,
+    "style_tags": [
+      "modern",
+      "minimalist",
+      "scandinavian"
+    ],
+    "color": "white",
+    "front": "+z",
+    "description": "Two drawers"
+  }
+]

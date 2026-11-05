@@ -1,0 +1,31 @@
+{
+  "photo_keys": [
+    "fixtures/home-office/photo-1.jpg"
+  ],
+  "dimensions": {
+    "width": 3.0,
+    "length": 3.0,
+    "height": 2.7
+  },
+  "room_spec": "fixtures/home-office/room_spec.json",
+  "brief": {
+    "room_use": "home office",
+    "styles": [
+      "rustic"
+    ],
+    "budget": 1300,
+    "must_haves": [
+      "desk",
+      "office chair",
+      "armchair"
+    ],
+    "keep": [
+      "filing cabinet"
+    ],
+    "remove": [
+      "old sofa"
+    ],
+    "notes": "Cozy like a cabin study: wood, wool and warm lamps"
+  },
+  "category": "atmosphere"
+}

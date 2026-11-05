@@ -1,0 +1,30 @@
+{
+  "photo_keys": [
+    "fixtures/living-room/photo-1.jpg",
+    "fixtures/living-room/photo-2.jpg"
+  ],
+  "dimensions": {
+    "width": 4.5,
+    "length": 5.0,
+    "height": 2.7
+  },
+  "room_spec": "fixtures/living-room/room_spec.json",
+  "brief": {
+    "room_use": "living room",
+    "styles": [
+      "mid-century"
+    ],
+    "budget": 2500,
+    "must_haves": [
+      "two sofas",
+      "coffee table",
+      "armchair"
+    ],
+    "keep": [
+      "bookcase"
+    ],
+    "remove": [],
+    "notes": "Seats facing each other around the coffee table for conversation; no TV"
+  },
+  "category": "layout"
+}

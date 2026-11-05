@@ -1,0 +1,271 @@
+[
+  {
+    "id": "black-bookshelf-80",
+    "name": "Black steel bookshelf",
+    "category": "shelf",
+    "size": {
+      "width": 0.8,
+      "depth": 0.3,
+      "height": 1.8
+    },
+    "price": 89.0,
+    "style_tags": [
+      "industrial",
+      "modern"
+    ],
+    "color": "black",
+    "front": "+z",
+    "description": "Five shelves"
+  },
+  {
+    "id": "black-cube-shelf",
+    "name": "Black steel cube shelf",
+    "category": "shelf",
+    "size": {
+      "width": 0.77,
+      "depth": 0.39,
+      "height": 1.47
+    },
+    "price": 79.0,
+    "style_tags": [
+      "industrial",
+      "modern"
+    ],
+    "color": "black",
+    "front": "+z",
+    "description": "Eight cubes"
+  },
+  {
+    "id": "black-ladder-shelf",
+    "name": "Black steel ladder shelf",
+    "category": "shelf",
+    "size": {
+      "width": 0.6,
+      "depth": 0.35,
+      "height": 1.8
+    },
+    "price": 79.0,
+    "style_tags": [
+      "industrial",
+      "modern"
+    ],
+    "color": "black",
+    "front": "+z",
+    "description": "Leaning shelf with four tiers"
+  },
+  {
+    "id": "oak-bookshelf-80",
+    "name": "Oak bookshelf",
+    "category": "shelf",
+    "size": {
+      "width": 0.8,
+      "depth": 0.3,
+      "height": 1.8
+    },
+    "price": 99.0,
+    "style_tags": [
+      "scandinavian",
+      "japandi"
+    ],
+    "color": "oak",
+    "front": "+z",
+    "description": "Five shelves"
+  },
+  {
+    "id": "oak-cube-shelf",
+    "name": "Oak cube shelf",
+    "category": "shelf",
+    "size": {
+      "width": 0.77,
+      "depth": 0.39,
+      "height": 1.47
+    },
+    "price": 89.0,
+    "style_tags": [
+      "scandinavian",
+      "japandi"
+    ],
+    "color": "oak",
+    "front": "+z",
+    "description": "Eight cubes"
+  },
+  {
+    "id": "oak-ladder-shelf",
+    "name": "Oak ladder shelf",
+    "category": "shelf",
+    "size": {
+      "width": 0.6,
+      "depth": 0.35,
+      "height": 1.8
+    },
+    "price": 79.0,
+    "style_tags": [
+      "scandinavian",
+      "japandi"
+    ],
+    "color": "oak",
+    "front": "+z",
+    "description": "Leaning shelf with four tiers"
+  },
+  {
+    "id": "pine-bookshelf-80",
+    "name": "Solid pine bookshelf",
+    "category": "shelf",
+    "size": {
+      "width": 0.8,
+      "depth": 0.3,
+      "height": 1.8
+    },
+    "price": 79.0,
+    "style_tags": [
+      "traditional",
+      "scandinavian"
+    ],
+    "color": "pine",
+    "front": "+z",
+    "description": "Five shelves"
+  },
+  {
+    "id": "pine-cube-shelf",
+    "name": "Solid pine cube shelf",
+    "category": "shelf",
+    "size": {
+      "width": 0.77,
+      "depth": 0.39,
+      "height": 1.47
+    },
+    "price": 69.0,
+    "style_tags": [
+      "traditional",
+      "scandinavian"
+    ],
+    "color": "pine",
+    "front": "+z",
+    "description": "Eight cubes"
+  },
+  {
+    "id": "pine-ladder-shelf",
+    "name": "Solid pine ladder shelf",
+    "category": "shelf",
+    "size": {
+      "width": 0.6,
+      "depth": 0.35,
+      "height": 1.8
+    },
+    "price": 59.0,
+    "style_tags": [
+      "traditional",
+      "scandinavian"
+    ],
+    "color": "pine",
+    "front": "+z",
+    "description": "Leaning shelf with four tiers"
+  },
+  {
+    "id": "walnut-bookshelf-80",
+    "name": "Walnut bookshelf",
+    "category": "shelf",
+    "size": {
+      "width": 0.8,
+      "depth": 0.3,
+      "height": 1.8
+    },
+    "price": 129.0,
+    "style_tags": [
+      "mid-century"
+    ],
+    "color": "walnut",
+    "front": "+z",
+    "description": "Five shelves"
+  },
+  {
+    "id": "walnut-cube-shelf",
+    "name": "Walnut cube shelf",
+    "category": "shelf",
+    "size": {
+      "width": 0.77,
+      "depth": 0.39,
+      "height": 1.47
+    },
+    "price": 119.0,
+    "style_tags": [
+      "mid-century"
+    ],
+    "color": "walnut",
+    "front": "+z",
+    "description": "Eight cubes"
+  },
+  {
+    "id": "walnut-ladder-shelf",
+    "name": "Walnut ladder shelf",
+    "category": "shelf",
+    "size": {
+      "width": 0.6,
+      "depth": 0.35,
+      "height": 1.8
+    },
+    "price": 109.0,
+    "style_tags": [
+      "mid-century"
+    ],
+    "color": "walnut",
+    "front": "+z",
+    "description": "Leaning shelf with four tiers"
+  },
+  {
+    "id": "white-bookshelf-80",
+    "name": "White bookshelf 80",
+    "category": "shelf",
+    "size": {
+      "width": 0.8,
+      "depth": 0.35,
+      "height": 1.8
+    },
+    "price": 99.0,
+    "style_tags": [
+      "modern"
+    ],
+    "color": "white",
+    "front": "+z",
+    "license": "CC0-1.0",
+    "description": "Five shelves"
+  },
+  {
+    "id": "white-cube-shelf",
+    "name": "White lacquered cube shelf",
+    "category": "shelf",
+    "size": {
+      "width": 0.77,
+      "depth": 0.39,
+      "height": 1.47
+    },
+    "price": 79.0,
+    "style_tags": [
+      "modern",
+      "minimalist",
+      "scandinavian"
+    ],
+    "color": "white",
+    "front": "+z",
+    "description": "Eight cubes"
+  },
+  {
+    "id": "white-ladder-shelf",
+    "name": "White lacquered ladder shelf",
+    "category": "shelf",
+    "size": {
+      "width": 0.6,
+      "depth": 0.35,
+      "height": 1.8
+    },
+    "price": 69.0,
+    "style_tags": [
+      "modern",
+      "minimalist",
+      "scandinavian"
+    ],
+    "color": "white",
+    "front": "+z",
+    "description": "Leaning shelf with four tiers"
+  }
+]

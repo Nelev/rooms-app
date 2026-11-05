@@ -1,0 +1,30 @@
+{
+  "photo_keys": [
+    "fixtures/living-room/photo-1.jpg",
+    "fixtures/living-room/photo-2.jpg"
+  ],
+  "dimensions": {
+    "width": 4.5,
+    "length": 5.0,
+    "height": 2.7
+  },
+  "room_spec": "fixtures/living-room/room_spec.json",
+  "brief": {
+    "room_use": "living room",
+    "styles": [
+      "mid-century"
+    ],
+    "budget": 2800,
+    "must_haves": [
+      "sectional sofa",
+      "tv stand",
+      "side table"
+    ],
+    "keep": [
+      "bookcase"
+    ],
+    "remove": [],
+    "notes": "A cozy cinema for movie nights with soft, dimmable lighting"
+  },
+  "category": "atmosphere"
+}

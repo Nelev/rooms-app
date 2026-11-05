@@ -1,0 +1,30 @@
+{
+  "photo_keys": [
+    "fixtures/small-bedroom/photo-1.jpg",
+    "fixtures/small-bedroom/photo-2.jpg"
+  ],
+  "dimensions": {
+    "width": 3.2,
+    "length": 3.4,
+    "height": 2.6
+  },
+  "room_spec": "fixtures/small-bedroom/room_spec.json",
+  "brief": {
+    "room_use": "bedroom",
+    "styles": [
+      "scandinavian"
+    ],
+    "budget": 1000,
+    "must_haves": [
+      "double bed",
+      "chest of drawers",
+      "nightstand"
+    ],
+    "keep": [
+      "wardrobe"
+    ],
+    "remove": [],
+    "notes": "Too many clothes for the wardrobe alone: more storage without losing floor space"
+  },
+  "category": "functionality"
+}
