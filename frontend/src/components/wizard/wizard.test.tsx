@@ -142,7 +142,7 @@ describe("Wizard", () => {
     await waitFor(() => expect(push).toHaveBeenCalledWith(`/projects/${api.thread.thread_id}`), { timeout: 5000 });
   });
 
-  it("reuses the project when its run failed to start", async () => {
+  it("reuses the project and the uploaded photos when its run failed to start", async () => {
     runs = () => json({ detail: "Run failed" }, 500);
     render(<Wizard />);
     await fillUpToBrief();
@@ -154,5 +154,6 @@ describe("Wizard", () => {
     fireEvent.click(screen.getByRole("button", { name: "Design my room" }));
     await waitFor(() => expect(push).toHaveBeenCalledWith(`/projects/${api.thread.thread_id}`), { timeout: 5000 });
     expect(calls("POST /threads")).toHaveLength(1);
+    expect(calls("POST /uploads")).toHaveLength(1);
   });
 });
