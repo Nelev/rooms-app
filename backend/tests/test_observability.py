@@ -24,20 +24,26 @@ class State(TypedDict, total=False):
     text: str
 
 
-def reply(cost: float, tokens: int) -> AIMessage:
-    """A model reply as OpenRouter gives it: tokens in usage_metadata, the cost charged in token_usage."""
+def reply(cost: float | None, tokens: int) -> AIMessage:
+    """A model reply as OpenRouter gives it: tokens in usage_metadata, the cost charged in token_usage (none when
+    streamed)."""
     usage = {"input_tokens": tokens, "output_tokens": 1, "total_tokens": tokens + 1}
-    return AIMessage("ok", usage_metadata=usage, response_metadata={"token_usage": {"cost": cost}})
+    return AIMessage("ok", usage_metadata=usage, response_metadata={} if cost is None else {"token_usage": {"cost": cost}})
 
 
-def two_node_graph() -> Any:
-    model = FakeMessagesListChatModel(responses=[reply(0.01, 10), reply(0.02, 20)])
+def two_node_graph(replies: list[AIMessage]) -> Any:
+    """`first` makes one model call, `second` two (the last one streamed); `replies` collects what the nodes get back."""
+    model = FakeMessagesListChatModel(responses=[reply(0.01, 10), reply(0.02, 20), reply(None, 30)])
+
+    def call(prompt: str) -> str:
+        replies.append(model.invoke(prompt))  # type: ignore[arg-type]
+        return str(replies[-1].content)
 
     def first(state: State) -> State:
-        return {"text": str(model.invoke("first").content)}
+        return {"text": call("first")}
 
     def second(state: State) -> State:
-        return {"text": str(model.invoke("second").content)}
+        return {"text": call("second") + call("second, streamed")}
 
     builder = StateGraph(State)
     builder.add_node(first)
@@ -51,8 +57,9 @@ def test_a_run_is_one_trace_with_nested_node_spans_and_costs() -> None:
     client = MagicMock(spec=Client)
     run_id = uuid4()
     config = traced({"configurable": {"thread_id": "t1", "no_critic": True}}, run_id)
+    replies: list[AIMessage] = []
     with tracing_v2_enabled(client=client):
-        two_node_graph().invoke({}, config)
+        two_node_graph(replies).invoke({}, config)
     wait_for_all_tracers()
 
     runs = {c.kwargs["id"]: c.kwargs for c in client.create_run.call_args_list}
@@ -68,9 +75,13 @@ def test_a_run_is_one_trace_with_nested_node_spans_and_costs() -> None:
     nodes = {r["name"]: r for r in runs.values() if r.get("parent_run_id") == run_id and r["name"] in ("first", "second")}
     assert set(nodes) == {"first", "second"}
     llm_runs = [r for r in runs.values() if r["run_type"] == "llm"]
-    usage = {runs[r["parent_run_id"]]["name"]: r["extra"]["metadata"]["usage_metadata"] for r in llm_runs}
-    assert usage["first"]["input_tokens"] == 10 and usage["first"]["total_cost"] == 0.01
-    assert usage["second"]["input_tokens"] == 20 and usage["second"]["total_cost"] == 0.02
+    usage = [(r["extra"]["metadata"]["usage_metadata"], runs[r["parent_run_id"]]["name"]) for r in llm_runs]
+    assert sorted((u["input_tokens"], u.get("total_cost"), node) for u, node in usage) == [
+        (10, 0.01, "first"),
+        (20, 0.02, "second"),
+        (30, None, "second"),  # streamed: no provider cost, LangSmith prices it from its model table
+    ]
+    assert all("total_cost" not in r.usage_metadata for r in replies)  # type: ignore[operator]  # graph state stays clean
 
 
 def test_requests_get_an_id_on_their_json_logs() -> None:
