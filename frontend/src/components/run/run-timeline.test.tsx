@@ -2,7 +2,8 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { useLayoutEffect } from "react";
+import { afterEach, beforeEach, describe, expect, it, onTestFinished, vi } from "vitest";
 import { RunTimeline } from "@/components/run/run-timeline";
 import { historySteps, liveSteps } from "@/components/run/steps";
 import type { RunCreate } from "@/lib/api";
@@ -19,10 +20,14 @@ const design = {
 let api: ReturnType<typeof stubApi>;
 let run: ReturnType<typeof useRunStream>;
 
-// the page: it streams the run and shows it
+// the page: it streams the run and shows it. `run` is the committed state: a transition may have rendered but not committed yet,
+// and a test that went on from that render would click a button that is still disabled
 function Page() {
-  run = useRunStream(api.thread.thread_id);
-  return <RunTimeline run={run} />;
+  const stream = useRunStream(api.thread.thread_id);
+  useLayoutEffect(() => {
+    run = stream;
+  });
+  return <RunTimeline run={stream} />;
 }
 
 beforeEach(() => {
@@ -125,11 +130,19 @@ describe("RunTimeline", () => {
       });
       return new Response(body);
     });
+    // Retry the moment the alert shows: the alert must already have the run's id, for Retry to rejoin the run, not start it again
+    const { promise: alert, resolve } = Promise.withResolvers<string | null>();
+    const observer = new MutationObserver(() => {
+      const retry = screen.queryByRole("button", { name: "Retry" });
+      if (!retry) return;
+      observer.disconnect();
+      resolve(screen.getByRole("alert").textContent);
+      fireEvent.click(retry);
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+    onTestFinished(() => observer.disconnect());
     run.submit(design);
-    expect((await screen.findByRole("alert")).textContent).toContain("the connection to the server was lost");
-    expect(run.runId).toBeTruthy();
-
-    fireEvent.click(screen.getByRole("button", { name: "Retry" }));
+    expect(await alert).toContain("the connection to the server was lost");
     await screen.findByRole("button", { name: "Confirm room" });
     expect(screen.queryByRole("alert")).toBeNull();
     const posts = vi.mocked(fetch).mock.calls.filter(([, init]) => init?.method === "POST");
