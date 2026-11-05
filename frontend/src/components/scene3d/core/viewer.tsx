@@ -78,7 +78,7 @@ class Fallback extends Component<{ fallback: ReactNode; children: ReactNode }, {
   }
 }
 
-function Item({ item }: { item: Scene["items"][number] }) {
+export function Item({ item }: { item: Scene["items"][number] }) {
   const { position, rotation } = itemPose(item);
   const box = <Box size={item.size} />;
   const url = item.item?.glb_url;
