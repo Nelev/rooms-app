@@ -12,11 +12,11 @@ from functools import cache, wraps
 from pathlib import Path
 from typing import Any
 
-from langchain_core.language_models.fake_chat_models import GenericFakeChatModel
 from langgraph.config import get_stream_writer
 from pydantic import TypeAdapter
 
 from app.graph.state import RunState
+from app.llm.fake import FakeLLM
 from app.schemas import CatalogItem, Scene
 
 CASE = Path(__file__).resolve().parents[3] / "fixtures" / "small-bedroom"
@@ -37,9 +37,9 @@ def load[T](name: str, type_: type[T]) -> T:
 
 
 def ask[T](type_: Any, value: T) -> T:
-    """`value` as a model would return it: the fake model replies with its JSON, so the run streams real message tokens."""
+    """`value` as a model would return it: the fake model replies with its JSON, so the run streams a real model message."""
     adapter = TypeAdapter[T](type_)
-    reply = GenericFakeChatModel(messages=iter([adapter.dump_json(value).decode()])).invoke("")
+    reply = FakeLLM(adapter.dump_json(value).decode()).invoke("")
     return adapter.validate_json(str(reply.content))
 
 
