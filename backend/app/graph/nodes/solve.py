@@ -30,6 +30,7 @@ from app.graph.stub import chat_turn, stub_node
 from app.schemas import Layout, RoomSpec, RunOutput, SceneGraph, ValidationReport
 from app.schemas.layout import Placement, ValidationIssue
 
+BUDGET = 30.0  # s, the user-facing worst case: a safety net only, the step limit decides (impossible brief: 2-3 s idle)
 WALKWAY = 0.6  # m, the narrowest walkway a person passes through (as eval/metrics/layout.py)
 TOL = 0.05  # m a placement may miss its relation's box by and still keep it (the solver rounds positions to 1 mm)
 
@@ -95,7 +96,7 @@ def validate(graph: SceneGraph, spec: RoomSpec, layout: Layout) -> ValidationRep
 def solve_scene(state: RunState) -> dict[str, Any]:
     """The run's layout, its fallback report and validation, and the scene graph and candidates with the resized items applied."""
     graph, spec = state["scene_graph"], state["room_spec"]
-    layout, report = solve_with_fallback(graph, spec, seed=state.get("round", 1))  # B-12's time caps: a safety net only
+    layout, report = solve_with_fallback(graph, spec, seed=state.get("round", 1), budget=BUDGET)
     placed = {p.node_id: p for p in layout.placements}
     candidates = dict(state.get("candidates", {}))
     nodes = []
