@@ -69,6 +69,8 @@ it("tells a chat edit from a design run and an undo", () => {
   expect(chatEdit(edited, refused)).toBeUndefined(); // a refused edit changes nothing: nothing to undo
   expect(chatEdit(edited, done)).toBeUndefined(); // the undo
   expect(chatEdit(api.states[1], done)).toBeUndefined(); // the design run
+  // the chat's history is append-only: a state with a diff but no new message is not a chat edit
+  expect(chatEdit(done, { ...edited, values: { ...edited.values, messages: done.values.messages } })).toBeUndefined();
 });
 
 it("updates the plan, the results and the 3D view together from the fixture diff, highlights it for a while, and undoes it", async () => {

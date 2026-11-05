@@ -12,6 +12,8 @@ type LayoutDiff = components["schemas"]["LayoutDiff"];
 
 // The layout diff of a chat turn that changed the design, going from one state of the thread to the next; nothing when the change is
 // not a chat edit: a design run or an undo (neither adds to the chat's history), or a refused edit (an empty diff).
+// This relies on the thread's `messages` being append-only (`Annotated[list[ChatEntry], operator.add]` in backend/app/graph/state.py):
+// every chat turn adds to it, only a revert shortens it, and no run rewrites it at the same length. If that changes, so must this.
 export function chatEdit(before: ThreadState, after: ThreadState): LayoutDiff | undefined {
   const diff = after.values.layout_diff;
   if ((after.values.messages?.length ?? 0) <= (before.values.messages?.length ?? 0)) return;
@@ -32,7 +34,9 @@ function useWorkspaceStore(threadId: string) {
   const [undoing, setUndoing] = useState(false);
   const [undoError, setUndoError] = useState<ApiError>();
 
-  // a new state of the thread: a chat edit can be undone, and its items are highlighted
+  // a new state of the thread: a chat edit can be undone, and its items are highlighted. Set while rendering, as React advises for
+  // state derived from a change (react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes): the checkpoint
+  // guard makes it run once per state, and the views never draw the new layout without its highlight.
   const state = thread.data;
   if (state && state.checkpoint_id !== sync.seen?.checkpoint_id) {
     const diff = sync.seen && chatEdit(sync.seen, state);
