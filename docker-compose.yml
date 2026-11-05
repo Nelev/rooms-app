@@ -1,0 +1,41 @@
+# The whole stack: Postgres with pgvector, the API and the frontend. `docker compose up -d --build`, then open http://localhost:3000.
+# The API reads the root .env (copy .env.example); DATABASE_URL is set here, for the db service.
+# `docker compose up -d db` alone starts just the database, for running the API and the frontend from source (`make dev`).
+services:
+  db:
+    image: pgvector/pgvector:pg17
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: rooms
+    ports:
+      - "127.0.0.1:${DB_PORT:-5432}:5432"  # the password is the development default: this machine only
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    env_file:
+      - path: ./.env
+        required: false
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/rooms
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    depends_on:
+      - backend
+
+volumes:
+  db-data:
