@@ -1,0 +1,53 @@
+name: Frontend
+
+on:
+  push:
+    branches: [main]
+    paths: ["frontend/**", ".github/workflows/frontend.yml"]
+  pull_request: # any base branch: PRs are stacked on their dependency's branch
+    paths: ["frontend/**", ".github/workflows/frontend.yml"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: frontend-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: frontend
+
+jobs:
+  ci:
+    name: Frontend
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
+        with:
+          package_json_file: frontend/package.json # the version comes from its packageManager field
+          cache: true
+          cache_dependency_path: frontend/pnpm-lock.yaml
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Format
+        run: pnpm format:check
+
+      - name: Lint
+        run: pnpm lint
+
+      # next build also type-checks (tsc needs the next-env.d.ts that it generates, and that file is gitignored).
+      - name: Build
+        run: pnpm build
+
+      - name: Test
+        run: pnpm test

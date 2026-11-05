@@ -1,0 +1,15 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true, "root": ".." },
+  "files": {
+    "includes": ["**", "!src/components/ui", "!src/app/globals.css", "!tsconfig.json", "!next-env.d.ts"]
+  },
+  "formatter": { "indentStyle": "space", "indentWidth": 2, "lineWidth": 150 },
+  "javascript": { "formatter": { "quoteStyle": "double", "trailingCommas": "all" } },
+  "linter": {
+    "enabled": true,
+    "rules": { "preset": "recommended" },
+    "domains": { "next": "recommended", "react": "recommended" }
+  },
+  "assist": { "actions": { "source": { "organizeImports": "on" } } }
+}
