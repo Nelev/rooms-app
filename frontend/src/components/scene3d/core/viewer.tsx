@@ -122,22 +122,28 @@ function Camera({ view, scene }: { view: View; scene: Scene }) {
 export function Viewer({ scene }: { scene: Scene }) {
   const [view, setView] = useState<View>("orbit");
   const credits = scene.items.flatMap(({ item }) => (item?.glb_url ? [`${item.name}: ${item.description}`] : []));
+  // a photo's view is letterboxed to the photo's aspect, so its vertical fov frames the scene as the photo does
+  const pose = typeof view === "number" ? scene.cameras[view] : undefined;
+  const aspect = pose && pose.image_width / pose.image_height;
+  const frame = aspect ? { width: `min(100cqw, ${100 * aspect}cqh)`, height: `min(100cqh, ${100 / aspect}cqw)` } : undefined;
   return (
-    <div className="relative size-full min-h-80">
-      <Canvas frameloop="demand" aria-label="3D view of the design">
-        <Camera view={view} scene={scene} />
-        <hemisphereLight args={["#ffffff", "#b5a48c", 1.5]} />
-        <directionalLight position={toThree(scene.room.dimensions.width, -scene.room.dimensions.length, 6)} intensity={1.5} />
-        <Room room={scene.room} />
-        {scene.items.map((item) => (
-          <Item key={item.node_id} item={item} />
-        ))}
-        {scene.room.kept_furniture.map((kept) => (
-          <group key={kept.id} {...itemPose(kept)}>
-            <Box size={kept.size} />
-          </group>
-        ))}
-      </Canvas>
+    <div className="relative size-full min-h-80 bg-muted" style={{ containerType: "size" }}>
+      <div className="absolute inset-0 m-auto" style={frame}>
+        <Canvas frameloop="demand" aria-label="3D view of the design">
+          <Camera view={view} scene={scene} />
+          <hemisphereLight args={["#ffffff", "#b5a48c", 1.5]} />
+          <directionalLight position={toThree(scene.room.dimensions.width, -scene.room.dimensions.length, 6)} intensity={1.5} />
+          <Room room={scene.room} />
+          {scene.items.map((item) => (
+            <Item key={item.node_id} item={item} />
+          ))}
+          {scene.room.kept_furniture.map((kept) => (
+            <group key={kept.id} {...itemPose(kept)}>
+              <Box size={kept.size} />
+            </group>
+          ))}
+        </Canvas>
+      </div>
       <div className="absolute top-2 left-2 flex flex-wrap gap-1">
         {(["orbit", "eye", ...scene.cameras.map((_, i) => i)] as View[]).map((v) => (
           <Button key={v} size="sm" variant={v === view ? "default" : "outline"} aria-pressed={v === view} onClick={() => setView(v)}>

@@ -78,9 +78,12 @@ export function wallMeshes(room: RoomSpec): WallMesh[] {
     const features = room.features.filter((f) => f.wall === wall);
     const doors = features.filter((f) => f.type === "door").sort((a, b) => a.offset - b.offset);
     const outline: [number, number][] = [[0, 0]];
+    let end = 0; // overlapping doors would fold the outline back on itself: each starts where the last one ends
     for (const door of doors) {
-      const [a, b] = span(door);
+      const [a, b] = [Math.max(end, span(door)[0]), span(door)[1]];
+      if (b <= a) continue;
       outline.push([a, 0], [a, door.height], [b, door.height], [b, 0]);
+      end = b;
     }
     outline.push([length + WALL_THICKNESS, 0], [length + WALL_THICKNESS, height], [0, height]);
     const holes = features

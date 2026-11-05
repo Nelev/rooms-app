@@ -128,3 +128,14 @@ it("maps room coordinates to three.js and back", () => {
   expect(toThree(1, 2, 3)).toEqual([1, 3, -2]);
   expect(toRoom(toThree(1, 2, 3))).toEqual([1, 2, 3]);
 });
+
+it("keeps a wall outline going forward when doors overlap", () => {
+  const { room }: Scene = read("small-bedroom", "scene.json");
+  const door = room.features.find((f) => f.type === "door") as Scene["room"]["features"][number];
+  const features = [door, { ...door, id: "door_2", offset: door.offset + 0.05 }, { ...door, id: "door_3", width: 0.2 }];
+  const outline = wallMeshes({ ...room, features }).find((m) => m.wall === door.wall)?.outline ?? [];
+  // door_3 lies inside door_1 and is dropped; door_2 starts where door_1 ends
+  expect(outline).toHaveLength(1 + 4 * 2 + 3);
+  // along the bottom edge, up to the far top corner
+  outline.slice(1, -1).forEach(([u], i) => void expect(u).toBeGreaterThanOrEqual(outline[i][0]));
+});
