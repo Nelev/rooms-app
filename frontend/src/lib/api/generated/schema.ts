@@ -156,7 +156,7 @@ export interface paths {
         put?: never;
         /**
          * Upload
-         * @description Store a photo. Stub: returns a key and drops the file.
+         * @description Store a room photo. Stub: checks it, returns a key and drops the file.
          */
         post: operations["upload_uploads_post"];
         delete?: never;
@@ -2018,6 +2018,20 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["Upload"];
                 };
+            };
+            /** @description The file is over 20 MB */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The file is not an image */
+            415: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Validation Error */
             422: {

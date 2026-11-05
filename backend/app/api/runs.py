@@ -51,7 +51,9 @@ class Run:
                 return
 
 
-RUNS: dict[str, Run] = {}  # thread id -> its latest run
+# Thread id -> its latest run, kept after it ends so a client can rejoin it: one buffer per thread, bounded like the
+# in-memory checkpoints. Stub only: B-20 replaces this registry and THREADS with Postgres and the Agent Server.
+RUNS: dict[str, Run] = {}
 
 
 def running(thread_id: str) -> bool:

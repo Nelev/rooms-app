@@ -10,6 +10,7 @@ from pydantic import TypeAdapter
 
 from app.api.export import OUT, render
 from app.api.models import StreamPart
+from app.api.uploads import MAX_UPLOAD_BYTES
 from app.graph.graph import build_graph
 from app.graph.stub import fixture
 from app.main import app
@@ -120,7 +121,10 @@ def test_catalog_upload_and_camera_pose(client: TestClient) -> None:
     item = fixture("scene")["items"][0]["item"]
     assert client.get(f"/catalog/items/{item['id']}").json() == as_sent(CatalogItem, item)
     assert client.get("/catalog/items/nope").status_code == 404
-    assert client.post("/uploads", files={"file": ("room.jpg", b"jpeg")}).json()["key"].endswith(".jpg")
+    assert client.post("/uploads", files={"file": ("room.jpg", b"jpeg", "image/jpeg")}).json()["key"].endswith(".jpg")
+    assert client.post("/uploads", files={"file": ("notes.txt", b"text", "text/plain")}).status_code == 415
+    too_big = b"0" * (MAX_UPLOAD_BYTES + 1)
+    assert client.post("/uploads", files={"file": ("room.jpg", too_big, "image/jpeg")}).status_code == 413
 
 
 def test_exported_openapi_is_current() -> None:

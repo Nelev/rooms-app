@@ -458,7 +458,7 @@
           "uploads"
         ],
         "summary": "Upload",
-        "description": "Store a photo. Stub: returns a key and drops the file.",
+        "description": "Store a room photo. Stub: checks it, returns a key and drops the file.",
         "operationId": "upload_uploads_post",
         "requestBody": {
           "content": {
@@ -480,6 +480,12 @@
                 }
               }
             }
+          },
+          "413": {
+            "description": "The file is over 20 MB"
+          },
+          "415": {
+            "description": "The file is not an image"
           },
           "422": {
             "description": "Validation Error",
