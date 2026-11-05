@@ -1276,6 +1276,34 @@
       ],
       "default": null,
       "title": "Rationale"
+    },
+    "total": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "EUR: the shopping list, the catalog items of the scene",
+      "title": "Total"
+    },
+    "budget": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "EUR: the brief's",
+      "title": "Budget"
     }
   },
   "type": "object"

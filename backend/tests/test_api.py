@@ -61,7 +61,7 @@ def custom(parts: list[tuple[str, Any]]) -> list[Any]:
     return [data for event, data in parts if event == "custom"]
 
 
-REAL = ("solve", "critic")  # deterministic nodes that run for real in the stub graph and stream their own step events
+REAL = ("solve", "critic", "present")  # deterministic nodes that run for real in the stub graph and stream their own step events
 
 
 def one_round(events: list[Any]) -> list[Any]:
@@ -91,6 +91,8 @@ def test_design_run_interrupt_resume_and_chat(client: TestClient) -> None:
     assert any(event == "messages" and data[1]["langgraph_node"] == "analyze_room" for event, data in parts)
     (interrupt,) = parts[-1][1]["__interrupt__"]
     assert (parts[-1][0], interrupt["value"]) == ("updates", as_sent(ConfirmRoom, {"room": room}))
+    paused = f"{url}/runs/{parts[0][1]['run_id']}/result"
+    assert client.get(paused).status_code == 409  # paused at confirm_room
     state = client.get(f"{url}/state").json()
     assert (state["status"], state["next"], state["interrupts"]) == ("needs_input", ["confirm_room"], [interrupt])
 
@@ -104,6 +106,13 @@ def test_design_run_interrupt_resume_and_chat(client: TestClient) -> None:
     assert [i["node_id"] for i in values["scene"]["items"]] == [p["node_id"] for p in values["layout"]["placements"]] != []
     assert values["scene"]["room"] == as_sent(Scene, fixture("scene"))["room"]
     assert values["cost"] == pytest.approx(stub_cost(events["first_run"] + resumed))
+    result = client.get(f"{url}/runs/{parts[0][1]['run_id']}/result").json()
+    assert {k: result[k] for k in ("scene", "layout", "critique", "rationale")} == {
+        k: values[k] for k in ("scene", "layout", "critique", "rationale")
+    }
+    assert (result["total"], result["budget"]) == (806, 1200) and "€806, within the €1,200 budget" in result["rationale"]
+    assert client.get(f"{url}/runs/nope/result").status_code == 404
+    assert client.get(paused).status_code == 409
 
     for turn in chat:  # an applied edit, then a refused one
         parts = stream(client, f"{url}/runs/stream", {"input": turn["input"]})
@@ -116,6 +125,8 @@ def test_design_run_interrupt_resume_and_chat(client: TestClient) -> None:
             {"role": "assistant", "content": turn["output"]["rationale"]},
         ]
     assert values["layout"] == as_sent(Layout, chat[0]["output"]["layout"])  # the refused edit kept the first edit's layout
+    result = client.get(f"{url}/runs/{parts[0][1]['run_id']}/result").json()
+    assert (result["rationale"], result["layout_diff"]) == (chat[-1]["output"]["rationale"], values["layout_diff"])
 
     rejoined = stream(client, f"{url}/runs/current/stream")
     assert custom(rejoined) == chat[-1]["events"]

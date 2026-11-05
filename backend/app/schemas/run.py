@@ -95,6 +95,8 @@ class RunOutput(Model):
     critique: Critique | None = None
     layout_diff: LayoutDiff | None = None
     rationale: str | None = None
+    total: float | None = Field(None, ge=0, description="EUR: the shopping list, the catalog items of the scene")
+    budget: float | None = Field(None, ge=0, description="EUR: the brief's")
 
 
 class ConfirmRoom(Model):

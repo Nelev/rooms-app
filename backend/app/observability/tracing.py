@@ -44,10 +44,11 @@ class ProviderCost(BaseCallbackHandler):
 def traced(config: RunnableConfig, run_id: UUID) -> RunnableConfig:
     """`config` tagged for its trace: the thread (the user's design project) it runs on and the variant flags.
 
-    `run_id` becomes the trace's root run ID, so the API's run ID finds its trace."""
+    `run_id` becomes the trace's root run ID, so the API's run ID finds its trace, and its checkpoints."""
     configurable = config.get("configurable", {})
     flags = run_flags(config).model_dump()
-    metadata = {"thread_id": configurable["thread_id"], **flags}
+    # run_id: each checkpoint of the run keeps it in its metadata, as in LangGraph's Agent Server (GET .../runs/{run_id}/result)
+    metadata = {"thread_id": configurable["thread_id"], "run_id": run_id.hex, **flags}
     return {
         **config,
         "run_id": run_id,
