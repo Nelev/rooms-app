@@ -29,6 +29,7 @@ os.environ.pop("STORAGE_ENDPOINT_URL", None)
 import argparse
 import asyncio
 import json
+import math
 import pkgutil
 import time
 from collections.abc import Callable, Mapping, Sequence
@@ -131,14 +132,37 @@ def evaluate(run: Pipeline, name: str, case: Case, repeat: int, judge: Judge | N
     return row, state
 
 
-def run(variant: str, cases: Mapping[str, Case], repeats: int, out: Path, judge: Judge | None = None, workers: int = 1) -> list[Row]:
-    """Run and score every case `repeats` times, `workers` runs at a time; write the CSV, the report and the per-case artifacts."""
+def spent(rows: Sequence[Mapping[str, Any]]) -> float:
+    """USD: the model cost of the runs and of their grading (every `*cost_usd` column, e.g. the judge's)."""
+    return sum(v for r in rows for k, v in r.items() if k.endswith("cost_usd") and isinstance(v, int | float))
+
+
+def run(
+    variant: str,
+    cases: Mapping[str, Case],
+    repeats: int,
+    out: Path,
+    judge: Judge | None = None,
+    workers: int = 1,
+    max_cost: float = math.inf,
+) -> list[Row]:
+    """Run and score every case `repeats` times, `workers` runs at a time; write the CSV, the report and the per-case artifacts.
+    Live, once the cost spent passes `max_cost` (USD), the runs not started yet are skipped: recorded as failed with that error."""
     live = bool(os.environ.get("OPENROUTER_API_KEY"))
     fake = patch.object(llm, "get_llm", lambda role: FakeLLM(json.dumps(LAYOUT_EXAMPLE)))
+    cost: list[Row] = []  # the finished runs' rows, for their cost
+
+    def job(pipe: Pipeline, name: str, case: Case, n: int) -> tuple[Row, RunState]:
+        if live and spent(cost) > max_cost:
+            return {"case": name, "category": case.category, "repeat": n, "error": "skipped: the cost spent passed the cap"}, {}
+        result = evaluate(pipe, name, case, n, judge)
+        cost.append(result[0])
+        return result
+
     with nullcontext() if live else fake:
         pipe = pipeline(variant, live)
         with ThreadPoolExecutor(workers) as pool:
-            jobs = [pool.submit(evaluate, pipe, name, case, n, judge) for n in range(1, repeats + 1) for name, case in cases.items()]
+            jobs = [pool.submit(job, pipe, name, case, n) for n in range(1, repeats + 1) for name, case in cases.items()]
             results = [job.result() for job in jobs]
     rows = [row if live else row | dict.fromkeys(MEASURED) for row, _ in results]
     (out / "cases").mkdir(parents=True, exist_ok=True)

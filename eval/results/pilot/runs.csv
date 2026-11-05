@@ -5,4 +5,4 @@ baseline,living-airy,atmosphere,1,,17.846,0.0275395,6786,1064,False,0.0,0.9,0,10
 no_critic,bedroom-calm,atmosphere,1,,70.44,0.03605465000000001,9447,3764,False,0.0,0.75,0,4,True,1.0,526.0,e06-9c610c4ad1b2,0.0170169,4.0,3.0,5.0,3.0,2.0,1.0,0.0,
 no_critic,office-focused,atmosphere,1,,33.896,0.02575995,8120,2328,False,0.0,1.0,0,4,True,1.0,517.0,e06-9059a0a592ba,0.016817699999999998,3.0,4.333333333333333,5.0,4.0,2.0,1.0,0.0,
 no_critic,living-airy,atmosphere,1,,64.51,0.037542900000000004,11588,3192,False,7.83373366175509e-18,1.0,0,6,True,1.0,1325.0,e06-c68273590b64,0.016076100000000003,4.0,6.0,6.0,3.0,2.0,1.0,0.0,
-full,,,,"RuntimeError: Event loop is closed (seeding its catalog store; no run started, see README.md)",,,,,,,,,,,,,,,,,,,,,,
+full,,,,RuntimeError: Event loop is closed,,,,,,,,,,,,,,,,,,,,,,

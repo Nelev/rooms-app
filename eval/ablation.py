@@ -4,8 +4,11 @@ Run from backend/ (eval/ shares its environment):
 `PYTHONPATH=..:../eval uv run python -m eval ablate [--variants ...] [--cases ...] [--repeats 3] [--judge] [--out DIR]`.
 Each variant runs through the eval runner (runner.py) into `<out>/runs/<variant>/`; every run's row, with its variant, goes to
 `<out>/runs.csv`, the means per variant to `<out>/report.md` and one bar chart (SVG) per metric to `<out>/charts/`. `<out>` defaults to
-eval/results/ablation-<time>. The variants run one after another; once the model cost spent passes `--max-cost` (USD), the rest are
-skipped (the report says which).
+eval/results/ablation-<time>. The variants run one after another; once the model cost spent passes `--max-cost` (USD), the runs
+not started yet are skipped (checked before each run: with `--workers` N, up to N runs already started can still add to it).
+
+`--rebuild RUNS_CSV...` runs nothing: it rebuilds the report and the charts in `<out>` from earlier ablations' runs.csv files, e.g.
+to report variants run on different days as one ablation.
 
 `--judge` grades each run with the VLM judge (E-04, judge/vlm.py): the run's scene (the baseline's, which has none, is built from its
 layout in the labeled room) is written to eval/results/renders/<render>/scene.json, rendered from two corners by
@@ -20,10 +23,12 @@ import runner  # first: it turns tracing off before langchain is imported
 
 # isort: split
 import argparse
+import csv
 import hashlib
 import os
 import shutil
 import subprocess
+import traceback
 from collections.abc import Mapping, Sequence
 from datetime import datetime
 from html import escape
@@ -80,11 +85,6 @@ def judge(case: Case, state: RunState) -> dict[str, Any]:
     return {"render": render, "judge_cost_usd": cast(dict[str, float], record["usage"])["cost"]} | {
         f"judge_{name}": grade for name, grade in means.items()
     }
-
-
-def spent(rows: Sequence[Mapping[str, Any]]) -> float:
-    """USD: the model cost of the runs and of their judging."""
-    return sum(v for r in rows for k in ("cost_usd", "judge_cost_usd") if isinstance(v := r.get(k), int | float))
 
 
 def bar_chart(title: str, means: Mapping[str, float | None], scale: float | None = None) -> str:
@@ -151,25 +151,56 @@ def ablate(
     rows: list[runner.Row] = []
     done: list[str] = []
     for variant in variants:
-        if spent(rows) > max_cost:
+        if (left := max_cost - runner.spent(rows)) < 0:
             break
         done.append(variant)
         try:
-            rows += [{"variant": variant} | row for row in runner.run(variant, cases, repeats, out / "runs" / variant, judge, workers)]
+            ran = runner.run(variant, cases, repeats, out / "runs" / variant, judge, workers, left)
+            rows += [{"variant": variant} | row for row in ran]
         except Exception as error:  # the variant could not run at all (e.g. its graph not built): the others still do
+            traceback.print_exc()
             rows.append({"variant": variant, "case": "", "repeat": None, "error": f"{type(error).__name__}: {error}"})
     live = bool(os.environ.get("OPENROUTER_API_KEY"))
     mode = "live models" if live else "fake models and fixture replay (offline): the numbers only check that the pipeline runs"
     title = f"Variants {', '.join(f'`{v}`' for v in done)}; {len(cases)} cases x {repeats} repeats, {mode}"
     if skipped := variants[len(done) :]:
         title += f"; skipped {', '.join(skipped)}: the cost spent passed ${max_cost}"
+    write(rows, title, out)
+    return rows
+
+
+def write(rows: Sequence[runner.Row], title: str, out: Path) -> None:
+    """The combined runs.csv and report (the judge's cost in its title), the charts, and the judged runs' renders."""
     judge_costs = [c for r in rows if isinstance(c := r.get("judge_cost_usd"), int | float)]
     if judge_costs:
         title += f"; judge cost ${sum(judge_costs):.4f}"
     report.write(rows, out, title, by="variant")
-    charts(rows, done, out / "charts")
+    charts(rows, list(dict.fromkeys(r["variant"] for r in rows)), out / "charts")
     for render in {r["render"] for r in rows if r.get("render")}:
-        shutil.copytree(vlm.RENDERS / render, out / "renders" / render, dirs_exist_ok=True)
+        if (vlm.RENDERS / render).exists():  # a rebuild may not have them: they are in the earlier ablation's out
+            shutil.copytree(vlm.RENDERS / render, out / "renders" / render, dirs_exist_ok=True)
+
+
+def cell(value: str) -> Any:
+    """A runs.csv cell as the runner wrote it: blank None, a bool, an int, a float or the text."""
+    if value in ("", "True", "False"):
+        return {"": None, "True": True, "False": False}[value]
+    for kind in (int, float):
+        try:
+            return kind(value)
+        except ValueError:
+            pass
+    return value
+
+
+def rebuild(paths: Sequence[Path], out: Path) -> list[runner.Row]:
+    """The report and charts of earlier ablations' runs (their runs.csv files), as one ablation; nothing runs."""
+    rows: list[runner.Row] = []
+    for path in paths:
+        with path.open(newline="") as f:
+            rows += [{k: v if k in report.KEYS else cell(v) for k, v in r.items()} for r in csv.DictReader(f)]
+    variants = ", ".join(f"`{v}`" for v in dict.fromkeys(r["variant"] for r in rows))
+    write(rows, f"Variants {variants}; rebuilt from {', '.join(p.name if p.parent == out else str(p) for p in paths)}", out)
     return rows
 
 
@@ -192,8 +223,9 @@ def main(argv: Sequence[str]) -> int:
         "--max-cost",
         type=float,
         default=2.0,
-        help="USD: skip the remaining variants once the cost spent passes it (checked between variants, not within one)",
+        help="USD: skip the runs not started yet once the cost spent passes it (checked before each run)",
     )
+    parser.add_argument("--rebuild", nargs="+", type=Path, metavar="RUNS_CSV", help="run nothing: report these runs.csv as one")
     parser.add_argument("--fake", action="store_true", help="no model calls even with OPENROUTER_API_KEY (automatic without it)")
     parser.add_argument("--out", type=Path, help="default: eval/results/ablation-<time>")
     args = parser.parse_args(argv)
@@ -202,8 +234,11 @@ def main(argv: Sequence[str]) -> int:
     every = load_cases()
     cases = {name: every[name] for name in args.cases} if args.cases else every
     out = args.out or runner.RESULTS / f"ablation-{datetime.now():%Y%m%d-%H%M%S}"
-    rows = ablate(args.variants, cases, args.repeats, out, judge if args.judge else None, args.workers, args.max_cost)
+    if args.rebuild:
+        rows = rebuild(args.rebuild, out)
+    else:
+        rows = ablate(args.variants, cases, args.repeats, out, judge if args.judge else None, args.workers, args.max_cost)
     print((out / "report.md").read_text())
     failed = [f"{r['variant']} {r['case']}-{r['repeat']}: {r['error']}" for r in rows if r["error"]]
-    print(*(f"Failed: {f}" for f in failed), f"Model cost spent: ${spent(rows):.4f}", f"Results in {out}", sep="\n")
+    print(*(f"Failed: {f}" for f in failed), f"Model cost spent: ${runner.spent(rows):.4f}", f"Results in {out}", sep="\n")
     return 1 if failed else 0

@@ -72,19 +72,24 @@ OpenRouter embeddings client.
 - **Hardening.** `ablate` now records a variant that cannot run as a failed row and goes on with the next variant, instead of
   losing the variants that already ran.
 
-This report was assembled by hand from the 2 completed variants' runner output, with the module's own `report.write` and
-`charts`; `full`'s failed row and the report's title and header line were written by hand (`ablate` writes them itself now). No
-model was called again.
+The pilot ran before that hardening, so `full`'s failed row in `runs.csv` was added by hand, as `ablate` records it now (its error
+alone). `report.md` and `charts/` are rebuilt from `runs.csv` by the ablation command, with no model call:
+`PYTHONPATH=..:../eval uv run python -m eval ablate --rebuild ../eval/results/pilot/runs.csv --out ../eval/results/pilot` (from
+backend/). `full` charts as n/a.
 
 ## How to run the rest
 
-From backend/, with OPENROUTER_API_KEY set. Each command needs the owner's approval, and the cap stops it before the next variant
-once the spend passes `--max-cost`.
+**E-06 stays open on `full` and `analyst_mode`** until the owner approves a second small run. From backend/, with
+OPENROUTER_API_KEY set; the cap skips the runs not started yet once the spend passes `--max-cost`.
 
 ```sh
 # the variants the pilot missed, same 3 rooms
 PYTHONPATH=..:../eval uv run python -m eval ablate --variants full analyst_mode \
-  --cases bedroom-calm office-focused living-airy --repeats 1 --judge --out ../eval/results/pilot-2
+  --cases bedroom-calm office-focused living-airy --repeats 1 --judge --max-cost 1 --out ../eval/results/pilot-2
+# then one report and chart set for the 4 variants, and the ratings template for every judged run (no model call)
+PYTHONPATH=..:../eval uv run python -m eval ablate --rebuild ../eval/results/pilot/runs.csv ../eval/results/pilot-2/runs.csv \
+  --out ../eval/results/pilot
+PYTHONPATH=.:..:../eval uv run python ../eval/agreement.py template ../eval/results/pilot/runs.csv --force
 # the full study: 4 variants x every case x 3 repeats (about $12 to $20)
 PYTHONPATH=..:../eval uv run python -m eval ablate --judge --max-cost 20
 ```

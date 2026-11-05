@@ -1,7 +1,7 @@
 # Eval report
 
-Variants `baseline`, `no_critic` (`full` crashed before its first run, so `analyst_mode` never ran); 3 cases x 1 repeats, live models; judge cost $0.0989.
-7 rows (6 runs, plus `full`, which failed while seeding its store before any run), 1 failed; total model cost $0.1743. Means over each variant's runs:
+Variants `baseline`, `no_critic`, `full`; rebuilt from runs.csv; judge cost $0.0989.
+7 runs, 1 failed; total model cost $0.1743. Means over each variant's runs:
 
 | variant | runs | failed | latency_s | cost_usd | input_tokens | output_tokens | out_of_bounds | overlap_volume | clearance_pass_rate | blocked_openings | item_count | budget_fit | must_have_coverage | furniture_eur | judge_cost_usd | judge_functionality | judge_layout | judge_color_scheme | judge_atmosphere | judge_realism | feature_precision | feature_recall | position_error_cm |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |

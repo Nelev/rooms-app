@@ -6,7 +6,8 @@ For each criterion, over the runs both graded (a run's human grade is its raters
 Cohen's kappa on the grades binned as poor (0-3), fair (4-6) and good (7-10). None where it is undefined (under 2 runs, constant grades).
 
 Run from backend/ (eval/ shares its environment), `PYTHONPATH=.:..:../eval uv run python ../eval/agreement.py`:
-- `template RUNS_CSV` writes the ratings template, a blank row per judged run of an ablation's runs.csv, unless one exists;
+- `template RUNS_CSV [--force]` writes the ratings template, a blank row per judged run of an ablation's runs.csv; it keeps an
+  existing one (people's ratings) unless `--force`;
 - `report RUNS_CSV` prints the agreement table.
 """
 
@@ -76,10 +77,10 @@ def markdown(table: Mapping[str, Mapping[str, float | None]]) -> str:
     return "\n".join(lines) + "\n"
 
 
-def template(runs: Sequence[Row], path: Path = RATINGS) -> None:
-    """A blank ratings row (rater and grades empty) per judged run."""
-    if path.exists():
-        sys.exit(f"{path} exists: not overwritten")
+def template(runs: Sequence[Row], path: Path = RATINGS, force: bool = False) -> None:
+    """A blank ratings row (rater and grades empty) per judged run; an existing file is kept unless `force`."""
+    if path.exists() and not force:
+        sys.exit(f"{path} exists: not overwritten (--force overwrites it)")
     with path.open("w", newline="") as f:
         writer = csv.DictWriter(f, [*KEY, "render", "rater", *CRITERIA])
         writer.writeheader()
@@ -88,8 +89,8 @@ def template(runs: Sequence[Row], path: Path = RATINGS) -> None:
 
 if __name__ == "__main__":
     match sys.argv[1:]:
-        case ["template", runs]:
-            template(read(Path(runs)))
+        case ["template", runs, *force] if force in ([], ["--force"]):
+            template(read(Path(runs)), force=bool(force))
         case ["report", runs]:
             print(markdown(agreement(read(Path(runs)), read(RATINGS))))
         case _:
