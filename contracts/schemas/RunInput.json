@@ -1,0 +1,203 @@
+{
+  "title": "RunInput",
+  "$defs": {
+    "Brief": {
+      "additionalProperties": false,
+      "description": "What the user asks for in the new-project wizard.",
+      "examples": [
+        {
+          "budget": 1500,
+          "keep": [
+            "wardrobe"
+          ],
+          "must_haves": [
+            "double bed",
+            "desk"
+          ],
+          "notes": "I work from home two days a week",
+          "remove": [
+            "old armchair"
+          ],
+          "room_use": "bedroom",
+          "styles": [
+            "scandinavian"
+          ]
+        }
+      ],
+      "properties": {
+        "room_use": {
+          "title": "Room Use",
+          "type": "string"
+        },
+        "styles": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Styles",
+          "type": "array"
+        },
+        "budget": {
+          "description": "EUR",
+          "minimum": 0,
+          "title": "Budget",
+          "type": "number"
+        },
+        "must_haves": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Must Haves",
+          "type": "array"
+        },
+        "keep": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Keep",
+          "type": "array"
+        },
+        "remove": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Remove",
+          "type": "array"
+        },
+        "notes": {
+          "default": "",
+          "title": "Notes",
+          "type": "string"
+        }
+      },
+      "required": [
+        "room_use",
+        "budget"
+      ],
+      "title": "Brief",
+      "type": "object"
+    },
+    "ChatMessage": {
+      "additionalProperties": false,
+      "description": "Run input for a chat edit on an existing design.",
+      "examples": [
+        {
+          "chat_message": "Move the desk closer to the window"
+        }
+      ],
+      "properties": {
+        "chat_message": {
+          "minLength": 1,
+          "title": "Chat Message",
+          "type": "string"
+        }
+      },
+      "required": [
+        "chat_message"
+      ],
+      "title": "ChatMessage",
+      "type": "object"
+    },
+    "Dimensions": {
+      "additionalProperties": false,
+      "properties": {
+        "width": {
+          "description": "Length of walls A and C (x)",
+          "minimum": 0,
+          "title": "Width",
+          "type": "number"
+        },
+        "length": {
+          "description": "Length of walls B and D (y)",
+          "minimum": 0,
+          "title": "Length",
+          "type": "number"
+        },
+        "height": {
+          "description": "Ceiling height",
+          "minimum": 0,
+          "title": "Height",
+          "type": "number"
+        }
+      },
+      "required": [
+        "width",
+        "length",
+        "height"
+      ],
+      "title": "Dimensions",
+      "type": "object"
+    },
+    "NewDesign": {
+      "additionalProperties": false,
+      "description": "Run input for a new design.",
+      "examples": [
+        {
+          "brief": {
+            "budget": 1500,
+            "keep": [
+              "wardrobe"
+            ],
+            "must_haves": [
+              "double bed",
+              "desk"
+            ],
+            "notes": "I work from home two days a week",
+            "remove": [
+              "old armchair"
+            ],
+            "room_use": "bedroom",
+            "styles": [
+              "scandinavian"
+            ]
+          },
+          "dimensions": {
+            "height": 2.6,
+            "length": 4.0,
+            "width": 3.2
+          },
+          "photo_keys": [
+            "uploads/3f2a/photo-1.jpg"
+          ]
+        }
+      ],
+      "properties": {
+        "photo_keys": {
+          "description": "Object-storage keys of the uploaded photos",
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 3,
+          "minItems": 1,
+          "title": "Photo Keys",
+          "type": "array"
+        },
+        "dimensions": {
+          "$ref": "#/$defs/Dimensions"
+        },
+        "brief": {
+          "$ref": "#/$defs/Brief"
+        }
+      },
+      "required": [
+        "photo_keys",
+        "dimensions",
+        "brief"
+      ],
+      "title": "NewDesign",
+      "type": "object"
+    }
+  },
+  "anyOf": [
+    {
+      "$ref": "#/$defs/NewDesign"
+    },
+    {
+      "$ref": "#/$defs/ChatMessage"
+    }
+  ],
+  "description": "The graph's input: a new design or a chat message on an existing design"
+}

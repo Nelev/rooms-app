@@ -1,0 +1,70 @@
+{
+  "title": "ValidationReport",
+  "$defs": {
+    "ValidationIssue": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "description": "Machine-readable, e.g. cycle, unknown_node, blocks_opening",
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "description": "One short sentence the Critic can pass on",
+          "title": "Message",
+          "type": "string"
+        },
+        "severity": {
+          "default": "error",
+          "enum": [
+            "error",
+            "warning"
+          ],
+          "title": "Severity",
+          "type": "string"
+        },
+        "node_ids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Node Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ],
+      "title": "ValidationIssue",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Problems found in a SceneGraph or Layout; no error issues means valid.",
+  "examples": [
+    {
+      "issues": [
+        {
+          "code": "blocks_opening",
+          "message": "The desk blocks the door swing",
+          "node_ids": [
+            "desk",
+            "door_1"
+          ]
+        }
+      ]
+    }
+  ],
+  "properties": {
+    "issues": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/ValidationIssue"
+      },
+      "title": "Issues",
+      "type": "array"
+    }
+  },
+  "type": "object"
+}

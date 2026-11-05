@@ -1,0 +1,1244 @@
+{
+  "title": "RunOutput",
+  "$defs": {
+    "CameraPose": {
+      "additionalProperties": false,
+      "description": "A camera in the three.js convention (y-up: room (x, y, z) is three.js (x, z, -y)), e.g. the one that took a photo.",
+      "examples": [
+        {
+          "fov": 55.0,
+          "image_height": 3024,
+          "image_width": 4032,
+          "photo_key": "uploads/3f2a/photo-1.jpg",
+          "position": [
+            0.4,
+            1.5,
+            -0.3
+          ],
+          "quaternion": [
+            0.0,
+            0.9239,
+            0.0,
+            0.3827
+          ],
+          "reprojection_error": 3.2
+        }
+      ],
+      "properties": {
+        "photo_key": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Photo Key"
+        },
+        "position": {
+          "maxItems": 3,
+          "minItems": 3,
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "Position",
+          "type": "array"
+        },
+        "quaternion": {
+          "description": "x, y, z, w",
+          "maxItems": 4,
+          "minItems": 4,
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "Quaternion",
+          "type": "array"
+        },
+        "fov": {
+          "description": "Vertical field of view in degrees",
+          "exclusiveMaximum": 180,
+          "exclusiveMinimum": 0,
+          "title": "Fov",
+          "type": "number"
+        },
+        "image_width": {
+          "exclusiveMinimum": 0,
+          "title": "Image Width",
+          "type": "integer"
+        },
+        "image_height": {
+          "exclusiveMinimum": 0,
+          "title": "Image Height",
+          "type": "integer"
+        },
+        "reprojection_error": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Pixels",
+          "title": "Reprojection Error"
+        }
+      },
+      "required": [
+        "position",
+        "quaternion",
+        "fov",
+        "image_width",
+        "image_height"
+      ],
+      "title": "CameraPose",
+      "type": "object"
+    },
+    "CatalogItem": {
+      "additionalProperties": false,
+      "examples": [
+        {
+          "category": "nightstand",
+          "color": "white",
+          "description": "Solid pine nightstand with one drawer",
+          "front": "+z",
+          "glb_url": "https://example.com/models/hemnes-nightstand.glb",
+          "id": "ikea-hemnes-nightstand",
+          "license": "CC-BY-4.0",
+          "name": "HEMNES nightstand",
+          "price": 89.0,
+          "size": {
+            "depth": 0.35,
+            "height": 0.7,
+            "width": 0.46
+          },
+          "style_tags": [
+            "scandinavian",
+            "traditional"
+          ]
+        }
+      ],
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "category": {
+          "title": "Category",
+          "type": "string"
+        },
+        "size": {
+          "$ref": "#/$defs/Size"
+        },
+        "price": {
+          "description": "EUR",
+          "minimum": 0,
+          "title": "Price",
+          "type": "number"
+        },
+        "style_tags": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Style Tags",
+          "type": "array"
+        },
+        "color": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Color"
+        },
+        "front": {
+          "default": "+z",
+          "description": "The GLB's local axis the item's front faces (glTF is y-up)",
+          "enum": [
+            "+x",
+            "-x",
+            "+z",
+            "-z"
+          ],
+          "title": "Front",
+          "type": "string"
+        },
+        "glb_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Glb Url"
+        },
+        "license": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "License"
+        },
+        "url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Product page",
+          "title": "Url"
+        },
+        "image_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Image Url"
+        },
+        "description": {
+          "default": "",
+          "title": "Description",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "category",
+        "size",
+        "price"
+      ],
+      "title": "CatalogItem",
+      "type": "object"
+    },
+    "Critique": {
+      "additionalProperties": false,
+      "examples": [
+        {
+          "actions": [
+            {
+              "instruction": "Put the bed against wall D",
+              "node_id": "bed",
+              "target": "architect"
+            }
+          ],
+          "round": 1,
+          "rules": [
+            {
+              "passed": true,
+              "rule": "desk_near_light"
+            },
+            {
+              "message": "The bed faces the door",
+              "passed": false,
+              "rule": "bed_not_facing_door"
+            }
+          ],
+          "summary": "One rule fails: the bed faces the door"
+        }
+      ],
+      "properties": {
+        "round": {
+          "minimum": 1,
+          "title": "Round",
+          "type": "integer"
+        },
+        "rules": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/RuleResult"
+          },
+          "title": "Rules",
+          "type": "array"
+        },
+        "actions": {
+          "default": [],
+          "description": "Empty when the layout is accepted",
+          "items": {
+            "$ref": "#/$defs/CritiqueAction"
+          },
+          "title": "Actions",
+          "type": "array"
+        },
+        "summary": {
+          "title": "Summary",
+          "type": "string"
+        }
+      },
+      "required": [
+        "round",
+        "summary"
+      ],
+      "title": "Critique",
+      "type": "object"
+    },
+    "CritiqueAction": {
+      "additionalProperties": false,
+      "properties": {
+        "target": {
+          "enum": [
+            "architect",
+            "sourcer"
+          ],
+          "title": "Target",
+          "type": "string"
+        },
+        "node_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Node Id"
+        },
+        "instruction": {
+          "title": "Instruction",
+          "type": "string"
+        }
+      },
+      "required": [
+        "target",
+        "instruction"
+      ],
+      "title": "CritiqueAction",
+      "type": "object"
+    },
+    "Dimensions": {
+      "additionalProperties": false,
+      "properties": {
+        "width": {
+          "description": "Length of walls A and C (x)",
+          "minimum": 0,
+          "title": "Width",
+          "type": "number"
+        },
+        "length": {
+          "description": "Length of walls B and D (y)",
+          "minimum": 0,
+          "title": "Length",
+          "type": "number"
+        },
+        "height": {
+          "description": "Ceiling height",
+          "minimum": 0,
+          "title": "Height",
+          "type": "number"
+        }
+      },
+      "required": [
+        "width",
+        "length",
+        "height"
+      ],
+      "title": "Dimensions",
+      "type": "object"
+    },
+    "Feature": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "window",
+            "door",
+            "radiator",
+            "outlet",
+            "built_in",
+            "column",
+            "other"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "wall": {
+          "enum": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "title": "Wall",
+          "type": "string"
+        },
+        "offset": {
+          "description": "Feature center as a fraction of the wall length from the wall's start corner",
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Offset",
+          "type": "number"
+        },
+        "width": {
+          "minimum": 0,
+          "title": "Width",
+          "type": "number"
+        },
+        "height": {
+          "minimum": 0,
+          "title": "Height",
+          "type": "number"
+        },
+        "sill_height": {
+          "default": 0,
+          "description": "Height of the feature's bottom edge above the floor; 0 for doors",
+          "minimum": 0,
+          "title": "Sill Height",
+          "type": "number"
+        },
+        "confidence": {
+          "default": 1,
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Confidence",
+          "type": "number"
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "wall",
+        "offset",
+        "width",
+        "height"
+      ],
+      "title": "Feature",
+      "type": "object"
+    },
+    "KeptItem": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "x": {
+          "title": "X",
+          "type": "number"
+        },
+        "y": {
+          "title": "Y",
+          "type": "number"
+        },
+        "rotation": {
+          "default": 0,
+          "description": "Counterclockwise about z, 0 = front faces +y",
+          "exclusiveMaximum": 360,
+          "minimum": 0,
+          "title": "Rotation",
+          "type": "number"
+        },
+        "size": {
+          "$ref": "#/$defs/Size"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "x",
+        "y",
+        "size"
+      ],
+      "title": "KeptItem",
+      "type": "object"
+    },
+    "Layout": {
+      "additionalProperties": false,
+      "description": "Where each SceneGraph node ended up, in room coordinates.",
+      "examples": [
+        {
+          "placements": [
+            {
+              "node_id": "bed",
+              "rotation": 90,
+              "size": {
+                "depth": 2.1,
+                "height": 1.0,
+                "width": 1.6
+              },
+              "x": 2.15,
+              "y": 2.0
+            },
+            {
+              "item_id": "ikea-micke-desk",
+              "node_id": "desk",
+              "rotation": 180,
+              "size": {
+                "depth": 0.5,
+                "height": 0.75,
+                "width": 1.05
+              },
+              "x": 1.6,
+              "y": 3.7
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "placements": {
+          "items": {
+            "$ref": "#/$defs/Placement"
+          },
+          "title": "Placements",
+          "type": "array"
+        }
+      },
+      "required": [
+        "placements"
+      ],
+      "title": "Layout",
+      "type": "object"
+    },
+    "LayoutDiff": {
+      "additionalProperties": false,
+      "description": "What a chat edit changed, by node id, so the views can highlight it.",
+      "examples": [
+        {
+          "added": [],
+          "changed": [
+            "desk"
+          ],
+          "removed": [
+            "nightstand"
+          ]
+        }
+      ],
+      "properties": {
+        "added": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Added",
+          "type": "array"
+        },
+        "removed": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Removed",
+          "type": "array"
+        },
+        "changed": {
+          "default": [],
+          "description": "Moved, rotated or swapped",
+          "items": {
+            "type": "string"
+          },
+          "title": "Changed",
+          "type": "array"
+        }
+      },
+      "title": "LayoutDiff",
+      "type": "object"
+    },
+    "Light": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "area",
+            "directional"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "window_id": {
+          "description": "The RoomSpec window feature the light comes through",
+          "title": "Window Id",
+          "type": "string"
+        },
+        "intensity": {
+          "minimum": 0,
+          "title": "Intensity",
+          "type": "number"
+        }
+      },
+      "required": [
+        "kind",
+        "window_id",
+        "intensity"
+      ],
+      "title": "Light",
+      "type": "object"
+    },
+    "Placement": {
+      "additionalProperties": false,
+      "properties": {
+        "node_id": {
+          "title": "Node Id",
+          "type": "string"
+        },
+        "item_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Item Id"
+        },
+        "x": {
+          "title": "X",
+          "type": "number"
+        },
+        "y": {
+          "title": "Y",
+          "type": "number"
+        },
+        "z": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Z",
+          "type": "number"
+        },
+        "rotation": {
+          "default": 0,
+          "description": "Counterclockwise about z, 0 = front faces +y",
+          "exclusiveMaximum": 360,
+          "minimum": 0,
+          "title": "Rotation",
+          "type": "number"
+        },
+        "size": {
+          "$ref": "#/$defs/Size"
+        }
+      },
+      "required": [
+        "node_id",
+        "x",
+        "y",
+        "size"
+      ],
+      "title": "Placement",
+      "type": "object"
+    },
+    "RoomSpec": {
+      "additionalProperties": false,
+      "description": "The room as analyzed from the photos and confirmed by the user.",
+      "examples": [
+        {
+          "dimensions": {
+            "height": 2.6,
+            "length": 4.0,
+            "width": 3.2
+          },
+          "features": [
+            {
+              "confidence": 0.95,
+              "height": 2.1,
+              "id": "door_1",
+              "offset": 0.15,
+              "type": "door",
+              "wall": "A",
+              "width": 0.8
+            },
+            {
+              "confidence": 0.9,
+              "height": 1.4,
+              "id": "window_1",
+              "offset": 0.5,
+              "sill_height": 0.9,
+              "type": "window",
+              "wall": "C",
+              "width": 1.2
+            },
+            {
+              "confidence": 0.7,
+              "height": 0.6,
+              "id": "radiator_1",
+              "offset": 0.5,
+              "sill_height": 0.1,
+              "type": "radiator",
+              "wall": "C",
+              "width": 1.0
+            }
+          ],
+          "floor_material": "oak",
+          "kept_furniture": [
+            {
+              "id": "kept_1",
+              "name": "wardrobe",
+              "rotation": 270,
+              "size": {
+                "depth": 0.6,
+                "height": 2.0,
+                "width": 1.2
+              },
+              "x": 0.3,
+              "y": 2.0
+            }
+          ],
+          "walls": [
+            {
+              "color": "#f2efe9",
+              "wall": "A"
+            },
+            {
+              "color": "#f2efe9",
+              "wall": "B"
+            },
+            {
+              "color": "#f2efe9",
+              "wall": "C"
+            },
+            {
+              "color": "#f2efe9",
+              "wall": "D"
+            }
+          ],
+          "warnings": [
+            "Radiator width estimated from one photo"
+          ]
+        }
+      ],
+      "properties": {
+        "dimensions": {
+          "$ref": "#/$defs/Dimensions"
+        },
+        "walls": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/WallSpec"
+          },
+          "title": "Walls",
+          "type": "array"
+        },
+        "floor_material": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Floor Material"
+        },
+        "features": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Feature"
+          },
+          "title": "Features",
+          "type": "array"
+        },
+        "kept_furniture": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/KeptItem"
+          },
+          "title": "Kept Furniture",
+          "type": "array"
+        },
+        "warnings": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "dimensions"
+      ],
+      "title": "RoomSpec",
+      "type": "object"
+    },
+    "RuleResult": {
+      "additionalProperties": false,
+      "properties": {
+        "rule": {
+          "title": "Rule",
+          "type": "string"
+        },
+        "passed": {
+          "title": "Passed",
+          "type": "boolean"
+        },
+        "message": {
+          "default": "",
+          "title": "Message",
+          "type": "string"
+        }
+      },
+      "required": [
+        "rule",
+        "passed"
+      ],
+      "title": "RuleResult",
+      "type": "object"
+    },
+    "Scene": {
+      "additionalProperties": false,
+      "description": "Everything the 2D plan and the 3D viewer need to render the design.",
+      "examples": [
+        {
+          "cameras": [
+            {
+              "fov": 55.0,
+              "image_height": 3024,
+              "image_width": 4032,
+              "photo_key": "uploads/3f2a/photo-1.jpg",
+              "position": [
+                0.4,
+                1.5,
+                -0.3
+              ],
+              "quaternion": [
+                0.0,
+                0.9239,
+                0.0,
+                0.3827
+              ],
+              "reprojection_error": 3.2
+            }
+          ],
+          "items": [
+            {
+              "node_id": "bed",
+              "rotation": 90,
+              "size": {
+                "depth": 2.1,
+                "height": 1.0,
+                "width": 1.6
+              },
+              "x": 2.15,
+              "y": 2.0
+            },
+            {
+              "item": {
+                "category": "nightstand",
+                "color": "white",
+                "description": "Solid pine nightstand with one drawer",
+                "front": "+z",
+                "glb_url": "https://example.com/models/hemnes-nightstand.glb",
+                "id": "ikea-hemnes-nightstand",
+                "license": "CC-BY-4.0",
+                "name": "HEMNES nightstand",
+                "price": 89.0,
+                "size": {
+                  "depth": 0.35,
+                  "height": 0.7,
+                  "width": 0.46
+                },
+                "style_tags": [
+                  "scandinavian",
+                  "traditional"
+                ]
+              },
+              "item_id": "ikea-hemnes-nightstand",
+              "node_id": "nightstand",
+              "rotation": 90,
+              "size": {
+                "depth": 0.35,
+                "height": 0.7,
+                "width": 0.46
+              },
+              "x": 3.0,
+              "y": 3.3
+            }
+          ],
+          "lights": [
+            {
+              "intensity": 5.0,
+              "kind": "area",
+              "window_id": "window_1"
+            }
+          ],
+          "room": {
+            "dimensions": {
+              "height": 2.6,
+              "length": 4.0,
+              "width": 3.2
+            },
+            "features": [
+              {
+                "confidence": 0.95,
+                "height": 2.1,
+                "id": "door_1",
+                "offset": 0.15,
+                "type": "door",
+                "wall": "A",
+                "width": 0.8
+              },
+              {
+                "confidence": 0.9,
+                "height": 1.4,
+                "id": "window_1",
+                "offset": 0.5,
+                "sill_height": 0.9,
+                "type": "window",
+                "wall": "C",
+                "width": 1.2
+              },
+              {
+                "confidence": 0.7,
+                "height": 0.6,
+                "id": "radiator_1",
+                "offset": 0.5,
+                "sill_height": 0.1,
+                "type": "radiator",
+                "wall": "C",
+                "width": 1.0
+              }
+            ],
+            "floor_material": "oak",
+            "kept_furniture": [
+              {
+                "id": "kept_1",
+                "name": "wardrobe",
+                "rotation": 270,
+                "size": {
+                  "depth": 0.6,
+                  "height": 2.0,
+                  "width": 1.2
+                },
+                "x": 0.3,
+                "y": 2.0
+              }
+            ],
+            "walls": [
+              {
+                "color": "#f2efe9",
+                "wall": "A"
+              },
+              {
+                "color": "#f2efe9",
+                "wall": "B"
+              },
+              {
+                "color": "#f2efe9",
+                "wall": "C"
+              },
+              {
+                "color": "#f2efe9",
+                "wall": "D"
+              }
+            ],
+            "warnings": [
+              "Radiator width estimated from one photo"
+            ]
+          }
+        }
+      ],
+      "properties": {
+        "room": {
+          "$ref": "#/$defs/RoomSpec"
+        },
+        "items": {
+          "items": {
+            "$ref": "#/$defs/SceneItem"
+          },
+          "title": "Items",
+          "type": "array"
+        },
+        "lights": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Light"
+          },
+          "title": "Lights",
+          "type": "array"
+        },
+        "cameras": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/CameraPose"
+          },
+          "title": "Cameras",
+          "type": "array"
+        }
+      },
+      "required": [
+        "room",
+        "items"
+      ],
+      "title": "Scene",
+      "type": "object"
+    },
+    "SceneItem": {
+      "additionalProperties": false,
+      "properties": {
+        "node_id": {
+          "title": "Node Id",
+          "type": "string"
+        },
+        "item_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Item Id"
+        },
+        "x": {
+          "title": "X",
+          "type": "number"
+        },
+        "y": {
+          "title": "Y",
+          "type": "number"
+        },
+        "z": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Z",
+          "type": "number"
+        },
+        "rotation": {
+          "default": 0,
+          "description": "Counterclockwise about z, 0 = front faces +y",
+          "exclusiveMaximum": 360,
+          "minimum": 0,
+          "title": "Rotation",
+          "type": "number"
+        },
+        "size": {
+          "$ref": "#/$defs/Size"
+        },
+        "item": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CatalogItem"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "None renders a box"
+        }
+      },
+      "required": [
+        "node_id",
+        "x",
+        "y",
+        "size"
+      ],
+      "title": "SceneItem",
+      "type": "object"
+    },
+    "Size": {
+      "additionalProperties": false,
+      "properties": {
+        "width": {
+          "minimum": 0,
+          "title": "Width",
+          "type": "number"
+        },
+        "depth": {
+          "minimum": 0,
+          "title": "Depth",
+          "type": "number"
+        },
+        "height": {
+          "minimum": 0,
+          "title": "Height",
+          "type": "number"
+        }
+      },
+      "required": [
+        "width",
+        "depth",
+        "height"
+      ],
+      "title": "Size",
+      "type": "object"
+    },
+    "WallSpec": {
+      "additionalProperties": false,
+      "properties": {
+        "wall": {
+          "enum": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "title": "Wall",
+          "type": "string"
+        },
+        "color": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Hex color, e.g. #f2efe9",
+          "title": "Color"
+        }
+      },
+      "required": [
+        "wall"
+      ],
+      "title": "WallSpec",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "What a finished run leaves for the frontend.",
+  "examples": [
+    {
+      "layout": {
+        "placements": [
+          {
+            "node_id": "bed",
+            "rotation": 90,
+            "size": {
+              "depth": 2.1,
+              "height": 1.0,
+              "width": 1.6
+            },
+            "x": 2.15,
+            "y": 2.0
+          },
+          {
+            "item_id": "ikea-micke-desk",
+            "node_id": "desk",
+            "rotation": 180,
+            "size": {
+              "depth": 0.5,
+              "height": 0.75,
+              "width": 1.05
+            },
+            "x": 1.6,
+            "y": 3.7
+          }
+        ]
+      },
+      "rationale": "The bed sits against wall B, away from the door"
+    }
+  ],
+  "properties": {
+    "scene": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Scene"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "layout": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Layout"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "critique": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Critique"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "layout_diff": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/LayoutDiff"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "rationale": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Rationale"
+    }
+  },
+  "type": "object"
+}
