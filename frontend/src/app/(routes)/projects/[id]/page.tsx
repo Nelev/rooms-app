@@ -1,5 +1,6 @@
 import { MessageSquare } from "lucide-react";
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -30,6 +31,11 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[id]"
           {TABS.map(({ value, label }) => (
             <TabsContent key={value} value={value} className="rounded-lg border p-4 text-muted-foreground">
               {label} view
+              {value === "room" && (
+                <Link href={`/projects/${id}/room`} className="ml-2 text-primary underline-offset-4 hover:underline">
+                  Confirm the room
+                </Link>
+              )}
             </TabsContent>
           ))}
         </Tabs>
