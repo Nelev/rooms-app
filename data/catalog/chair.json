@@ -1,0 +1,233 @@
+[
+  {
+    "id": "black-desk-chair",
+    "name": "Black steel desk chair",
+    "category": "chair",
+    "size": {
+      "width": 0.5,
+      "depth": 0.5,
+      "height": 0.9
+    },
+    "price": 89.0,
+    "style_tags": [
+      "industrial",
+      "modern"
+    ],
+    "color": "black",
+    "front": "+z",
+    "description": "Swivel chair on castors"
+  },
+  {
+    "id": "black-dining-chair",
+    "name": "Black steel dining chair",
+    "category": "chair",
+    "size": {
+      "width": 0.45,
+      "depth": 0.5,
+      "height": 0.82
+    },
+    "price": 79.0,
+    "style_tags": [
+      "industrial",
+      "modern"
+    ],
+    "color": "black",
+    "front": "+z",
+    "description": "Stackable dining chair"
+  },
+  {
+    "id": "grey-desk-chair",
+    "name": "Grey desk chair",
+    "category": "chair",
+    "size": {
+      "width": 0.45,
+      "depth": 0.45,
+      "height": 0.85
+    },
+    "price": 129.0,
+    "style_tags": [
+      "scandinavian"
+    ],
+    "color": "grey",
+    "front": "+z",
+    "license": "CC0-1.0",
+    "description": "Swivel chair"
+  },
+  {
+    "id": "grey-dining-chair",
+    "name": "Grey fabric dining chair",
+    "category": "chair",
+    "size": {
+      "width": 0.45,
+      "depth": 0.5,
+      "height": 0.82
+    },
+    "price": 79.0,
+    "style_tags": [
+      "modern",
+      "scandinavian"
+    ],
+    "color": "grey",
+    "front": "+z",
+    "description": "Stackable dining chair"
+  },
+  {
+    "id": "mesh-office-chair",
+    "name": "Mesh office chair",
+    "category": "chair",
+    "size": {
+      "width": 0.6,
+      "depth": 0.6,
+      "height": 1.1
+    },
+    "price": 249.0,
+    "style_tags": [
+      "modern"
+    ],
+    "color": "black",
+    "front": "+z",
+    "license": "CC0-1.0",
+    "description": "Ergonomic"
+  },
+  {
+    "id": "oak-desk-chair",
+    "name": "Oak desk chair",
+    "category": "chair",
+    "size": {
+      "width": 0.5,
+      "depth": 0.5,
+      "height": 0.9
+    },
+    "price": 99.0,
+    "style_tags": [
+      "scandinavian",
+      "japandi"
+    ],
+    "color": "oak",
+    "front": "+z",
+    "description": "Swivel chair on castors"
+  },
+  {
+    "id": "oak-dining-chair",
+    "name": "Oak dining chair",
+    "category": "chair",
+    "size": {
+      "width": 0.45,
+      "depth": 0.5,
+      "height": 0.82
+    },
+    "price": 79.0,
+    "style_tags": [
+      "scandinavian",
+      "japandi"
+    ],
+    "color": "oak",
+    "front": "+z",
+    "description": "Stackable dining chair"
+  },
+  {
+    "id": "rattan-desk-chair",
+    "name": "Rattan desk chair",
+    "category": "chair",
+    "size": {
+      "width": 0.5,
+      "depth": 0.5,
+      "height": 0.9
+    },
+    "price": 99.0,
+    "style_tags": [
+      "boho"
+    ],
+    "color": "natural",
+    "front": "+z",
+    "description": "Swivel chair on castors"
+  },
+  {
+    "id": "rattan-dining-chair",
+    "name": "Rattan dining chair",
+    "category": "chair",
+    "size": {
+      "width": 0.45,
+      "depth": 0.5,
+      "height": 0.82
+    },
+    "price": 79.0,
+    "style_tags": [
+      "boho"
+    ],
+    "color": "natural",
+    "front": "+z",
+    "description": "Stackable dining chair"
+  },
+  {
+    "id": "walnut-desk-chair",
+    "name": "Walnut desk chair",
+    "category": "chair",
+    "size": {
+      "width": 0.5,
+      "depth": 0.5,
+      "height": 0.9
+    },
+    "price": 129.0,
+    "style_tags": [
+      "mid-century"
+    ],
+    "color": "walnut",
+    "front": "+z",
+    "description": "Swivel chair on castors"
+  },
+  {
+    "id": "walnut-dining-chair",
+    "name": "Walnut dining chair",
+    "category": "chair",
+    "size": {
+      "width": 0.45,
+      "depth": 0.5,
+      "height": 0.82
+    },
+    "price": 109.0,
+    "style_tags": [
+      "mid-century"
+    ],
+    "color": "walnut",
+    "front": "+z",
+    "description": "Stackable dining chair"
+  },
+  {
+    "id": "white-desk-chair",
+    "name": "White desk chair",
+    "category": "chair",
+    "size": {
+      "width": 0.45,
+      "depth": 0.45,
+      "height": 0.85
+    },
+    "price": 59.0,
+    "style_tags": [
+      "scandinavian",
+      "modern"
+    ],
+    "color": "white",
+    "front": "+z",
+    "description": "Swivel chair"
+  },
+  {
+    "id": "white-dining-chair",
+    "name": "White lacquered dining chair",
+    "category": "chair",
+    "size": {
+      "width": 0.45,
+      "depth": 0.5,
+      "height": 0.82
+    },
+    "price": 69.0,
+    "style_tags": [
+      "modern",
+      "minimalist",
+      "scandinavian"
+    ],
+    "color": "white",
+    "front": "+z",
+    "description": "Stackable dining chair"
+  }
+]

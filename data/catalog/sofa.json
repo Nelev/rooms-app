@@ -1,0 +1,384 @@
+[
+  {
+    "id": "beige-sofa-2",
+    "name": "Beige linen two-seat sofa",
+    "category": "sofa",
+    "size": {
+      "width": 1.6,
+      "depth": 0.88,
+      "height": 0.82
+    },
+    "price": 599.0,
+    "style_tags": [
+      "japandi",
+      "minimalist"
+    ],
+    "color": "beige",
+    "front": "+z",
+    "description": "Two-seat sofa with loose cushions"
+  },
+  {
+    "id": "beige-sofa-3",
+    "name": "Beige linen three-seat sofa",
+    "category": "sofa",
+    "size": {
+      "width": 2.15,
+      "depth": 0.9,
+      "height": 0.84
+    },
+    "price": 819.0,
+    "style_tags": [
+      "japandi",
+      "minimalist"
+    ],
+    "color": "beige",
+    "front": "+z",
+    "description": "Three-seat sofa with loose cushions"
+  },
+  {
+    "id": "beige-sofa-corner",
+    "name": "Beige linen corner sofa",
+    "category": "sofa",
+    "size": {
+      "width": 2.6,
+      "depth": 1.6,
+      "height": 0.84
+    },
+    "price": 1319.0,
+    "style_tags": [
+      "japandi",
+      "minimalist"
+    ],
+    "color": "beige",
+    "front": "+z",
+    "description": "L-shaped corner sofa, reversible chaise"
+  },
+  {
+    "id": "cognac-sofa-2",
+    "name": "Cognac leather two-seat sofa",
+    "category": "sofa",
+    "size": {
+      "width": 1.6,
+      "depth": 0.88,
+      "height": 0.82
+    },
+    "price": 879.0,
+    "style_tags": [
+      "mid-century",
+      "industrial"
+    ],
+    "color": "cognac",
+    "front": "+z",
+    "description": "Two-seat sofa with loose cushions"
+  },
+  {
+    "id": "cognac-sofa-3",
+    "name": "Cognac leather three-seat sofa",
+    "category": "sofa",
+    "size": {
+      "width": 2.15,
+      "depth": 0.9,
+      "height": 0.84
+    },
+    "price": 1199.0,
+    "style_tags": [
+      "mid-century",
+      "industrial"
+    ],
+    "color": "cognac",
+    "front": "+z",
+    "description": "Three-seat sofa with loose cushions"
+  },
+  {
+    "id": "cognac-sofa-corner",
+    "name": "Cognac leather corner sofa",
+    "category": "sofa",
+    "size": {
+      "width": 2.6,
+      "depth": 1.6,
+      "height": 0.84
+    },
+    "price": 1919.0,
+    "style_tags": [
+      "mid-century",
+      "industrial"
+    ],
+    "color": "cognac",
+    "front": "+z",
+    "description": "L-shaped corner sofa, reversible chaise"
+  },
+  {
+    "id": "cream-sofa-2",
+    "name": "Cream boucle two-seat sofa",
+    "category": "sofa",
+    "size": {
+      "width": 1.6,
+      "depth": 0.88,
+      "height": 0.82
+    },
+    "price": 689.0,
+    "style_tags": [
+      "japandi",
+      "modern"
+    ],
+    "color": "cream",
+    "front": "+z",
+    "description": "Two-seat sofa with loose cushions"
+  },
+  {
+    "id": "cream-sofa-3",
+    "name": "Cream boucle three-seat sofa",
+    "category": "sofa",
+    "size": {
+      "width": 2.15,
+      "depth": 0.9,
+      "height": 0.84
+    },
+    "price": 939.0,
+    "style_tags": [
+      "japandi",
+      "modern"
+    ],
+    "color": "cream",
+    "front": "+z",
+    "description": "Three-seat sofa with loose cushions"
+  },
+  {
+    "id": "cream-sofa-corner",
+    "name": "Cream boucle corner sofa",
+    "category": "sofa",
+    "size": {
+      "width": 2.6,
+      "depth": 1.6,
+      "height": 0.84
+    },
+    "price": 1499.0,
+    "style_tags": [
+      "japandi",
+      "modern"
+    ],
+    "color": "cream",
+    "front": "+z",
+    "description": "L-shaped corner sofa, reversible chaise"
+  },
+  {
+    "id": "green-sofa-2",
+    "name": "Green velvet two-seat sofa",
+    "category": "sofa",
+    "size": {
+      "width": 1.6,
+      "depth": 0.88,
+      "height": 0.82
+    },
+    "price": 659.0,
+    "style_tags": [
+      "mid-century",
+      "boho"
+    ],
+    "color": "green",
+    "front": "+z",
+    "description": "Two-seat sofa with loose cushions"
+  },
+  {
+    "id": "green-sofa-3",
+    "name": "Green velvet three-seat sofa",
+    "category": "sofa",
+    "size": {
+      "width": 2.15,
+      "depth": 0.9,
+      "height": 0.84
+    },
+    "price": 899.0,
+    "style_tags": [
+      "mid-century",
+      "boho"
+    ],
+    "color": "green",
+    "front": "+z",
+    "description": "Three-seat sofa with loose cushions"
+  },
+  {
+    "id": "green-sofa-corner",
+    "name": "Green velvet corner sofa",
+    "category": "sofa",
+    "size": {
+      "width": 2.6,
+      "depth": 1.6,
+      "height": 0.84
+    },
+    "price": 1439.0,
+    "style_tags": [
+      "mid-century",
+      "boho"
+    ],
+    "color": "green",
+    "front": "+z",
+    "description": "L-shaped corner sofa, reversible chaise"
+  },
+  {
+    "id": "grey-sofa-2",
+    "name": "Grey fabric two-seat sofa",
+    "category": "sofa",
+    "size": {
+      "width": 1.6,
+      "depth": 0.88,
+      "height": 0.82
+    },
+    "price": 549.0,
+    "style_tags": [
+      "modern",
+      "scandinavian"
+    ],
+    "color": "grey",
+    "front": "+z",
+    "description": "Two-seat sofa with loose cushions"
+  },
+  {
+    "id": "grey-sofa-3",
+    "name": "Grey fabric three-seat sofa",
+    "category": "sofa",
+    "size": {
+      "width": 2.15,
+      "depth": 0.9,
+      "height": 0.84
+    },
+    "price": 749.0,
+    "style_tags": [
+      "modern",
+      "scandinavian"
+    ],
+    "color": "grey",
+    "front": "+z",
+    "description": "Three-seat sofa with loose cushions"
+  },
+  {
+    "id": "grey-sofa-corner",
+    "name": "Grey fabric corner sofa",
+    "category": "sofa",
+    "size": {
+      "width": 2.6,
+      "depth": 1.6,
+      "height": 0.84
+    },
+    "price": 1199.0,
+    "style_tags": [
+      "modern",
+      "scandinavian"
+    ],
+    "color": "grey",
+    "front": "+z",
+    "description": "L-shaped corner sofa, reversible chaise"
+  },
+  {
+    "id": "leather-wood-sofa-3",
+    "name": "Leather and wood three-seat sofa",
+    "category": "sofa",
+    "size": {
+      "width": 2.73,
+      "depth": 0.92,
+      "height": 1.12
+    },
+    "price": 1299.0,
+    "style_tags": [
+      "mid-century",
+      "industrial"
+    ],
+    "color": "brown",
+    "front": "+z",
+    "glb_url": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/8f492390ddc7a2ae221a1369ef560589cf8c70fb/Models/SheenWoodLeatherSofa/glTF-Binary/SheenWoodLeatherSofa.glb",
+    "license": "CC-BY-4.0",
+    "description": "Three-seat leather sofa on a wooden frame. Model: SheenWoodLeatherSofa by Fran Calvente (CC0), improved by Eric Chadwick / DGG, CC-BY-4.0"
+  },
+  {
+    "id": "navy-sofa-2",
+    "name": "Navy velvet two-seat sofa",
+    "category": "sofa",
+    "size": {
+      "width": 1.6,
+      "depth": 0.88,
+      "height": 0.82
+    },
+    "price": 629.0,
+    "style_tags": [
+      "traditional",
+      "modern"
+    ],
+    "color": "navy",
+    "front": "+z",
+    "description": "Two-seat sofa with loose cushions"
+  },
+  {
+    "id": "navy-sofa-3",
+    "name": "Navy velvet three-seat sofa",
+    "category": "sofa",
+    "size": {
+      "width": 2.15,
+      "depth": 0.9,
+      "height": 0.84
+    },
+    "price": 859.0,
+    "style_tags": [
+      "traditional",
+      "modern"
+    ],
+    "color": "navy",
+    "front": "+z",
+    "description": "Three-seat sofa with loose cushions"
+  },
+  {
+    "id": "navy-sofa-corner",
+    "name": "Navy velvet corner sofa",
+    "category": "sofa",
+    "size": {
+      "width": 2.6,
+      "depth": 1.6,
+      "height": 0.84
+    },
+    "price": 1379.0,
+    "style_tags": [
+      "traditional",
+      "modern"
+    ],
+    "color": "navy",
+    "front": "+z",
+    "description": "L-shaped corner sofa, reversible chaise"
+  },
+  {
+    "id": "pink-velvet-sectional-sofa",
+    "name": "Velvet sectional sofa",
+    "category": "sofa",
+    "size": {
+      "width": 2.19,
+      "depth": 1.02,
+      "height": 0.79
+    },
+    "price": 1099.0,
+    "style_tags": [
+      "modern",
+      "traditional"
+    ],
+    "color": "pink",
+    "front": "+z",
+    "glb_url": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/8f492390ddc7a2ae221a1369ef560589cf8c70fb/Models/GlamVelvetSofa/glTF-Binary/GlamVelvetSofa.glb",
+    "license": "CC-BY-4.0",
+    "description": "Velvet sectional sofa with chaise. Model: GlamVelvetSofa by Eric Chadwick, (c) Wayfair, CC-BY-4.0"
+  },
+  {
+    "id": "teal-sofa-3",
+    "name": "Teal three-seat sofa",
+    "category": "sofa",
+    "size": {
+      "width": 2.2,
+      "depth": 0.9,
+      "height": 0.85
+    },
+    "price": 899.0,
+    "style_tags": [
+      "mid-century"
+    ],
+    "color": "teal",
+    "front": "+z",
+    "license": "CC0-1.0",
+    "description": "Velvet sofa"
+  }
+]

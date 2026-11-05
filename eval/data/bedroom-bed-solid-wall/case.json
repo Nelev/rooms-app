@@ -1,0 +1,29 @@
+{
+  "photo_keys": [
+    "fixtures/small-bedroom/photo-1.jpg",
+    "fixtures/small-bedroom/photo-2.jpg"
+  ],
+  "dimensions": {
+    "width": 3.2,
+    "length": 3.4,
+    "height": 2.6
+  },
+  "room_spec": "fixtures/small-bedroom/room_spec.json",
+  "brief": {
+    "room_use": "bedroom",
+    "styles": [
+      "minimalist"
+    ],
+    "budget": 1200,
+    "must_haves": [
+      "double bed",
+      "two nightstands"
+    ],
+    "keep": [
+      "wardrobe"
+    ],
+    "remove": [],
+    "notes": "Headboard against a solid wall, not under the window, with a clear path from the door"
+  },
+  "category": "layout"
+}

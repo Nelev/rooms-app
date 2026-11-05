@@ -96,7 +96,7 @@ export interface paths {
         put?: never;
         /**
          * Set Camera Pose
-         * @description Set the scene's camera for a photo (pose.photo_key), e.g. after the user aligns it; 409 before the scene exists.
+         * @description Solve the photo's camera and save it in the scene; 409 before the scene exists, 400 if no pose fits the points.
          */
         post: operations["set_camera_pose_threads__thread_id__camera_pose_post"];
         delete?: never;
@@ -323,6 +323,22 @@ export interface components {
              */
             reprojection_error?: number | null;
         };
+        /** CameraPoseRequest */
+        CameraPoseRequest: {
+            /** Photo Key */
+            photo_key?: string | null;
+            /** Image Width */
+            image_width: number;
+            /** Image Height */
+            image_height: number;
+            /**
+             * Focal Length 35Mm
+             * @description EXIF FocalLengthIn35mmFilm; searched for when missing
+             */
+            focal_length_35mm?: number | null;
+            /** Points */
+            points: components["schemas"]["CornerPoint"][];
+        };
         /**
          * CatalogItem
          * @example {
@@ -506,6 +522,34 @@ export interface components {
              * @default []
              */
             overlay_keys: string[];
+        };
+        /**
+         * CornerPoint
+         * @description A room corner clicked on the photo.
+         */
+        CornerPoint: {
+            /**
+             * Corner
+             * @description The floor corner where this wall starts: A (0, 0), B (width, 0), C (width, length), D (0, length)
+             * @enum {string}
+             */
+            corner: "A" | "B" | "C" | "D";
+            /**
+             * Ceiling
+             * @description The ceiling corner above it instead
+             * @default false
+             */
+            ceiling: boolean;
+            /**
+             * X
+             * @description Pixels from the image's left edge
+             */
+            x: number;
+            /**
+             * Y
+             * @description Pixels from the image's top edge
+             */
+            y: number;
         };
         /**
          * Critique
@@ -1907,7 +1951,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CameraPose"];
+                "application/json": components["schemas"]["CameraPoseRequest"];
             };
         };
         responses: {
@@ -1917,7 +1961,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Scene"];
+                    "application/json": components["schemas"]["CameraPose"];
                 };
             };
             /** @description Validation Error */
