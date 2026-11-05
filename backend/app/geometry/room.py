@@ -70,9 +70,9 @@ def _along(spec: RoomSpec, wall: Wall, offset: float, width: float, start: float
 
 def _door(spec: RoomSpec, f: Feature) -> Solid:
     zone: BaseGeometry = _along(spec, f.wall, f.offset, f.width, 0, f.width)
-    if f.swing == "in":  # a quarter disc about the hinge; seen from inside, left is along the wall's direction
+    if f.swing != "out":  # a quarter disc about the hinge; seen from inside, left is along the wall's direction
         (x0, y0), (dx, dy), length = _wall_frame(spec, f.wall)
-        t = f.offset * length + (f.width / 2 if f.hinge == "left" else -f.width / 2)
+        t = f.offset * length + (f.width / 2 if f.hinge != "right" else -f.width / 2)
         hinge = Point(x0 + dx * t, y0 + dy * t)
         zone = zone.intersection(hinge.buffer(f.width))
     return Solid(f.id, zone, 0, f.height)

@@ -108,6 +108,13 @@ def test_door_swing(hinge: str, swing: str, area: float, inside: tuple[float, fl
     assert zone.contains(Point(inside)) and not zone.contains(Point(outside))
 
 
+@pytest.mark.parametrize("field", [{"swing": "out"}, {"hinge": "right"}])
+def test_swing_and_hinge_are_for_doors_only(field: dict[str, str]) -> None:
+    window = {"id": "window", "type": "window", "wall": "C", "offset": 0.5, "width": 1.2, "height": 1.4, **field}
+    with pytest.raises(ValueError, match="doors only"):
+        room(features=[window])
+
+
 @pytest.mark.parametrize(
     ("wall", "inside", "outside"),
     [

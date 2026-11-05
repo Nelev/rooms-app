@@ -1465,24 +1465,36 @@
             "default": 0
           },
           "swing": {
-            "type": "string",
-            "enum": [
-              "in",
-              "out"
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "in",
+                  "out"
+                ]
+              },
+              {
+                "type": "null"
+              }
             ],
             "title": "Swing",
-            "description": "Doors only: whether the door opens into the room or out of it",
-            "default": "in"
+            "description": "Doors only: whether the door opens into the room or out of it; a door without it opens in"
           },
           "hinge": {
-            "type": "string",
-            "enum": [
-              "left",
-              "right"
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "left",
+                  "right"
+                ]
+              },
+              {
+                "type": "null"
+              }
             ],
             "title": "Hinge",
-            "description": "Doors only: the hinge side, seen from inside the room facing the door",
-            "default": "left"
+            "description": "Doors only: the hinge side, seen from inside the room facing the door; a door without it is hinged left"
           },
           "confidence": {
             "type": "number",

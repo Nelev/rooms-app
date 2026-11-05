@@ -736,18 +736,14 @@ export interface components {
             sill_height: number;
             /**
              * Swing
-             * @description Doors only: whether the door opens into the room or out of it
-             * @default in
-             * @enum {string}
+             * @description Doors only: whether the door opens into the room or out of it; a door without it opens in
              */
-            swing: "in" | "out";
+            swing?: ("in" | "out") | null;
             /**
              * Hinge
-             * @description Doors only: the hinge side, seen from inside the room facing the door
-             * @default left
-             * @enum {string}
+             * @description Doors only: the hinge side, seen from inside the room facing the door; a door without it is hinged left
              */
-            hinge: "left" | "right";
+            hinge?: ("left" | "right") | null;
             /**
              * Confidence
              * @default 1
