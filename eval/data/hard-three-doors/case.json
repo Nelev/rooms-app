@@ -81,6 +81,7 @@
     ],
     "notes": "A walk-through room between the hall, the kitchen and the bedroom"
   },
+  "photos_match_room": false,
   "category": "layout",
   "expected": "Keeps all three door swings and the walkways between the doors clear, so the sofa goes against wall C or the free part of wall B; says so if a must-have cannot fit."
 }

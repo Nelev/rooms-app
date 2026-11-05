@@ -29,6 +29,9 @@ class Case(NewDesign):
     room_spec: RoomSpec = Field(description="The room as a person labeled it from the photos")
     category: Category = Field(description="What the brief mainly asks for")
     expected: str | None = Field(None, description="Hard cases only: what a correct run does instead of a plain design")
+    photos_match_room: bool = Field(
+        True, description="False when the photos show another room than `room_spec`: photo-analysis scoring must skip the case"
+    )
 
     @field_validator("room_spec", "brief", mode="before")
     @classmethod

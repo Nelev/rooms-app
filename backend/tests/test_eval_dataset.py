@@ -28,6 +28,10 @@ def test_hard_cases_say_what_a_correct_run_does() -> None:
     assert {name for name, c in CASES.items() if c.expected is not None} == HARD
 
 
+def test_only_borrowed_photo_cases_skip_photo_scoring() -> None:
+    assert {name for name, c in CASES.items() if not c.photos_match_room} == {"hard-tiny-room", "hard-three-doors"}
+
+
 @pytest.mark.parametrize("name", CASES)
 def test_case_is_consistent(name: str) -> None:
     case = CASES[name]

@@ -14,6 +14,7 @@ A `NewDesign` run input plus the labels:
 | `room_spec` | `RoomSpec`, or a path from the repo root to one | The room as a person labeled it from the photos |
 | `category` | `functionality`, `layout`, `color_scheme` or `atmosphere` | I-Design's brief categories: what the brief mainly asks for |
 | `expected` | string, hard cases only | What a correct run does instead of a plain design |
+| `photos_match_room` | bool, default `true` | `false` when the photos show another room than `room_spec`; photo-analysis scoring must skip the case |
 
 Put a real room's photos next to its `case.json` (`eval/data/<case>/photo-1.jpg`, referenced as `eval/data/<case>/photo-1.jpg`) and label its `RoomSpec` inline.
 
@@ -24,5 +25,8 @@ Put a real room's photos next to its `case.json` (`eval/data/<case>/photo-1.jpg`
 
 ## Not done yet
 
-- **No real rooms.** Every photo is a fixture placeholder (see `fixtures/README.md`), so the room specs are not labeled from real photos and photo analysis cannot be scored. `hard-tiny-room` and `hard-three-doors` borrow photos of other fixture rooms. Labeling the first 10 real rooms needs real photos.
+E-01 stays open until these are done.
+
+
+- **No real rooms.** Every photo is a fixture placeholder (see `fixtures/README.md`), so the room specs are not labeled from real photos and photo analysis cannot be scored. `hard-tiny-room` and `hard-three-doors` borrow photos of other fixture rooms, so they set `photos_match_room: false`. Labeling the first 10 real rooms needs real photos.
 - **No dark-photo case**: it needs a real dark photo.

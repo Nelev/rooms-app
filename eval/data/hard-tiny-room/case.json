@@ -65,6 +65,7 @@
     ],
     "notes": "Box room, 1.8 x 2.1 m"
   },
+  "photos_match_room": false,
   "category": "functionality",
   "expected": "Fits a single bed and a compact desk with the door swing clear, or drops the desk and says why; never places items outside the room or overlapping."
 }
