@@ -25,8 +25,9 @@ export function path(template: Path, params: Record<string, string> = {}): strin
 
 // Where a photo is read, by its key (an upload's or a fixture's): the API serves it or redirects to a signed URL of it. An <img> sends no
 // Authorization header: once there is sign-in (A-01), this route needs another way to know the person (a cookie or a token in the query).
+// Each segment is encoded on its own: some proxies and CDNs reject or rewrite an encoded slash (%2F).
 export function photoUrl(key: string): string {
-  return API_URL + path("/uploads/{key}", { key });
+  return `${API_URL}/uploads/${key.split("/").map(encodeURIComponent).join("/")}`;
 }
 
 // The access token of the signed-in person, once there is sign-in (A-01): until then requests go without one.
