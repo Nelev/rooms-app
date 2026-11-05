@@ -3,9 +3,10 @@ import { join } from "node:path";
 import type { Thread, ThreadState } from "@/lib/api";
 
 // The stub API (`make dev-stub`) as a fetch, for tests: it replays what the stub answered for one project (stub/, recorded by
-// record.sh). Its design run streams up to the confirm_room interrupt, the resumed run to the end; like the stub, a run goes on
-// without the client and can be rejoined from its first part. Streams arrive in small chunks, and stop after their first one
-// while the test holds them (`hold()`, until `release()`), so a test can leave in the middle of a run.
+// record.sh). Its design run streams up to the confirm_room interrupt, the resumed run to the end, then each chat run streams the
+// fixture's next chat turn (chat.json: an applied edit, then a refused one). Like the stub, a run goes on without the client and
+// can be rejoined from its first part. Streams arrive in small chunks, and stop after their first one while the test holds them
+// (`hold()`, until `release()`), so a test can leave in the middle of a run.
 
 const read = (name: string) => readFileSync(join(import.meta.dirname, "stub", name), "utf8");
 const CHUNK = 200; // bytes: Server-Sent Events are cut across chunks
@@ -35,8 +36,10 @@ function sse(text: string, signal: AbortSignal | null | undefined, held: () => P
 
 export function stubApi() {
   const thread: Thread = JSON.parse(read("thread.json"));
-  const states: ThreadState[] = ["state-new.json", "state-interrupt.json", "state-done.json"].map((name) => JSON.parse(read(name)));
-  const runs = [read("first-run.sse"), read("resumed-run.sse")];
+  const states: ThreadState[] = ["state-new.json", "state-interrupt.json", "state-done.json", "state-chat-1.json", "state-chat-2.json"].map((name) =>
+    JSON.parse(read(name)),
+  );
+  const runs = ["first-run.sse", "resumed-run.sse", "chat-1.sse", "chat-2.sse"].map(read);
   let step = 0; // the runs done: the state is states[step]
   let latest: string | undefined;
   let held = Promise.resolve();
