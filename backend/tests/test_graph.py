@@ -52,6 +52,7 @@ def test_design_run_pauses_at_confirm_room_then_chat_runs_take_the_chat_branch()
     values: RunState = graph.get_state(config).values
     assert values["best"] is None and values["fallback"].changes == []  # best is the loop's, cleared at the end
     assert (values["critique"].round, values["critique"].actions) == (1, []) and not graph.get_state(config).next
+    assert values["scene"].cameras == []  # the fixture scene's camera is matched to the fixture photo, not the user's
 
     applied, refused = fixture("chat")
     assert traced_nodes(graph, applied["input"]) == CHAT
