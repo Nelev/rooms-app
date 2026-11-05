@@ -1,7 +1,9 @@
+import os
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.store.memory import InMemoryStore
 
@@ -25,6 +27,12 @@ app = FastAPI(title="rooms-app", lifespan=lifespan)
 app.add_middleware(RequestId)
 for module in (threads, camera, runs, uploads, catalog):
     app.include_router(module.router)
+
+# local development: the Next.js dev server calls this API straight from the browser (CORS_ORIGINS: comma-separated, to allow another)
+origins = os.getenv("CORS_ORIGINS", "http://localhost:3000").split(",")
+app.add_middleware(
+    CORSMiddleware, allow_origins=origins, allow_methods=["GET", "POST", "DELETE"], allow_headers=["Authorization", "Content-Type"]
+)
 
 
 @app.get("/health")

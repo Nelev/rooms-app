@@ -3,9 +3,9 @@ name: Frontend
 on:
   push:
     branches: [main]
-    paths: ["frontend/**", "contracts/openapi.json", ".github/workflows/frontend.yml"]
+    paths: ["frontend/**", "contracts/openapi.json", "fixtures/**", ".github/workflows/frontend.yml"] # the hooks' tests read fixtures/
   pull_request: # any base branch: PRs are stacked on their dependency's branch
-    paths: ["frontend/**", "contracts/openapi.json", ".github/workflows/frontend.yml"]
+    paths: ["frontend/**", "contracts/openapi.json", "fixtures/**", ".github/workflows/frontend.yml"] # the hooks' tests read fixtures/
 
 permissions:
   contents: read
