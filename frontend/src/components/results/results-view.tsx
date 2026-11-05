@@ -30,7 +30,7 @@ function Thumbnail({ item }: { item: CatalogItem }) {
 }
 
 function Link({ item }: { item: CatalogItem }) {
-  if (!item.url) return null;
+  if (!item.url || !/^https?:\/\//i.test(item.url)) return null; // catalog URLs are untrusted: never render javascript: and co.
   return (
     <a
       href={item.url}

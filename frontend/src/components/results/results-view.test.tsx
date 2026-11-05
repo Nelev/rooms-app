@@ -64,7 +64,11 @@ test("the selected item shows the Sourcer's other candidates; the Critic's rules
   if (!bed || !values.brief) throw new Error("fixture changed");
   values.candidates = {
     ...values.candidates,
-    bed: [bed, { ...bed, id: "pine-bed", name: "Pine bed", price: 299, url: "https://shop.example/pine-bed" }],
+    bed: [
+      bed,
+      { ...bed, id: "pine-bed", name: "Pine bed", price: 299, url: "https://shop.example/pine-bed" },
+      { ...bed, id: "evil-bed", name: "Evil bed", url: "javascript:alert(1)" },
+    ],
   };
   values.critique = {
     round: 2,
@@ -81,9 +85,9 @@ test("the selected item shows the Sourcer's other candidates; the Critic's rules
 
   fireEvent.click(within(row("bed")).getByRole("button", { name: /bed/i }));
   const alternatives = screen.getByRole("list", { name: "Alternatives for the bed" });
-  expect(within(alternatives).getAllByRole("listitem")).toHaveLength(1);
+  expect(within(alternatives).getAllByRole("listitem")).toHaveLength(2);
   expect(within(alternatives).getByText("Pine bed")).toBeTruthy();
-  expect(within(alternatives).getByRole("link").getAttribute("href")).toBe("https://shop.example/pine-bed");
+  expect(within(alternatives).getByRole("link").getAttribute("href")).toBe("https://shop.example/pine-bed"); // not the javascript: one
   fireEvent.click(within(row("desk")).getByRole("button", { name: /desk/i }));
   expect(within(row("desk")).getByText("No other candidates.")).toBeTruthy();
 
