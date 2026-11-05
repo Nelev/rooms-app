@@ -83,7 +83,9 @@ def test_endpoint_saves_the_pose_in_the_scene() -> None:
         stream(client, f"{url}/runs/stream", {"input": design_input()})
         stream(client, f"{url}/runs/stream", {"command": {"resume": fixture("room_spec")}})
         assert client.post(f"{url}/camera-pose", json={**body, "points": body["points"][:3]}).status_code == 422
-        assert client.post(f"{url}/camera-pose", json={**body, "points": body["points"][:1] * 4}).status_code == 400
+        assert client.post(f"{url}/camera-pose", json={**body, "points": body["points"][:1] * 4}).status_code == 422
+        shifted = [{**p, "x": q["x"], "y": q["y"]} for p, q in zip(body["points"], body["points"][1:] + body["points"][:1], strict=True)]
+        assert client.post(f"{url}/camera-pose", json={**body, "points": shifted}).status_code == 400  # mismatched corners
 
         pose = CameraPose.model_validate(client.post(f"{url}/camera-pose", json=body).json())
         assert_close(pose, known)

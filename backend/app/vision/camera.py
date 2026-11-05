@@ -17,6 +17,7 @@ FOCAL_SEARCH = (0.3, 1.5)  # unknown focal length: f / the image's longer side, 
 # (telephoto photos, narrower than that, need the EXIF focal length)
 ROOM_TO_THREE = np.array([[1.0, 0, 0], [0, 0, 1], [0, -1, 0]])  # room (x, y, z) -> three.js (x, z, -y), see coords.py
 CV_TO_THREE_CAMERA = np.diag([1.0, -1, -1])  # an OpenCV camera looks down +z with y down, a three.js one down -z with y up
+MAX_ERROR = 0.02  # RMS reprojection error, as a fraction of the image diagonal, above which the points are likely mismatched
 
 
 def _solve(room: Array, image: Array, f: float, width: int, height: int) -> tuple[float, MatLike, MatLike]:
@@ -40,7 +41,10 @@ def solve_camera_pose(
     image_height: int,
     focal_length_35mm: float | None = None,
 ) -> CameraPose:
-    """The pose in the three.js convention; without a focal length (EXIF), the one with the lowest error in FOCAL_SEARCH."""
+    """The pose in the three.js convention; without a focal length (EXIF), the one with the lowest error in FOCAL_SEARCH.
+
+    ValueError if no pose fits, or the best one is over MAX_ERROR off.
+    """
     room, image = np.array(room_points, dtype=np.float64), np.array(image_points, dtype=np.float64)
     if focal_length_35mm:
         f = focal_length_35mm * math.hypot(image_width, image_height) / FULL_FRAME_DIAGONAL_MM
@@ -56,6 +60,8 @@ def solve_camera_pose(
         best, step = min(coarse, key=error), coarse[1] / coarse[0]
         f = float(min(np.geomspace(best / step, best * step, 41), key=error))
     reprojection_error, rvec, tvec = _solve(room, image, f, image_width, image_height)
+    if reprojection_error > MAX_ERROR * math.hypot(image_width, image_height):
+        raise ValueError(f"The points are {reprojection_error:.0f} px off the best camera pose: check which corner each one is")
 
     to_camera, _ = cv2.Rodrigues(rvec)  # room -> OpenCV camera
     position = ROOM_TO_THREE @ (-to_camera.T @ tvec.ravel())

@@ -3,10 +3,10 @@
 import asyncio
 
 from fastapi import APIRouter, HTTPException
-from pydantic import Field
+from pydantic import Field, field_validator
 
 from app.api.deps import Graph, ThreadConfig
-from app.api.threads import _idle
+from app.api.threads import idle
 from app.schemas import CameraPose, Scene
 from app.schemas.base import Model
 from app.schemas.coords import Wall
@@ -31,11 +31,18 @@ class CameraPoseRequest(Model):
     focal_length_35mm: float | None = Field(None, gt=0, description="EXIF FocalLengthIn35mmFilm; searched for when missing")
     points: list[CornerPoint] = Field(min_length=4)
 
+    @field_validator("points")
+    @classmethod
+    def _distinct(cls, points: list[CornerPoint]) -> list[CornerPoint]:
+        if len({(p.corner, p.ceiling) for p in points}) < len(points):
+            raise ValueError("Each corner can be clicked only once")
+        return points
+
 
 @router.post("/{thread_id}/camera-pose")
 async def set_camera_pose(body: CameraPoseRequest, graph: Graph, config: ThreadConfig) -> CameraPose:
     """Solve the photo's camera and save it in the scene; 409 before the scene exists, 400 if no pose fits the points."""
-    _idle(config)
+    idle(config)
     scene: Scene | None = (await graph.aget_state(config)).values.get("scene")
     if scene is None:
         raise HTTPException(409, "The thread has no scene yet")

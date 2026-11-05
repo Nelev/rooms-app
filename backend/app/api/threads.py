@@ -41,7 +41,7 @@ async def _current(graph: Graph, config: ThreadConfig) -> ThreadState:
     return _state(await graph.aget_state(config), running(config["configurable"]["thread_id"]))
 
 
-def _idle(config: ThreadConfig) -> None:
+def idle(config: ThreadConfig) -> None:
     if running(config["configurable"]["thread_id"]):
         raise HTTPException(409, "A run is active on this thread")
 
@@ -75,7 +75,7 @@ async def get_history(graph: Graph, config: ThreadConfig) -> list[ThreadState]:
 @router.post("/{thread_id}/revert")
 async def revert(body: Revert, graph: Graph, config: ThreadConfig) -> ThreadState:
     """Make an earlier checkpoint the thread's current state; 409 while a run is active."""
-    _idle(config)
+    idle(config)
     target: RunnableConfig = {
         **config,
         "configurable": {**config["configurable"], "checkpoint_ns": "", "checkpoint_id": body.checkpoint_id},
