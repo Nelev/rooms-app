@@ -21,8 +21,8 @@ def after_route_input(state: RunState) -> Literal["analyze_room", "chat_edit"]:
 
 
 def after_solve(state: RunState, config: RunnableConfig) -> Literal["critic", "present"]:
-    """A chat edit is presented (not re-validated while chat_edit is a stub); a new design goes to the critic, unless the run has
-    `no_critic`."""
+    """A chat edit is presented (solve validated it; chat_edit refuses the edits that do not fit); a new design goes to the critic,
+    unless the run has `no_critic`."""
     return "present" if state["mode"] == "chat" or flags(config).no_critic else "critic"
 
 
