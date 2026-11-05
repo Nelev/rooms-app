@@ -54,7 +54,7 @@ from metrics.layout import layout_metrics
 
 from app import llm
 from app.api.models import RunConfigurable
-from app.catalog.embed import DIMS, index_config, seed
+from app.catalog.embed import DIMS, get_embeddings, index_config, seed
 from app.graph.graph import build_graph, serde
 from app.graph.state import RunState
 from app.llm.fake import FakeLLM
@@ -66,7 +66,7 @@ VARIANTS = ["baseline", "full", *RunConfigurable.model_fields]
 MEASURED = ("latency_s", "cost_usd", "input_tokens", "output_tokens")  # blank offline: not real numbers then
 
 Row = dict[str, Any]
-Judge = Callable[[Case, RunState], Mapping[str, float]]  # a run's grades by name, e.g. an LLM judge's (E-04)
+Judge = Callable[[Case, RunState], Mapping[str, Any]]  # a run's grades by name, e.g. an LLM judge's (E-04, ablation.judge)
 Pipeline = Callable[[str, Case], tuple[RunState, RoomSpec | None]]  # (thread id, case) -> final state, the room the analyst read
 
 
@@ -81,6 +81,8 @@ def pipeline(variant: str, live: bool) -> Pipeline:
 
         return baseline
 
+    if live:  # a new client: the cached one's async connections belong to an earlier pipeline's asyncio.run, whose loop is closed
+        get_embeddings.cache_clear()
     store = InMemoryStore(index=index_config(None if live else DeterministicFakeEmbedding(size=DIMS)))
     asyncio.run(seed(store))
     graph = build_graph(InMemorySaver(serde=serde()), store)
