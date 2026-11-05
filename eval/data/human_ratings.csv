@@ -1,0 +1,7 @@
+variant,case,repeat,render,rater,functionality,layout,color_scheme,atmosphere,realism
+baseline,bedroom-calm,1,e06-b170c462b061,,,,,,
+baseline,office-focused,1,e06-51342fa12916,,,,,,
+baseline,living-airy,1,e06-0879f6156a6e,,,,,,
+no_critic,bedroom-calm,1,e06-9c610c4ad1b2,,,,,,
+no_critic,office-focused,1,e06-9059a0a592ba,,,,,,
+no_critic,living-airy,1,e06-c68273590b64,,,,,,

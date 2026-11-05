@@ -6,7 +6,7 @@ from pathlib import Path
 from statistics import fmean
 from typing import Any
 
-KEYS = ("case", "category", "repeat", "error")  # the row's columns that are not averaged
+KEYS = ("variant", "case", "category", "repeat", "error", "render")  # the row's columns that are not averaged
 
 
 def mean(rows: Sequence[dict[str, Any]], column: str) -> str:
@@ -15,20 +15,21 @@ def mean(rows: Sequence[dict[str, Any]], column: str) -> str:
     return f"{fmean(values):.4g}" if values else ""  # significant digits: a run's model cost can be under $0.001
 
 
-def markdown(rows: Sequence[dict[str, Any]], columns: Sequence[str], title: str) -> str:
+def markdown(rows: Sequence[dict[str, Any]], columns: Sequence[str], title: str, by: str = "case") -> str:
+    """The means of every metric per `by` (a column: the case, or the variant of an ablation) and over all runs."""
     metrics = [c for c in columns if c not in KEYS]
     by_case: dict[str, list[dict[str, Any]]] = {}
     for row in rows:
-        by_case.setdefault(row["case"], []).append(row)
+        by_case.setdefault(row[by], []).append(row)
     costs = [c for r in rows if isinstance(c := r.get("cost_usd"), int | float)]
     cost = f"total model cost ${sum(costs):.4f}" if costs else "model cost not measured"
     lines = [
         "# Eval report",
         "",
         title + ".",
-        f"{len(rows)} runs, {sum(bool(r['error']) for r in rows)} failed; {cost}. Means over each case's runs:",
+        f"{len(rows)} runs, {sum(bool(r['error']) for r in rows)} failed; {cost}. Means over each {by}'s runs:",
         "",
-        "| " + " | ".join(["case", "runs", "failed", *metrics]) + " |",
+        "| " + " | ".join([by, "runs", "failed", *metrics]) + " |",
         "|" + " --- |" * (len(metrics) + 3),
     ]
     for case, group in [*by_case.items(), ("**all**", list(rows))]:
@@ -37,11 +38,11 @@ def markdown(rows: Sequence[dict[str, Any]], columns: Sequence[str], title: str)
     return "\n".join(lines) + "\n"
 
 
-def write(rows: Sequence[dict[str, Any]], out: Path, title: str) -> None:
+def write(rows: Sequence[dict[str, Any]], out: Path, title: str, by: str = "case") -> None:
     columns = list(dict.fromkeys(k for r in rows for k in r))
     out.mkdir(parents=True, exist_ok=True)
     with (out / "runs.csv").open("w", newline="") as f:
         writer = csv.DictWriter(f, columns)
         writer.writeheader()
         writer.writerows(rows)
-    (out / "report.md").write_text(markdown(rows, columns, title))
+    (out / "report.md").write_text(markdown(rows, columns, title, by))

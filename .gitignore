@@ -7,5 +7,8 @@ __pycache__/
 .env*
 !.env.example
 *.tsbuildinfo
-eval/results/
+eval/results/*
+# the E-06 pilot's report, charts and the renders people rate; not its per-variant runner output
+!eval/results/pilot/
+eval/results/pilot/runs/
 backend/.uploads/

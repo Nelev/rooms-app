@@ -1,0 +1,197 @@
+{
+  "room": {
+    "dimensions": {
+      "width": 3.0,
+      "length": 3.0,
+      "height": 2.7
+    },
+    "walls": [
+      {
+        "wall": "A",
+        "color": "#ffffff"
+      },
+      {
+        "wall": "B",
+        "color": "#ffffff"
+      },
+      {
+        "wall": "C",
+        "color": "#ffffff"
+      },
+      {
+        "wall": "D",
+        "color": "#ffffff"
+      }
+    ],
+    "floor_material": "grey carpet",
+    "features": [
+      {
+        "id": "door_1",
+        "type": "door",
+        "wall": "A",
+        "offset": 0.2,
+        "width": 0.8,
+        "height": 2.1,
+        "sill_height": 0.0,
+        "swing": null,
+        "hinge": null,
+        "confidence": 0.95
+      },
+      {
+        "id": "window_1",
+        "type": "window",
+        "wall": "B",
+        "offset": 0.5,
+        "width": 1.2,
+        "height": 1.4,
+        "sill_height": 0.9,
+        "swing": null,
+        "hinge": null,
+        "confidence": 0.9
+      }
+    ],
+    "kept_furniture": [
+      {
+        "id": "kept_1",
+        "name": "filing cabinet",
+        "x": 0.3,
+        "y": 1.5,
+        "rotation": 270.0,
+        "size": {
+          "width": 0.4,
+          "depth": 0.6,
+          "height": 0.7
+        }
+      }
+    ],
+    "warnings": []
+  },
+  "items": [
+    {
+      "node_id": "desk",
+      "item_id": "oak-desk-120",
+      "x": 2.158,
+      "y": 2.7,
+      "z": 0.0,
+      "rotation": 180.0,
+      "size": {
+        "width": 1.2,
+        "depth": 0.6,
+        "height": 0.75
+      },
+      "item": {
+        "id": "oak-desk-120",
+        "name": "Oak desk",
+        "category": "desk",
+        "size": {
+          "width": 1.2,
+          "depth": 0.6,
+          "height": 0.75
+        },
+        "price": 169.0,
+        "style_tags": [
+          "scandinavian",
+          "japandi"
+        ],
+        "color": "oak",
+        "front": "+z",
+        "glb_url": null,
+        "license": null,
+        "url": null,
+        "image_url": null,
+        "description": "Desk with a cable tray"
+      }
+    },
+    {
+      "node_id": "bookshelf",
+      "item_id": "oak-bookshelf-80",
+      "x": 2.85,
+      "y": 0.456,
+      "z": 0.0,
+      "rotation": 90.0,
+      "size": {
+        "width": 0.8,
+        "depth": 0.3,
+        "height": 1.8
+      },
+      "item": {
+        "id": "oak-bookshelf-80",
+        "name": "Oak bookshelf",
+        "category": "shelf",
+        "size": {
+          "width": 0.8,
+          "depth": 0.3,
+          "height": 1.8
+        },
+        "price": 99.0,
+        "style_tags": [
+          "scandinavian",
+          "japandi"
+        ],
+        "color": "oak",
+        "front": "+z",
+        "glb_url": null,
+        "license": null,
+        "url": null,
+        "image_url": null,
+        "description": "Five shelves"
+      }
+    },
+    {
+      "node_id": "ergonomic_chair",
+      "item_id": "mesh-office-chair",
+      "x": 1.895,
+      "y": 2.024,
+      "z": 0.0,
+      "rotation": 0.0,
+      "size": {
+        "width": 0.6,
+        "depth": 0.6,
+        "height": 1.1
+      },
+      "item": {
+        "id": "mesh-office-chair",
+        "name": "Mesh office chair",
+        "category": "chair",
+        "size": {
+          "width": 0.6,
+          "depth": 0.6,
+          "height": 1.1
+        },
+        "price": 249.0,
+        "style_tags": [
+          "modern"
+        ],
+        "color": "black",
+        "front": "+z",
+        "glb_url": null,
+        "license": "CC0-1.0",
+        "url": null,
+        "image_url": null,
+        "description": "Ergonomic"
+      }
+    },
+    {
+      "node_id": "desk_lamp",
+      "item_id": null,
+      "x": 2.441,
+      "y": 2.731,
+      "z": 0.75,
+      "rotation": 180.0,
+      "size": {
+        "width": 0.2,
+        "depth": 0.2,
+        "height": 0.5
+      },
+      "item": null
+    }
+  ],
+  "lights": [
+    {
+      "kind": "area",
+      "window_id": "window_1",
+      "intensity": 5.0
+    }
+  ],
+  "cameras": []
+}
