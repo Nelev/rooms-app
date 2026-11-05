@@ -70,18 +70,24 @@ async function follow(
 export function useRunStream(threadId: string) {
   const [state, setState] = useState(() => idle(threadId));
   const controller = useRef<AbortController>(null);
+  const last = useRef<Parameters<typeof start>>(null); // F-06: what retry() starts again
 
   // a new stream replaces the one being read; `running` from the start for a run that is being started
   function start(open: (signal: AbortSignal) => Promise<Response>, running: boolean) {
     controller.current?.abort();
     controller.current = new AbortController();
+    last.current = [open, running];
     setState({ ...idle(threadId), running });
     void follow(threadId, open, controller.current.signal, setState);
   }
 
+  function rejoin() {
+    start((signal) => request(path("/threads/{thread_id}/runs/current/stream", { thread_id: threadId }), { signal, timeout: null }), false);
+  }
+
   // biome-ignore lint/correctness/useExhaustiveDependencies: rejoins once per thread
   useEffect(() => {
-    start((signal) => request(path("/threads/{thread_id}/runs/current/stream", { thread_id: threadId }), { signal, timeout: null }), false);
+    rejoin();
     return () => controller.current?.abort();
   }, [threadId]);
 
@@ -91,5 +97,12 @@ export function useRunStream(threadId: string) {
     start((signal) => request(url, { ...init, signal }), true);
   }
 
-  return { ...(state.threadId === threadId ? state : idle(threadId)), submit };
+  // F-06: after an error, rejoin the run when its stream broke while it ran; or else start again what failed: the request that could
+  // not be sent or was refused, or the run that failed on the server (a new run with the same request; a rejoined run only replays)
+  function retry() {
+    if (state.runId && state.error?.kind === "network") rejoin();
+    else if (last.current) start(...last.current);
+  }
+
+  return { ...(state.threadId === threadId ? state : idle(threadId)), submit, retry };
 }

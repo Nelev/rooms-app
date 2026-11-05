@@ -35,9 +35,10 @@ function sse(text: string, signal: AbortSignal | null | undefined, held: () => P
 
 export function stubApi() {
   const thread: Thread = JSON.parse(read("thread.json"));
-  const states: ThreadState[] = ["state-new.json", "state-interrupt.json", "state-done.json"].map((name) => JSON.parse(read(name)));
+  const states: ThreadState[] = ["new", "interrupt", "done"].map((name) => JSON.parse(read(`state-${name}.json`)));
+  const histories: ThreadState[][] = ["new", "interrupt", "done"].map((name) => JSON.parse(read(`history-${name}.json`)));
   const runs = [read("first-run.sse"), read("resumed-run.sse")];
-  let step = 0; // the runs done: the state is states[step]
+  let step = 0; // the runs done: the state is states[step], the history histories[step]
   let latest: string | undefined;
   let held = Promise.resolve();
   let release = () => {};
@@ -51,6 +52,8 @@ export function stubApi() {
         return answer([{ ...thread, status: states[step].status }]);
       case "GET /threads/{thread_id}/state":
         return answer(states[step]);
+      case "GET /threads/{thread_id}/history":
+        return answer(histories[step]);
       case "POST /threads/{thread_id}/runs/stream": {
         const resume = "command" in JSON.parse(String(init?.body));
         if (step === runs.length || resume !== (step === 1)) return answer({ detail: "The thread has no open interrupt to resume" }, 409);
@@ -68,5 +71,5 @@ export function stubApi() {
       release = resolve;
     });
   }
-  return { fetch, thread, states, hold, release: () => release() };
+  return { fetch, thread, states, histories, hold, release: () => release() };
 }

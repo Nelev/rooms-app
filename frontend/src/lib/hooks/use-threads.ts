@@ -51,3 +51,8 @@ export function useProjects() {
 export function useThread(threadId: string) {
   return useGet("/threads/{thread_id}/state", { thread_id: threadId }, threadId);
 }
+
+// A project's checkpoints, newest first (F-06: the run timeline rebuilds the steps of earlier runs from them).
+export function useHistory(threadId: string) {
+  return useGet("/threads/{thread_id}/history", { thread_id: threadId }, threadId);
+}
