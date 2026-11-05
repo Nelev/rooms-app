@@ -148,6 +148,33 @@ describe("RunTimeline", () => {
     await screen.findByRole("button", { name: "Confirm room" });
     expect(screen.queryByRole("alert")).toBeNull();
   });
+
+  it("rejoins the thread's run when the request was refused with a 409", async () => {
+    render(<Page />);
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(2));
+    run.submit(design);
+    await ended();
+    const refused = Response.json({ detail: "A run is already active on this thread" }, { status: 409 });
+    vi.mocked(fetch).mockResolvedValueOnce(refused); // another tab resumed the interrupt
+    fireEvent.click(screen.getByRole("button", { name: "Confirm room" }));
+    await screen.findByRole("alert");
+
+    fireEvent.click(screen.getByRole("button", { name: "Retry" }));
+    await waitFor(() => expect(screen.queryByRole("alert")).toBeNull());
+    const posts = vi.mocked(fetch).mock.calls.filter(([, init]) => init?.method === "POST");
+    expect(posts).toHaveLength(2); // the run and the refused resume: the retry rejoined
+  });
+
+  it("has no retry for a resumed run that failed on the server: its interrupt is gone", async () => {
+    render(<Page />);
+    run.submit(design);
+    await ended();
+    const failed = 'event: metadata\ndata: {"run_id": "failed"}\n\nevent: error\ndata: {"message": "ValueError: no design"}\n\n';
+    vi.mocked(fetch).mockResolvedValueOnce(new Response(failed, { headers: { "Content-Type": "text/event-stream" } }));
+    fireEvent.click(screen.getByRole("button", { name: "Confirm room" }));
+    expect((await screen.findByRole("alert")).textContent).toContain("ValueError: no design");
+    expect(screen.queryByRole("button", { name: "Retry" })).toBeNull();
+  });
 });
 
 describe("historySteps", () => {

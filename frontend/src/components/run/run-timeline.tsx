@@ -24,6 +24,7 @@ export function RunTimeline({ run }: { run: RunStream }) {
   if (interrupt && !(last?.node === "confirm_room" && last.status === "started"))
     steps.push({ node: "confirm_room", status: "started", summary: "" }); // the history has no row for a step that has not ended
   const error = run.error ?? history.error;
+  const retry = run.error ? run.retry : undefined; // none for a resumed run that failed
 
   // consecutive steps of the same Critic round in one group; `at` is the first step's index, a stable key
   const groups: { at: number; round?: number | null; steps: Step[] }[] = [];
@@ -90,10 +91,12 @@ export function RunTimeline({ run }: { run: RunStream }) {
         <div role="alert" className="flex items-center gap-2 rounded-lg bg-destructive/10 p-3 text-sm text-destructive">
           <CircleAlert aria-hidden className="size-4 shrink-0" />
           <span className="flex-1">{error.message}</span>
-          <Button size="sm" variant="outline" onClick={() => (run.error ? run.retry() : history.refetch())}>
-            <RotateCw aria-hidden />
-            Retry
-          </Button>
+          {(retry || !run.error) && (
+            <Button size="sm" variant="outline" onClick={retry ?? history.refetch}>
+              <RotateCw aria-hidden />
+              Retry
+            </Button>
+          )}
         </div>
       )}
     </section>
