@@ -98,8 +98,26 @@ def _cluster(node: str, size: Size, children: dict[str, list[tuple[str, str]]], 
     return shape
 
 
-def solve(graph: SceneGraph, spec: RoomSpec, seed: int = 0, budget: float = 2.0) -> Layout:
+def parents(graph: SceneGraph) -> dict[str, tuple[str, str]]:
+    """Each object's (relation, parent), from its first placing edge."""
+    objects = {n.id for n in graph.nodes if n.kind == "object"}
+    parent: dict[str, tuple[str, str]] = {}
+
+    def ancestors(n: str) -> Iterator[str]:
+        while n in parent:
+            n = parent[n][1]
+            yield n
+
+    # adjacent edges last, and only where they close no loop: the validator gives them no parent, so it lets such loops through
+    for e in sorted(graph.edges, key=lambda e: e.relation == "adjacent"):
+        if e.relation != "facing" and e.source in objects and e.source not in parent and e.source not in (e.target, *ancestors(e.target)):
+            parent[e.source] = (e.relation, e.target)
+    return parent
+
+
+def solve(graph: SceneGraph, spec: RoomSpec, seed: int = 0, budget: float = 2.0, pinned: Layout | None = None) -> Layout:
     """Place every object node; the same seed gives the same layout. Raises Unsolvable after `budget` seconds.
+    The `pinned` placements stay where they are (B-21's chat edits): only the others are placed, around them.
 
     Only each node's parent edge and `in_front`'s turn are honoured: other edges of a node with several, and `facing`, are not
     checked, so a caller (B-18's solve node) should run the layout checks it needs on the result."""
@@ -110,17 +128,7 @@ def solve(graph: SceneGraph, spec: RoomSpec, seed: int = 0, budget: float = 2.0)
     if missing := [n.id for n in objects if not n.size]:
         raise Unsolvable(f"No size for {', '.join(missing)}")
     items = {n.id: n.item_id for n in objects}
-    parent: dict[str, tuple[str, str]] = {}  # child -> (relation, parent), from its first placing edge
-
-    def ancestors(n: str) -> Iterator[str]:
-        while n in parent:
-            n = parent[n][1]
-            yield n
-
-    # adjacent edges last, and only where they close no loop: the validator gives them no parent, so it lets such loops through
-    for e in sorted(graph.edges, key=lambda e: e.relation == "adjacent"):
-        if e.relation != "facing" and e.source in sizes and e.source not in parent and e.source not in (e.target, *ancestors(e.target)):
-            parent[e.source] = (e.relation, e.target)
+    parent = parents(graph)
     children: dict[str, list[tuple[str, str]]] = {}
     for c, (r, p) in parent.items():
         children.setdefault(p, []).append((c, r))
@@ -131,11 +139,12 @@ def solve(graph: SceneGraph, spec: RoomSpec, seed: int = 0, budget: float = 2.0)
     groups: dict[int, list[tuple[str, str]]] = {}  # depth -> (placement id, node id), in graph order
     for n in objects:
         groups.setdefault(depth(n.id), []).extend((n.id if k == 0 else f"{n.id}_{k + 1}", n.id) for k in range(n.quantity))
-    levels = [groups[d] for d in sorted(groups)]
+    pins = {p.node_id: (p, solid(p)) for p in pinned.placements} if pinned else {}
+    levels = [[g for g in groups[d] if g[0] not in pins] for d in sorted(groups)]
     clusters = {n: _cluster(n, s, children, sizes) for n, s in sizes.items()}
     blockers = room.walls + room.obstacles + room.doors + room.windows + room.radiators
     floor = room.floor.buffer(EPS)
-    placed: dict[str, tuple[Placement, Solid]] = {}
+    placed: dict[str, tuple[Placement, Solid]] = dict(pins)
 
     def sample(node: str) -> Placement:
         size = sizes[node]
@@ -192,4 +201,4 @@ def solve(graph: SceneGraph, spec: RoomSpec, seed: int = 0, budget: float = 2.0)
         for pid, _ in (p for level in levels[i - up : i + 1] for p in level):
             placed.pop(pid, None)
         i -= up
-    return Layout(placements=[placed[pid][0] for level in levels for pid, _ in level])
+    return Layout(placements=[p for p, _ in pins.values()] + [placed[pid][0] for level in levels for pid, _ in level])
