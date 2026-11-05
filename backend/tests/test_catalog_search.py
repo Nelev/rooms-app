@@ -136,6 +136,7 @@ def dsn() -> Iterator[str]:
 def fake_embeddings(monkeypatch: pytest.MonkeyPatch) -> Iterator[FakeEmbeddings]:
     fake = FakeEmbeddings()
     monkeypatch.setattr(embed, "get_embeddings", lambda: fake)
+    monkeypatch.setenv("OPENROUTER_API_KEY", "fake")  # open_store needs a key to use Postgres; the fake embeddings never send it
     yield fake
 
 
