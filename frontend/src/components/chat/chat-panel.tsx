@@ -28,12 +28,14 @@ function unquote(text: string): string {
 
 // The chat turn the run is on, or nothing when it is not a chat run (a design run, say): the message sent (`pending` until
 // route_input moves it to the history), the assistant's text as it streams (its final answer once chat_edit returns it), the
-// chips of the tools and checks it ran, in order, and why an edit was refused.
-function chatTurn(run: Run, pending?: string) {
+// chips of the tools and checks it ran, in order, why its edits were refused (each refused tool's reason: a turn can apply some
+// edits and refuse others, its chips then show which), and how many history entries the run has added so far.
+export function chatTurn(run: Run, pending?: string) {
   const update = (node: string) => run.updates.find((u) => u[node])?.[node] as { mode?: string; messages?: ChatEntry[] } | undefined;
   const routed = update("route_input");
   if (routed ? routed.mode !== "chat" : !pending) return;
   const streamed = run.messages.filter((m) => m.node === "chat_edit").map((m) => m.content);
+  const added = [routed, update("chat_edit")].reduce((n, u) => n + (u?.messages?.length ?? 0), 0);
   const chips = run.events.flatMap((e) =>
     e.type === "tool"
       ? [{ summary: e.summary, ok: e.ok }]
@@ -45,7 +47,8 @@ function chatTurn(run: Run, pending?: string) {
     user: routed?.messages?.[0]?.content ?? pending ?? "",
     text: update("chat_edit")?.messages?.[0]?.content ?? unquote(streamed.join("")),
     chips,
-    refused: run.events.find((e) => e.type === "tool" && !e.ok)?.summary,
+    refused: chips.filter((c) => !c.ok).map((c) => c.summary.replace(/^refused: /, "")),
+    added,
   };
 }
 
@@ -74,17 +77,20 @@ export function ChatPanel({ threadId, suggestions = SUGGESTIONS }: { threadId: s
   const thread = useThread(threadId);
   const run = useRunStream(threadId);
   const [sent, setSent] = useState("");
+  const [base, setBase] = useState<number>(); // the history's length when the turn was sent
   const [draft, setDraft] = useState("");
 
   const turn = chatTurn(run, run.running ? sent : undefined);
   let history = thread.data?.values.messages ?? [];
-  // once the thread's state holds the turn (fetched again after the run, or on a reload that replays it), its last two entries are the turn's
-  if (turn && history.at(-1)?.content === turn.text) history = history.slice(0, -2);
+  // the history without the turn shown below it, whether or not the thread's state has been fetched again since: a turn sent here
+  // follows the history it was sent after; a run rejoined on a reload, already over, added its entries at the end
+  if (turn) history = history.slice(0, base ?? Math.max(0, history.length - turn.added));
   const items = thread.data?.values.scene?.items ?? [];
 
   function send(text: string) {
     if (!text.trim() || run.running) return;
     setSent(text);
+    setBase(history.length + (turn?.added ?? 0)); // the entries shown: the latest run's may not be in the thread's state yet
     setDraft("");
     run.submit({ input: { chat_message: text } });
   }
@@ -122,10 +128,14 @@ export function ChatPanel({ threadId, suggestions = SUGGESTIONS }: { threadId: s
                 ))}
               </li>
             )}
-            {turn.refused ? (
+            {turn.refused.length > 0 ? (
               <li role="alert" className="self-start max-w-[85%] rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm">
                 <p className="font-medium text-destructive">Edit refused</p>
-                <p className="text-muted-foreground">{turn.refused.replace(/^refused: /, "")}</p>
+                {turn.refused.map((reason) => (
+                  <p key={reason} className="text-muted-foreground">
+                    {reason}
+                  </p>
+                ))}
                 {turn.text && <p className="mt-1">{turn.text}</p>}
               </li>
             ) : turn.text ? (

@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
-import { ChatPanel } from "@/components/chat/chat-panel";
+import { ChatPanel, chatTurn } from "@/components/chat/chat-panel";
 import { stubApi } from "@/lib/mocks/stub-api";
 
 // the stub's chat turns: an applied edit, then a refused one
@@ -84,3 +84,23 @@ it("inserts an item reference, shown as a chip, and sends a suggested reply", as
   fireEvent.click(await screen.findByRole("button", { name: "Make it cheaper" }));
   await within(log()).findByRole("alert"); // the stub's next turn: the refused edit
 }, 15_000);
+
+it("lists each refusal of a turn that applies some edits and refuses others, and counts the entries the run added", () => {
+  const turn = chatTurn({
+    threadId: "t",
+    running: false,
+    messages: [],
+    updates: [
+      { route_input: { mode: "chat", messages: [{ role: "user", content: "Move the desk and the bed" }] } },
+      { chat_edit: { messages: [{ role: "assistant", content: "Moved the desk; the bed stays." }] } },
+    ],
+    events: [
+      { type: "tool", tool: "move_item", summary: "moved desk", ok: true },
+      { type: "tool", tool: "move_item", summary: "refused: the bed would block the door", ok: false },
+      { type: "tool", tool: "remove_item", summary: "refused: the wardrobe is required", ok: false },
+    ],
+  });
+  expect(turn?.chips.map((c) => c.ok)).toEqual([true, false, false]);
+  expect(turn?.refused).toEqual(["the bed would block the door", "the wardrobe is required"]);
+  expect(turn?.added).toBe(2);
+});
