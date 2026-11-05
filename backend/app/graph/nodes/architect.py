@@ -5,7 +5,6 @@ The graph is checked with the B-07 validator plus the Architect's own rules, and
 Without OPENROUTER_API_KEY the node replays the fixture graph, like the rest of the stub graph.
 """
 
-import os
 import time
 from pathlib import Path
 from typing import Any, get_args
@@ -14,6 +13,7 @@ from langgraph.config import get_stream_writer
 
 from app import llm
 from app.geometry.graph_validate import validate_graph
+from app.graph import stub
 from app.graph.state import RunState
 from app.graph.stub import ask, load, stub_node
 from app.schemas import DesignBrief, RoomSpec, SceneGraph, coords
@@ -117,7 +117,7 @@ replay = stub_node(_replay)  # the stub graph's architect: the fixture graph and
 
 
 def architect(state: RunState) -> dict[str, Any]:
-    if not os.getenv("OPENROUTER_API_KEY"):
+    if not stub.live("architect"):
         return replay(state)
     write, start, round_ = get_stream_writer(), time.monotonic(), state.get("round")
     step = {"type": "step", "node": "architect", "round": round_}  # a StepEvent

@@ -7,13 +7,13 @@ from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.types import Command
 
 from app import llm
+from app.graph import stub
 from app.graph.graph import build_graph, serde
-from app.graph.nodes import design
 from app.graph.nodes.architect import Edges, check, scene_graph, scene_nodes
 from app.graph.state import RunState
 from app.graph.stub import fixture
 from app.llm.fake import CALL_USAGE, FakeLLM
-from app.schemas import Critique, DesignBrief, SceneGraph
+from app.schemas import Critique, SceneGraph
 from app.schemas.design import SceneEdge
 from app.schemas.layout import CritiqueAction
 from app.schemas.run import StepEvent
@@ -161,10 +161,7 @@ def test_in_the_graph_the_architect_streams_its_steps_and_applies_the_critic_fix
     facing = edges(*(e for e in EDGES if e.source != "desk"))
     # round 1 draws the graph; the fixture critic sends round 2 back, on the stub refine's fixture graph, which has no facing edges
     fake = install(monkeypatch, edges(*EDGES), fix, facing)
-    no_usage = llm.Usage(cost=0.0, input_tokens=0, output_tokens=0)
-    monkeypatch.setattr(
-        design, "plan", lambda brief, room: (DesignBrief.model_validate(fixture("design_brief")), no_usage)
-    )  # only the architect is real
+    monkeypatch.setattr(stub, "live", lambda node: node == "architect")  # only the architect is real
     graph = build_graph(InMemorySaver(serde=serde()))
     config: Any = {"configurable": {"thread_id": "t1"}}
     graph.invoke(design_input(), config)
