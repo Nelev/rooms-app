@@ -59,8 +59,16 @@ class Run:
                 return
 
 
-# Thread id -> its latest run, kept after it ends so a client can rejoin it (one buffer per thread).
+# Thread id -> its latest run, kept after it ends so a client can rejoin it (one buffer per thread), oldest first.
 RUNS: dict[str, Run] = {}
+# How many finished runs to keep for rejoining; older ones are dropped as new runs start, so memory stays bounded.
+MAX_FINISHED = 100
+
+
+def _evict_finished() -> None:
+    finished = [thread_id for thread_id, run in RUNS.items() if run.done]
+    for thread_id in finished[: max(0, len(finished) - MAX_FINISHED)]:
+        del RUNS[thread_id]
 
 
 def running(thread_id: str) -> bool:
@@ -97,6 +105,8 @@ def start(graph: CompiledStateGraph[RunState], graph_input: Any, config: Runnabl
     thread_id = config["configurable"]["thread_id"]
     if running(thread_id):
         raise RunActive(thread_id)
+    RUNS.pop(thread_id, None)  # re-inserted last: the newest run
+    _evict_finished()
     run_id = uuid4()
     run = RUNS[thread_id] = Run(parts=[ServerSentEvent(event="metadata", data=RunMetadata(run_id=run_id.hex))])
     run.task = asyncio.create_task(_execute(run, graph, graph_input, traced(config, run_id)))

@@ -118,3 +118,12 @@ def test_stream_resume_rejoin_conflict_restart_and_revert(database: str | None) 
         state = client.post(f"{url}/revert", json={"checkpoint_id": designed["checkpoint_id"]}).json()
         assert (state["status"], state["values"]["layout"]) == ("done", as_sent(Layout, fixture("layout")))
         assert client.get(f"{url}/history").json()[0]["checkpoint_id"] == state["checkpoint_id"]  # a new checkpoint, the history kept
+
+
+def test_finished_runs_are_capped(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Only the newest MAX_FINISHED finished runs stay rejoinable; an active run is never dropped."""
+    monkeypatch.setattr(runs, "MAX_FINISHED", 2)
+    active = runs.Run()
+    monkeypatch.setattr(runs, "RUNS", {"active": active, **{f"t{i}": runs.Run(done=True) for i in range(4)}})
+    runs._evict_finished()
+    assert runs.RUNS == {"active": active, "t2": runs.RUNS["t2"], "t3": runs.RUNS["t3"]}

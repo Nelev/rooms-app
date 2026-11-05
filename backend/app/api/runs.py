@@ -31,12 +31,13 @@ async def _start_run(body: RunCreate, graph: Graph, config: ThreadConfig, regist
         graph_input = dict(body.input)
     if body.config:
         config = {**config, "configurable": {**config["configurable"], **body.config.configurable.model_dump()}}
+    if runs.running(thread_id):  # checked before touching; start() checks again, with no await in between
+        raise HTTPException(409, "A run is already active on this thread")
+    await registry.touch(thread_id)  # before the run starts: if it fails, nothing runs and a retry can start it
     try:
-        run = runs.start(graph, graph_input, config)
+        return runs.start(graph, graph_input, config)
     except runs.RunActive:
         raise HTTPException(409, "A run is already active on this thread") from None
-    await registry.touch(thread_id)
-    return run
 
 
 def _current_run(config: ThreadConfig) -> runs.Run:
