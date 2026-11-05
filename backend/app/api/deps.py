@@ -7,7 +7,6 @@ from langchain_core.runnables import RunnableConfig
 from langgraph.graph.state import CompiledStateGraph
 
 from app.api.models import Thread
-from app.graph.graph import RECURSION_LIMIT
 from app.graph.state import RunState
 
 THREADS: dict[str, Thread] = {}  # thread id -> the thread, as created (status "new")
@@ -21,7 +20,7 @@ def _graph(request: Request) -> CompiledStateGraph[RunState]:
 def _thread_config(thread_id: str) -> RunnableConfig:
     if thread_id not in THREADS:
         raise HTTPException(404, "Thread not found")
-    return {"configurable": {"thread_id": thread_id}, "recursion_limit": RECURSION_LIMIT}
+    return {"configurable": {"thread_id": thread_id}}
 
 
 Graph = Annotated[CompiledStateGraph[RunState], Depends(_graph)]

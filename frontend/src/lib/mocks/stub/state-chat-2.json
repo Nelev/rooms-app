@@ -1,0 +1,497 @@
+{
+  "values": {
+    "photo_keys": ["fixtures/small-bedroom/photo-1.jpg"],
+    "dimensions": { "width": 3.2, "length": 3.4, "height": 2.6 },
+    "brief": {
+      "room_use": "bedroom",
+      "styles": ["scandinavian"],
+      "budget": 1200.0,
+      "must_haves": ["double bed", "desk"],
+      "keep": ["wardrobe"],
+      "remove": [],
+      "notes": "I work from home two days a week"
+    },
+    "chat_message": null,
+    "mode": "chat",
+    "room_spec": {
+      "dimensions": { "width": 3.2, "length": 3.4, "height": 2.6 },
+      "walls": [
+        { "wall": "A", "color": "#f2efe9" },
+        { "wall": "B", "color": "#f2efe9" },
+        { "wall": "C", "color": "#f2efe9" },
+        { "wall": "D", "color": "#f2efe9" }
+      ],
+      "floor_material": "oak",
+      "features": [
+        {
+          "id": "door_1",
+          "type": "door",
+          "wall": "A",
+          "offset": 0.75,
+          "width": 0.8,
+          "height": 2.1,
+          "sill_height": 0.0,
+          "swing": null,
+          "hinge": null,
+          "confidence": 0.95
+        },
+        {
+          "id": "window_1",
+          "type": "window",
+          "wall": "C",
+          "offset": 0.5,
+          "width": 1.0,
+          "height": 1.3,
+          "sill_height": 0.9,
+          "swing": null,
+          "hinge": null,
+          "confidence": 0.9
+        },
+        {
+          "id": "radiator_1",
+          "type": "radiator",
+          "wall": "C",
+          "offset": 0.5,
+          "width": 0.8,
+          "height": 0.6,
+          "sill_height": 0.1,
+          "swing": null,
+          "hinge": null,
+          "confidence": 0.7
+        }
+      ],
+      "kept_furniture": [
+        { "id": "kept_1", "name": "wardrobe", "x": 0.3, "y": 0.9, "rotation": 270.0, "size": { "width": 1.0, "depth": 0.6, "height": 2.0 } }
+      ],
+      "warnings": ["Radiator width estimated from one photo"]
+    },
+    "design_brief": {
+      "zones": [{ "name": "sleep", "purpose": "bed and nightstand" }, { "name": "work", "purpose": "desk near the window" }],
+      "palette": ["#f2efe9", "#c8b49a", "#3d4a3d"],
+      "objects": [
+        {
+          "id": "bed",
+          "name": "double bed",
+          "category": "bed",
+          "style": "scandinavian",
+          "material": "oak",
+          "size": { "width": 1.4, "depth": 2.0, "height": 0.9 },
+          "quantity": 1,
+          "priority": "must",
+          "zone": "sleep"
+        },
+        {
+          "id": "nightstand",
+          "name": "nightstand",
+          "category": "nightstand",
+          "style": "scandinavian",
+          "material": "oak",
+          "size": { "width": 0.4, "depth": 0.35, "height": 0.5 },
+          "quantity": 1,
+          "priority": "nice",
+          "zone": "sleep"
+        },
+        {
+          "id": "desk",
+          "name": "desk",
+          "category": "desk",
+          "style": "scandinavian",
+          "material": "birch",
+          "size": { "width": 1.0, "depth": 0.5, "height": 0.75 },
+          "quantity": 1,
+          "priority": "must",
+          "zone": "work"
+        },
+        {
+          "id": "desk_chair",
+          "name": "desk chair",
+          "category": "chair",
+          "style": "scandinavian",
+          "material": "fabric",
+          "size": { "width": 0.45, "depth": 0.45, "height": 0.85 },
+          "quantity": 1,
+          "priority": "must",
+          "zone": "work"
+        }
+      ],
+      "summary": "Calm Scandinavian bedroom with a compact work corner"
+    },
+    "scene_graph": {
+      "nodes": [
+        {
+          "id": "wall_B",
+          "kind": "wall",
+          "name": "wall B",
+          "style": null,
+          "material": null,
+          "size": null,
+          "quantity": 1,
+          "priority": "must",
+          "item_id": null
+        },
+        {
+          "id": "wall_D",
+          "kind": "wall",
+          "name": "wall D",
+          "style": null,
+          "material": null,
+          "size": null,
+          "quantity": 1,
+          "priority": "must",
+          "item_id": null
+        },
+        {
+          "id": "door_1",
+          "kind": "door",
+          "name": "door",
+          "style": null,
+          "material": null,
+          "size": null,
+          "quantity": 1,
+          "priority": "must",
+          "item_id": null
+        },
+        {
+          "id": "window_1",
+          "kind": "window",
+          "name": "window",
+          "style": null,
+          "material": null,
+          "size": null,
+          "quantity": 1,
+          "priority": "must",
+          "item_id": null
+        },
+        {
+          "id": "bed",
+          "kind": "object",
+          "name": "double bed",
+          "style": "scandinavian",
+          "material": "oak",
+          "size": { "width": 1.4, "depth": 2.0, "height": 0.9 },
+          "quantity": 1,
+          "priority": "must",
+          "item_id": "oak-double-bed-140"
+        },
+        {
+          "id": "nightstand",
+          "kind": "object",
+          "name": "nightstand",
+          "style": "scandinavian",
+          "material": "oak",
+          "size": { "width": 0.4, "depth": 0.35, "height": 0.5 },
+          "quantity": 1,
+          "priority": "nice",
+          "item_id": "oak-nightstand"
+        },
+        {
+          "id": "desk",
+          "kind": "object",
+          "name": "desk",
+          "style": "scandinavian",
+          "material": "birch",
+          "size": { "width": 1.0, "depth": 0.5, "height": 0.75 },
+          "quantity": 1,
+          "priority": "must",
+          "item_id": "birch-desk-100"
+        },
+        {
+          "id": "desk_chair",
+          "kind": "object",
+          "name": "desk chair",
+          "style": "scandinavian",
+          "material": "fabric",
+          "size": { "width": 0.45, "depth": 0.45, "height": 0.85 },
+          "quantity": 1,
+          "priority": "must",
+          "item_id": "grey-desk-chair"
+        }
+      ],
+      "edges": [
+        { "source": "bed", "relation": "against_wall", "target": "wall_B" },
+        { "source": "nightstand", "relation": "adjacent", "target": "bed" },
+        { "source": "desk", "relation": "against_wall", "target": "wall_D" },
+        { "source": "desk_chair", "relation": "in_front", "target": "desk" }
+      ]
+    },
+    "candidates": {
+      "bed": [
+        {
+          "id": "oak-double-bed-140",
+          "name": "Oak double bed 140",
+          "category": "bed",
+          "size": { "width": 1.4, "depth": 2.0, "height": 0.9 },
+          "price": 449.0,
+          "style_tags": ["scandinavian"],
+          "color": "oak",
+          "front": "+z",
+          "glb_url": null,
+          "license": "CC0-1.0",
+          "url": null,
+          "image_url": null,
+          "description": "Solid oak frame"
+        }
+      ],
+      "nightstand": [
+        {
+          "id": "oak-nightstand",
+          "name": "Oak nightstand",
+          "category": "nightstand",
+          "size": { "width": 0.4, "depth": 0.35, "height": 0.5 },
+          "price": 79.0,
+          "style_tags": ["scandinavian"],
+          "color": "oak",
+          "front": "+z",
+          "glb_url": null,
+          "license": "CC0-1.0",
+          "url": null,
+          "image_url": null,
+          "description": "One drawer"
+        }
+      ],
+      "desk": [
+        {
+          "id": "birch-desk-100",
+          "name": "Birch desk 100",
+          "category": "desk",
+          "size": { "width": 1.0, "depth": 0.5, "height": 0.75 },
+          "price": 149.0,
+          "style_tags": ["scandinavian"],
+          "color": "birch",
+          "front": "+z",
+          "glb_url": null,
+          "license": "CC0-1.0",
+          "url": null,
+          "image_url": null,
+          "description": "Compact desk"
+        }
+      ],
+      "desk_chair": [
+        {
+          "id": "grey-desk-chair",
+          "name": "Grey desk chair",
+          "category": "chair",
+          "size": { "width": 0.45, "depth": 0.45, "height": 0.85 },
+          "price": 129.0,
+          "style_tags": ["scandinavian"],
+          "color": "grey",
+          "front": "+z",
+          "glb_url": null,
+          "license": "CC0-1.0",
+          "url": null,
+          "image_url": null,
+          "description": "Swivel chair"
+        }
+      ]
+    },
+    "layout": {
+      "placements": [
+        {
+          "node_id": "bed",
+          "item_id": "oak-double-bed-140",
+          "x": 2.2,
+          "y": 2.25,
+          "z": 0.0,
+          "rotation": 90.0,
+          "size": { "width": 1.4, "depth": 2.0, "height": 0.9 }
+        },
+        {
+          "node_id": "nightstand",
+          "item_id": "oak-nightstand",
+          "x": 3.025,
+          "y": 3.2,
+          "z": 0.0,
+          "rotation": 90.0,
+          "size": { "width": 0.4, "depth": 0.35, "height": 0.5 }
+        },
+        {
+          "node_id": "desk",
+          "item_id": "birch-desk-100",
+          "x": 0.25,
+          "y": 2.7,
+          "z": 0.0,
+          "rotation": 270.0,
+          "size": { "width": 1.0, "depth": 0.5, "height": 0.75 }
+        },
+        {
+          "node_id": "desk_chair",
+          "item_id": "white-desk-chair",
+          "x": 0.8,
+          "y": 2.7,
+          "z": 0.0,
+          "rotation": 90.0,
+          "size": { "width": 0.45, "depth": 0.45, "height": 0.85 }
+        }
+      ]
+    },
+    "validation": { "issues": [] },
+    "critique": { "round": 2, "rules": [], "actions": [], "summary": "round 2" },
+    "round": 2,
+    "scene": {
+      "room": {
+        "dimensions": { "width": 3.2, "length": 3.4, "height": 2.6 },
+        "walls": [
+          { "wall": "A", "color": "#f2efe9" },
+          { "wall": "B", "color": "#f2efe9" },
+          { "wall": "C", "color": "#f2efe9" },
+          { "wall": "D", "color": "#f2efe9" }
+        ],
+        "floor_material": "oak",
+        "features": [
+          {
+            "id": "door_1",
+            "type": "door",
+            "wall": "A",
+            "offset": 0.75,
+            "width": 0.8,
+            "height": 2.1,
+            "sill_height": 0.0,
+            "swing": null,
+            "hinge": null,
+            "confidence": 0.95
+          },
+          {
+            "id": "window_1",
+            "type": "window",
+            "wall": "C",
+            "offset": 0.5,
+            "width": 1.0,
+            "height": 1.3,
+            "sill_height": 0.9,
+            "swing": null,
+            "hinge": null,
+            "confidence": 0.9
+          },
+          {
+            "id": "radiator_1",
+            "type": "radiator",
+            "wall": "C",
+            "offset": 0.5,
+            "width": 0.8,
+            "height": 0.6,
+            "sill_height": 0.1,
+            "swing": null,
+            "hinge": null,
+            "confidence": 0.7
+          }
+        ],
+        "kept_furniture": [
+          { "id": "kept_1", "name": "wardrobe", "x": 0.3, "y": 0.9, "rotation": 270.0, "size": { "width": 1.0, "depth": 0.6, "height": 2.0 } }
+        ],
+        "warnings": ["Radiator width estimated from one photo"]
+      },
+      "items": [
+        {
+          "node_id": "bed",
+          "item_id": "oak-double-bed-140",
+          "x": 2.2,
+          "y": 2.25,
+          "z": 0.0,
+          "rotation": 90.0,
+          "size": { "width": 1.4, "depth": 2.0, "height": 0.9 },
+          "item": {
+            "id": "oak-double-bed-140",
+            "name": "Oak double bed 140",
+            "category": "bed",
+            "size": { "width": 1.4, "depth": 2.0, "height": 0.9 },
+            "price": 449.0,
+            "style_tags": ["scandinavian"],
+            "color": "oak",
+            "front": "+z",
+            "glb_url": null,
+            "license": "CC0-1.0",
+            "url": null,
+            "image_url": null,
+            "description": "Solid oak frame"
+          }
+        },
+        {
+          "node_id": "nightstand",
+          "item_id": "oak-nightstand",
+          "x": 3.025,
+          "y": 3.2,
+          "z": 0.0,
+          "rotation": 90.0,
+          "size": { "width": 0.4, "depth": 0.35, "height": 0.5 },
+          "item": {
+            "id": "oak-nightstand",
+            "name": "Oak nightstand",
+            "category": "nightstand",
+            "size": { "width": 0.4, "depth": 0.35, "height": 0.5 },
+            "price": 79.0,
+            "style_tags": ["scandinavian"],
+            "color": "oak",
+            "front": "+z",
+            "glb_url": null,
+            "license": "CC0-1.0",
+            "url": null,
+            "image_url": null,
+            "description": "One drawer"
+          }
+        },
+        {
+          "node_id": "desk",
+          "item_id": "birch-desk-100",
+          "x": 0.25,
+          "y": 2.7,
+          "z": 0.0,
+          "rotation": 270.0,
+          "size": { "width": 1.0, "depth": 0.5, "height": 0.75 },
+          "item": {
+            "id": "birch-desk-100",
+            "name": "Birch desk 100",
+            "category": "desk",
+            "size": { "width": 1.0, "depth": 0.5, "height": 0.75 },
+            "price": 149.0,
+            "style_tags": ["scandinavian"],
+            "color": "birch",
+            "front": "+z",
+            "glb_url": null,
+            "license": "CC0-1.0",
+            "url": null,
+            "image_url": null,
+            "description": "Compact desk"
+          }
+        },
+        {
+          "node_id": "desk_chair",
+          "item_id": "white-desk-chair",
+          "x": 0.8,
+          "y": 2.7,
+          "z": 0.0,
+          "rotation": 90.0,
+          "size": { "width": 0.45, "depth": 0.45, "height": 0.85 },
+          "item": null
+        }
+      ],
+      "lights": [{ "kind": "area", "window_id": "window_1", "intensity": 5.0 }],
+      "cameras": [
+        {
+          "photo_key": "fixtures/small-bedroom/photo-1.jpg",
+          "position": [0.3, 1.5, -0.3],
+          "quaternion": [0.0, -0.3827, 0.0, 0.9239],
+          "fov": 60.0,
+          "image_width": 640,
+          "image_height": 480,
+          "reprojection_error": 2.8
+        }
+      ]
+    },
+    "layout_diff": { "added": [], "removed": [], "changed": [] },
+    "rationale": "I can't move the bed there: it would block the door.",
+    "messages": [
+      { "role": "user", "content": "Swap the desk chair for a cheaper one" },
+      { "role": "assistant", "content": "I swapped the desk chair for a white one that costs 70 EUR less." },
+      { "role": "user", "content": "Put the bed in front of the door" },
+      { "role": "assistant", "content": "I can't move the bed there: it would block the door." }
+    ],
+    "cost": 0.05800000000000001,
+    "input_tokens": 0,
+    "output_tokens": 0
+  },
+  "next": [],
+  "interrupts": [],
+  "checkpoint_id": "1f1d9221-e171-68a8-8019-2324db782b2a",
+  "created_at": "2026-11-05T14:06:38.214135Z",
+  "status": "done"
+}

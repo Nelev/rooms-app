@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Records what the stub API answers for one project, which the hooks' tests replay (stub/): the thread, its state and history before,
-# at and after the confirm_room interrupt, and the streams of its design run and of the resumed run. Re-record when the API or the
-# fixtures change: run the stub API (cd backend && uv run uvicorn app.main:app), then src/lib/mocks/record.sh [API URL].
+# at and after the confirm_room interrupt, the streams of its design run and of the resumed run, then those of the fixture's chat
+# turns (chat.json) and the state after each. Re-record when the API or the fixtures change: run the stub API (cd backend && uv run
+# uvicorn app.main:app), then src/lib/mocks/record.sh [API URL].
 set -euo pipefail
 api=${1:-http://localhost:8000}
 cd "$(dirname "$0")/stub"
@@ -18,4 +19,8 @@ curl -fsS "$api$url/history" >history-interrupt.json
 post "$url/runs/stream" "$(body "{'command': {'resume': f('room_spec')}}")" >resumed-run.sse
 curl -fsS "$api$url/state" >state-done.json
 curl -fsS "$api$url/history" >history-done.json
+for turn in 1 2; do
+  post "$url/runs/stream" "$(body "{'input': f('chat')[$turn - 1]['input']}")" >chat-$turn.sse
+  curl -fsS "$api$url/state" >state-chat-$turn.json
+done
 pnpm exec biome format --write . >/dev/null

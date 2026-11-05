@@ -20,8 +20,10 @@ test("/ shows the empty projects list with a link to the wizard", () => {
   expect(html).toContain('href="/projects/new"');
 });
 
-test("/projects/new shows the wizard placeholder", () => {
-  expect(renderToStaticMarkup(<NewProjectPage />)).toContain("New project");
+test("/projects/new shows the wizard at its photos step", () => {
+  const html = renderToStaticMarkup(<NewProjectPage />);
+  expect(html).toContain("New project");
+  expect(html).toContain("Photos of the room");
 });
 
 test("/projects/[id] shows the four tabs and the chat panel", async () => {

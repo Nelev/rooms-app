@@ -3,9 +3,10 @@ import { join } from "node:path";
 import type { Thread, ThreadState } from "@/lib/api";
 
 // The stub API (`make dev-stub`) as a fetch, for tests: it replays what the stub answered for one project (stub/, recorded by
-// record.sh). Its design run streams up to the confirm_room interrupt, the resumed run to the end; like the stub, a run goes on
-// without the client and can be rejoined from its first part. Streams arrive in small chunks, and stop after their first one
-// while the test holds them (`hold()`, until `release()`), so a test can leave in the middle of a run.
+// record.sh). Its design run streams up to the confirm_room interrupt, the resumed run to the end, then each chat run streams the
+// fixture's next chat turn (chat.json: an applied edit, then a refused one). Like the stub, a run goes on without the client and
+// can be rejoined from its first part. Streams arrive in small chunks, and stop after their first one while the test holds them
+// (`hold()`, until `release()`), so a test can leave in the middle of a run.
 
 const read = (name: string) => readFileSync(join(import.meta.dirname, "stub", name), "utf8");
 const CHUNK = 200; // bytes: Server-Sent Events are cut across chunks
@@ -35,10 +36,13 @@ function sse(text: string, signal: AbortSignal | null | undefined, held: () => P
 
 export function stubApi() {
   const thread: Thread = JSON.parse(read("thread.json"));
-  const states: ThreadState[] = ["new", "interrupt", "done"].map((name) => JSON.parse(read(`state-${name}.json`)));
+  const states: ThreadState[] = ["state-new.json", "state-interrupt.json", "state-done.json", "state-chat-1.json", "state-chat-2.json"].map((name) =>
+    JSON.parse(read(name)),
+  );
+  // History is recorded up to the end of the design run; the chat turns reuse the last one.
   const histories: ThreadState[][] = ["new", "interrupt", "done"].map((name) => JSON.parse(read(`history-${name}.json`)));
-  const runs = [read("first-run.sse"), read("resumed-run.sse")];
-  let step = 0; // the runs done: the state is states[step], the history histories[step]
+  const runs = ["first-run.sse", "resumed-run.sse", "chat-1.sse", "chat-2.sse"].map(read);
+  let step = 0; // the runs done: the state is states[step]
   let latest: string | undefined;
   let held = Promise.resolve();
   let release = () => {};
@@ -53,7 +57,7 @@ export function stubApi() {
       case "GET /threads/{thread_id}/state":
         return answer(states[step]);
       case "GET /threads/{thread_id}/history":
-        return answer(histories[step]);
+        return answer(histories[Math.min(step, histories.length - 1)]);
       case "POST /threads/{thread_id}/runs/stream": {
         const resume = "command" in JSON.parse(String(init?.body));
         if (step === runs.length || resume !== (step === 1)) return answer({ detail: "The thread has no open interrupt to resume" }, 409);

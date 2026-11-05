@@ -1,0 +1,27 @@
+event: metadata
+data: {"run_id":"d125376a960241daa4c191ef9ae7011c"}
+
+event: custom
+data: {"type": "step", "node": "route_input", "status": "started"}
+
+event: custom
+data: {"type": "step", "node": "route_input", "status": "done", "summary": "chat message", "duration_s": 0.01}
+
+event: updates
+data: {"route_input": {"mode": "chat", "chat_message": null, "messages": [{"role": "user", "content": "Put the bed in front of the door"}], "cost": 0.0}}
+
+event: custom
+data: {"type": "step", "node": "chat_edit", "status": "started"}
+
+event: messages
+data: [{"id": "lc_run--01a1ac08-7684-740c-a38f-c439534e9eac-0", "content": "\"I can't move the bed there: it would block the door.\""}, {"langgraph_node": "chat_edit"}]
+
+event: custom
+data: {"type": "tool", "tool": "move_item", "summary": "refused: the bed would block the door", "ok": false}
+
+event: custom
+data: {"type": "step", "node": "chat_edit", "status": "done", "summary": "edit refused", "duration_s": 2.1, "cost": 0.002}
+
+event: updates
+data: {"chat_edit": {"layout_diff": {"added": [], "removed": [], "changed": []}, "rationale": "I can't move the bed there: it would block the door.", "messages": [{"role": "assistant", "content": "I can't move the bed there: it would block the door."}], "cost": 0.002}}
+
