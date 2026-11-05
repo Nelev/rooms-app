@@ -32,7 +32,10 @@ def serde() -> JsonPlusSerializer:
 
 
 def build_graph(checkpointer: BaseCheckpointSaver[str] | None = None, store: BaseStore | None = None) -> CompiledStateGraph[RunState]:
-    """Compile the graph. Pass `{"recursion_limit": RECURSION_LIMIT}` in every run's config."""
+    """Compile the graph, every run of it with RECURSION_LIMIT.
+
+    The API passes the async Postgres checkpointer (B-20) and its store; tests pass InMemorySaver. Each thread runs the graph
+    many times: route_input sends its first input to the design branch and each later chat message to chat_edit."""
     builder = StateGraph(RunState)
     for node in (route_input, analyze_room, confirm_room, design, architect, refine, source, solve, critic, present, chat_edit):
         builder.add_node(node)
@@ -48,4 +51,4 @@ def build_graph(checkpointer: BaseCheckpointSaver[str] | None = None, store: Bas
     builder.add_conditional_edges("critic", after_critic)
     builder.add_conditional_edges("chat_edit", after_chat_edit)
     builder.add_edge("present", END)
-    return builder.compile(checkpointer=checkpointer, store=store)
+    return builder.compile(checkpointer=checkpointer, store=store).with_config(recursion_limit=RECURSION_LIMIT)

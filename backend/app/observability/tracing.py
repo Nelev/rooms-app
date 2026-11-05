@@ -12,7 +12,7 @@ from langchain_core.messages import AIMessage
 from langchain_core.outputs import LLMResult
 from langchain_core.runnables import RunnableConfig
 
-from app.api.models import RunConfigurable
+from app.graph.routing import flags as run_flags
 
 
 class ProviderCost(BaseCallbackHandler):
@@ -46,7 +46,7 @@ def traced(config: RunnableConfig, run_id: UUID) -> RunnableConfig:
 
     `run_id` becomes the trace's root run ID, so the API's run ID finds its trace."""
     configurable = config.get("configurable", {})
-    flags = {name: bool(configurable.get(name, False)) for name in RunConfigurable.model_fields}
+    flags = run_flags(config).model_dump()
     metadata = {"thread_id": configurable["thread_id"], **flags}
     return {
         **config,
