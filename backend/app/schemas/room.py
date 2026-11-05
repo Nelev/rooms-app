@@ -27,6 +27,8 @@ class Feature(Model):
     width: Meters
     height: Meters
     sill_height: Meters = Field(0, description="Height of the feature's bottom edge above the floor; 0 for doors")
+    swing: Literal["in", "out"] = Field("in", description="Doors only: whether the door opens into the room or out of it")
+    hinge: Literal["left", "right"] = Field("left", description="Doors only: the hinge side, seen from inside the room facing the door")
     confidence: Fraction = 1
 
 
@@ -44,7 +46,17 @@ ROOM_SPEC_EXAMPLE: dict[str, JsonValue] = {
     "walls": [{"wall": w, "color": "#f2efe9"} for w in "ABCD"],
     "floor_material": "oak",
     "features": [
-        {"id": "door_1", "type": "door", "wall": "A", "offset": 0.15, "width": 0.8, "height": 2.1, "confidence": 0.95},
+        {
+            "id": "door_1",
+            "type": "door",
+            "wall": "A",
+            "offset": 0.15,
+            "width": 0.8,
+            "height": 2.1,
+            "swing": "in",
+            "hinge": "left",
+            "confidence": 0.95,
+        },
         {
             "id": "window_1",
             "type": "window",

@@ -85,6 +85,26 @@
           "title": "Sill Height",
           "type": "number"
         },
+        "swing": {
+          "default": "in",
+          "description": "Doors only: whether the door opens into the room or out of it",
+          "enum": [
+            "in",
+            "out"
+          ],
+          "title": "Swing",
+          "type": "string"
+        },
+        "hinge": {
+          "default": "left",
+          "description": "Doors only: the hinge side, seen from inside the room facing the door",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "title": "Hinge",
+          "type": "string"
+        },
         "confidence": {
           "default": 1,
           "maximum": 1,
@@ -159,8 +179,10 @@
             {
               "confidence": 0.95,
               "height": 2.1,
+              "hinge": "left",
               "id": "door_1",
               "offset": 0.15,
+              "swing": "in",
               "type": "door",
               "wall": "A",
               "width": 0.8
@@ -357,8 +379,10 @@
           {
             "confidence": 0.95,
             "height": 2.1,
+            "hinge": "left",
             "id": "door_1",
             "offset": 0.15,
+            "swing": "in",
             "type": "door",
             "wall": "A",
             "width": 0.8
