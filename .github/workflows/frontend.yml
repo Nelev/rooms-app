@@ -3,9 +3,9 @@ name: Frontend
 on:
   push:
     branches: [main]
-    paths: ["frontend/**", ".github/workflows/frontend.yml"]
+    paths: ["frontend/**", "contracts/openapi.json", ".github/workflows/frontend.yml"]
   pull_request: # any base branch: PRs are stacked on their dependency's branch
-    paths: ["frontend/**", ".github/workflows/frontend.yml"]
+    paths: ["frontend/**", "contracts/openapi.json", ".github/workflows/frontend.yml"]
 
 permissions:
   contents: read
@@ -38,6 +38,9 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: API types are current
+        run: pnpm gen && git diff --exit-code src/lib/api/generated # else run `make gen`
 
       - name: Format
         run: pnpm format:check
