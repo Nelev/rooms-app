@@ -6,8 +6,11 @@ import os
 import time
 from pathlib import Path
 from typing import Any
+from uuid import UUID
 
 import pytest
+from langchain_core.callbacks import BaseCallbackHandler
+from langchain_core.outputs import LLMResult
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.store.memory import InMemoryStore
 from langgraph.types import Command
@@ -71,6 +74,22 @@ def test_a_design_run_is_presented_with_a_rationale_and_chat_runs_keep_the_match
     assert [i.x for i in values["scene"].items] == [p.x for p in values["layout"].placements]
 
 
+class ModelIds(BaseCallbackHandler):
+    """The model id OpenRouter reports for each call, by node: proves which model each role really called."""
+
+    def __init__(self) -> None:
+        self.nodes: dict[UUID, str] = {}
+        self.seen: set[tuple[str, str]] = set()
+
+    def on_chat_model_start(self, serialized: Any, messages: Any, *, run_id: UUID, metadata: Any = None, **kw: Any) -> None:
+        self.nodes[run_id] = (metadata or {}).get("langgraph_node", "?")
+
+    def on_llm_end(self, response: LLMResult, *, run_id: UUID, **kw: Any) -> None:
+        for gen in (g for gens in response.generations for g in gens):  # the reply's own `model`, not the configured one
+            reply = getattr(gen, "message", None)
+            self.seen.add((self.nodes.get(run_id, "?"), getattr(reply, "response_metadata", {}).get("model_name", "?")))
+
+
 @pytest.fixture(scope="module")
 def catalog_store() -> InMemoryStore:
     """The catalog in memory with real embeddings (B-08's index), as the API's Postgres store holds it: one embedding batch."""
@@ -89,7 +108,8 @@ def test_live_full_graph(case: str, catalog_store: InMemoryStore) -> None:
     fixture step cost is not counted, the catalog searches' query embeddings are not measured)."""
     llm.get_llm.cache_clear()
     graph = build_graph(InMemorySaver(serde=serde()), catalog_store)
-    config: Any = {"configurable": {"thread_id": case}}
+    models = ModelIds()
+    config: Any = {"configurable": {"thread_id": case}, "callbacks": [models]}
     photos = sorted(f"fixtures/{case}/{p.name}" for p in (FIXTURES / case).glob("photo-*.jpg"))
     room_spec = read(case, "room_spec", RoomSpec)
     graph_input = {"photo_keys": photos, "dimensions": room_spec.dimensions, "brief": read(case, "brief", Brief)}
@@ -117,5 +137,6 @@ def test_live_full_graph(case: str, catalog_store: InMemoryStore) -> None:
         f"({'; '.join(c.summary for c in rounds)}) | final: {values['critique'].summary} | errors {errors} | failed rules {failed} | "
         f"fallback: {values['fallback'].summary} | {len(values['scene'].items)} objects, €{total(values['scene']):.0f} of "
         f"€{values['brief'].budget:.0f} | features {[f.id for f in values['room_spec'].features]} | per node "
-        f"{ {n: round(sum(u.get('cost', 0.0) for m, u in model if m == n), 4) for n, _ in model} }\nrationale: {output.rationale}"
+        f"{ {n: round(sum(u.get('cost', 0.0) for m, u in model if m == n), 4) for n, _ in model} } | models {sorted(models.seen)}"
+        f"\nrationale: {output.rationale}"
     )
