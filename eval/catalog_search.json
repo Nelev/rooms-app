@@ -1,0 +1,227 @@
+[
+  {
+    "query": "light oak bedside table with a drawer",
+    "category": "nightstand",
+    "relevant": [
+      "oak-nightstand",
+      "oak-nightstand-2",
+      "ash-nightstand",
+      "ash-nightstand-2",
+      "pine-nightstand",
+      "pine-nightstand-2"
+    ]
+  },
+  {
+    "query": "black industrial metal desk for a home office",
+    "category": "desk",
+    "size": {
+      "width": 1.2,
+      "depth": 0.6,
+      "height": 0.75
+    },
+    "relevant": [
+      "black-desk-120"
+    ]
+  },
+  {
+    "query": "mid-century walnut sideboard for the TV",
+    "category": "tv_stand",
+    "relevant": [
+      "walnut-tv-stand",
+      "walnut-tv-stand-120",
+      "walnut-tv-stand-180"
+    ]
+  },
+  {
+    "query": "cozy green velvet sofa for a boho living room",
+    "category": "sofa",
+    "relevant": [
+      "green-sofa-2",
+      "green-sofa-3",
+      "green-sofa-corner",
+      "teal-sofa-3"
+    ]
+  },
+  {
+    "query": "three-seat sofa in a neutral beige, cream or grey",
+    "category": "sofa",
+    "size": {
+      "width": 2.15,
+      "depth": 0.9,
+      "height": 0.85
+    },
+    "max_price": 1000,
+    "relevant": [
+      "beige-sofa-3",
+      "cream-sofa-3",
+      "grey-sofa-3"
+    ]
+  },
+  {
+    "query": "scandinavian double bed with a white frame",
+    "category": "bed",
+    "size": {
+      "width": 1.6,
+      "depth": 2.05,
+      "height": 1.0
+    },
+    "relevant": [
+      "white-bed-160",
+      "white-bed-140"
+    ]
+  },
+  {
+    "query": "king size bed in natural rattan",
+    "category": "bed",
+    "relevant": [
+      "rattan-bed-180"
+    ]
+  },
+  {
+    "query": "single bed for a kids room",
+    "category": "bed",
+    "max_price": 220,
+    "relevant": [
+      "black-bed-90",
+      "grey-bed-90",
+      "oak-bed-90",
+      "rattan-bed-90",
+      "white-bed-90"
+    ]
+  },
+  {
+    "query": "office desk chair",
+    "category": "chair",
+    "relevant": [
+      "mesh-office-chair",
+      "black-desk-chair",
+      "oak-desk-chair",
+      "rattan-desk-chair",
+      "walnut-desk-chair",
+      "grey-desk-chair",
+      "white-desk-chair"
+    ]
+  },
+  {
+    "query": "white dining chair for a minimalist kitchen",
+    "category": "chair",
+    "relevant": [
+      "white-dining-chair"
+    ]
+  },
+  {
+    "query": "large wardrobe with sliding doors",
+    "category": "wardrobe",
+    "relevant": [
+      "black-wardrobe-200",
+      "oak-wardrobe-200",
+      "pine-wardrobe-200",
+      "walnut-wardrobe-200",
+      "white-wardrobe-200"
+    ]
+  },
+  {
+    "query": "narrow pine wardrobe",
+    "category": "wardrobe",
+    "size": {
+      "width": 1.0,
+      "depth": 0.58,
+      "height": 2.0
+    },
+    "relevant": [
+      "pine-wardrobe-100"
+    ]
+  },
+  {
+    "query": "brass floor lamp for a reading corner",
+    "category": "lamp",
+    "relevant": [
+      "brass-floor-lamp",
+      "brass-arc-lamp"
+    ]
+  },
+  {
+    "query": "small bedside table lamp",
+    "category": "lamp",
+    "size": {
+      "width": 0.25,
+      "depth": 0.25,
+      "height": 0.45
+    },
+    "relevant": [
+      "black-table-lamp",
+      "brass-table-lamp",
+      "oak-table-lamp",
+      "rattan-table-lamp",
+      "white-table-lamp"
+    ]
+  },
+  {
+    "query": "large rug for a japandi living room",
+    "category": "rug",
+    "size": {
+      "width": 2.0,
+      "depth": 3.0,
+      "height": 0.01
+    },
+    "relevant": [
+      "beige-rug-200x300",
+      "cream-rug-200x300"
+    ]
+  },
+  {
+    "query": "tall bookcase for lots of books",
+    "category": "shelf",
+    "relevant": [
+      "black-bookshelf-80",
+      "oak-bookshelf-80",
+      "pine-bookshelf-80",
+      "walnut-bookshelf-80",
+      "white-bookshelf-80"
+    ]
+  },
+  {
+    "query": "traditional cherry wood chest of drawers",
+    "category": "dresser",
+    "relevant": [
+      "cherry-dresser-6",
+      "cherry-dresser-3"
+    ]
+  },
+  {
+    "query": "round side table next to the sofa",
+    "category": "table",
+    "size": {
+      "width": 0.45,
+      "depth": 0.45,
+      "height": 0.55
+    },
+    "max_price": 80,
+    "relevant": [
+      "black-side-table",
+      "mango-side-table",
+      "oak-side-table",
+      "white-side-table"
+    ]
+  },
+  {
+    "query": "dining table that seats six",
+    "category": "table",
+    "relevant": [
+      "black-dining-table-6",
+      "mango-dining-table-6",
+      "oak-dining-table-6",
+      "walnut-dining-table-6",
+      "white-dining-table-6"
+    ]
+  },
+  {
+    "query": "comfortable armchair in cognac leather",
+    "category": "armchair",
+    "relevant": [
+      "cognac-armchair",
+      "cognac-lounge-chair",
+      "leather-armchair"
+    ]
+  }
+]
