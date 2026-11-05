@@ -63,7 +63,7 @@ try {
   for (const run of runs) {
     for (const corner of CORNERS) {
       await page.goto(`${url}/render/${encodeURIComponent(run)}?view=${corner}`, { waitUntil: "networkidle" });
-      const shown = page.locator("canvas, [role=alert]").first();
+      const shown = page.locator("main canvas, main [role=alert]").first(); // not Next's route announcer, also role=alert
       await shown.waitFor();
       if ((await shown.getAttribute("role")) === "alert") throw new Error(`${run}: ${await shown.textContent()}`);
       await page.waitForLoadState("networkidle"); // models still loading
