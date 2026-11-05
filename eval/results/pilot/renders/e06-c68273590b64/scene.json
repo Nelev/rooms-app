@@ -1,0 +1,281 @@
+{
+  "room": {
+    "dimensions": {
+      "width": 4.5,
+      "length": 5.0,
+      "height": 2.7
+    },
+    "walls": [
+      {
+        "wall": "A",
+        "color": "#efe7da"
+      },
+      {
+        "wall": "B",
+        "color": "#efe7da"
+      },
+      {
+        "wall": "C",
+        "color": "#efe7da"
+      },
+      {
+        "wall": "D",
+        "color": "#efe7da"
+      }
+    ],
+    "floor_material": "walnut",
+    "features": [
+      {
+        "id": "door_1",
+        "type": "door",
+        "wall": "D",
+        "offset": 0.2,
+        "width": 0.9,
+        "height": 2.1,
+        "sill_height": 0.0,
+        "swing": null,
+        "hinge": null,
+        "confidence": 0.95
+      },
+      {
+        "id": "window_1",
+        "type": "window",
+        "wall": "B",
+        "offset": 0.5,
+        "width": 1.6,
+        "height": 1.5,
+        "sill_height": 0.6,
+        "swing": null,
+        "hinge": null,
+        "confidence": 0.9
+      },
+      {
+        "id": "outlet_1",
+        "type": "outlet",
+        "wall": "A",
+        "offset": 0.5,
+        "width": 0.1,
+        "height": 0.1,
+        "sill_height": 0.3,
+        "swing": null,
+        "hinge": null,
+        "confidence": 0.6
+      }
+    ],
+    "kept_furniture": [
+      {
+        "id": "kept_1",
+        "name": "bookcase",
+        "x": 0.2,
+        "y": 1.5,
+        "rotation": 270.0,
+        "size": {
+          "width": 1.2,
+          "depth": 0.4,
+          "height": 2.0
+        }
+      }
+    ],
+    "warnings": []
+  },
+  "items": [
+    {
+      "node_id": "sofa",
+      "item_id": "grey-sofa-3",
+      "x": 1.391,
+      "y": 0.45,
+      "z": 0.0,
+      "rotation": 0.0,
+      "size": {
+        "width": 2.15,
+        "depth": 0.9,
+        "height": 0.84
+      },
+      "item": {
+        "id": "grey-sofa-3",
+        "name": "Grey fabric three-seat sofa",
+        "category": "sofa",
+        "size": {
+          "width": 2.15,
+          "depth": 0.9,
+          "height": 0.84
+        },
+        "price": 749.0,
+        "style_tags": [
+          "modern",
+          "scandinavian"
+        ],
+        "color": "grey",
+        "front": "+z",
+        "glb_url": null,
+        "license": null,
+        "url": null,
+        "image_url": null,
+        "description": "Three-seat sofa with loose cushions"
+      }
+    },
+    {
+      "node_id": "plant_stand",
+      "item_id": "white-potted-plant-small",
+      "x": 4.375,
+      "y": 0.125,
+      "z": 0.0,
+      "rotation": 90.0,
+      "size": {
+        "width": 0.25,
+        "depth": 0.25,
+        "height": 0.5
+      },
+      "item": {
+        "id": "white-potted-plant-small",
+        "name": "Small potted plant in a white pot",
+        "category": "plant",
+        "size": {
+          "width": 0.25,
+          "depth": 0.25,
+          "height": 0.5
+        },
+        "price": 19.0,
+        "style_tags": [
+          "modern",
+          "minimalist",
+          "scandinavian"
+        ],
+        "color": "white",
+        "front": "+z",
+        "glb_url": null,
+        "license": null,
+        "url": null,
+        "image_url": null,
+        "description": "Artificial plant in a pot"
+      }
+    },
+    {
+      "node_id": "armchair",
+      "item_id": "grey-armchair",
+      "x": 2.267,
+      "y": 4.6,
+      "z": 0.0,
+      "rotation": 180.0,
+      "size": {
+        "width": 0.78,
+        "depth": 0.8,
+        "height": 0.8
+      },
+      "item": {
+        "id": "grey-armchair",
+        "name": "Grey fabric armchair",
+        "category": "armchair",
+        "size": {
+          "width": 0.78,
+          "depth": 0.8,
+          "height": 0.8
+        },
+        "price": 329.0,
+        "style_tags": [
+          "modern",
+          "scandinavian"
+        ],
+        "color": "grey",
+        "front": "+z",
+        "glb_url": null,
+        "license": null,
+        "url": null,
+        "image_url": null,
+        "description": "Upholstered armchair"
+      }
+    },
+    {
+      "node_id": "floor_lamp",
+      "item_id": "oak-floor-lamp",
+      "x": 2.795,
+      "y": 0.384,
+      "z": 0.0,
+      "rotation": 0.0,
+      "size": {
+        "width": 0.3,
+        "depth": 0.3,
+        "height": 1.55
+      },
+      "item": {
+        "id": "oak-floor-lamp",
+        "name": "Oak floor lamp",
+        "category": "lamp",
+        "size": {
+          "width": 0.3,
+          "depth": 0.3,
+          "height": 1.55
+        },
+        "price": 69.0,
+        "style_tags": [
+          "scandinavian",
+          "japandi"
+        ],
+        "color": "oak",
+        "front": "+z",
+        "glb_url": null,
+        "license": null,
+        "url": null,
+        "image_url": null,
+        "description": "Floor lamp with a fabric shade"
+      }
+    },
+    {
+      "node_id": "area_rug",
+      "item_id": null,
+      "x": 1.429,
+      "y": 1.653,
+      "z": 0.0,
+      "rotation": 180.0,
+      "size": {
+        "width": 1.8,
+        "depth": 1.2,
+        "height": 0.01
+      },
+      "item": null
+    },
+    {
+      "node_id": "coffee_table",
+      "item_id": "oak-coffee-table",
+      "x": 1.292,
+      "y": 1.793,
+      "z": 0.01,
+      "rotation": 180.0,
+      "size": {
+        "width": 1.1,
+        "depth": 0.6,
+        "height": 0.45
+      },
+      "item": {
+        "id": "oak-coffee-table",
+        "name": "Oak coffee table",
+        "category": "table",
+        "size": {
+          "width": 1.1,
+          "depth": 0.6,
+          "height": 0.45
+        },
+        "price": 159.0,
+        "style_tags": [
+          "scandinavian",
+          "japandi"
+        ],
+        "color": "oak",
+        "front": "+z",
+        "glb_url": null,
+        "license": null,
+        "url": null,
+        "image_url": null,
+        "description": "Rectangular coffee table"
+      }
+    }
+  ],
+  "lights": [
+    {
+      "kind": "area",
+      "window_id": "window_1",
+      "intensity": 5.0
+    }
+  ],
+  "cameras": []
+}

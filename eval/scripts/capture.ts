@@ -3,9 +3,10 @@
 //
 //   pnpm --dir frontend exec node ../eval/scripts/capture.ts [runId ...]   (Node >= 22.18: built-in type stripping)
 //
-// A run id is a thread id, whose scene the frontend fetches from the API, or a fixture case (fixtures/<case>/scene.json, the
-// default: all of them), whose scene this script serves in place of the API. Without BASE_URL (a running frontend) it starts
-// `next dev` on a free port. Needs Playwright's Chromium: `pnpm --dir frontend exec playwright install chromium`.
+// A run id is a thread id, whose scene the frontend fetches from the API, an eval run (eval/results/renders/<run>/scene.json, E-06)
+// or a fixture case (fixtures/<case>/scene.json, the default: all of them), whose scene this script serves in place of the API.
+// Without BASE_URL (a running frontend) it starts `next dev` on a free port. Needs Playwright's Chromium:
+// `pnpm --dir frontend exec playwright install chromium`.
 import { type ChildProcess, spawn } from "node:child_process";
 import { existsSync, mkdirSync, readdirSync, readFileSync } from "node:fs";
 import { createRequire } from "node:module";
@@ -22,6 +23,7 @@ const CORNERS = ["cornerA", "cornerC"];
 const { chromium } = createRequire(join(FRONTEND, "package.json"))("playwright") as typeof import("playwright");
 
 const fixtureScene = (id: string) => join(FIXTURES, id, "scene.json");
+const sceneFile = (id: string) => [join(OUT, id, "scene.json"), fixtureScene(id)].find(existsSync);
 const runs = process.argv.slice(2);
 if (runs.length === 0) runs.push(...readdirSync(FIXTURES).filter((id) => existsSync(fixtureScene(id))));
 
@@ -56,8 +58,9 @@ try {
   const page = await browser.newPage({ viewport: { width: 1024, height: 768 }, colorScheme: "light" });
   await page.route("**/threads/*/state", (route) => {
     const id = decodeURIComponent(new URL(route.request().url()).pathname.split("/").at(-2) ?? "");
-    if (!runs.includes(id) || !existsSync(fixtureScene(id))) return route.continue();
-    const values = { scene: JSON.parse(readFileSync(fixtureScene(id), "utf8")) };
+    const file = runs.includes(id) ? sceneFile(id) : undefined;
+    if (!file) return route.continue();
+    const values = { scene: JSON.parse(readFileSync(file, "utf8")) };
     return route.fulfill({ json: { values, next: [], interrupts: [], status: "done" }, headers: { "Access-Control-Allow-Origin": "*" } });
   });
   for (const run of runs) {

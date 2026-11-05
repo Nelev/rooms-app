@@ -23,6 +23,12 @@ Put a real room's photos next to its `case.json` (`eval/data/<case>/photo-1.jpg`
 - 20 briefs, 5 per category, on the three fixture rooms (`fixtures/small-bedroom`, `home-office`, `living-room`): they reference the fixtures' photos and `room_spec.json`.
 - Hard cases (`hard-*`): `tiny-room` (1.8 x 2.1 m), `three-doors`, `wrong-dimensions` (the typed dimensions of `fixtures/negative/wrong_dimensions.json`), `impossible-brief` (`fixtures/negative/impossible_brief.json`) and `budget-too-low` (EUR 150).
 
+## Human ratings
+
+`human_ratings.csv` (E-06): people's 0-10 grades of judged runs on the VLM judge's five criteria, one row per run and rater, to measure
+judge-human agreement (`eval/agreement.py`). Its rows are the pilot's judged runs (`eval/results/pilot/`), whose renders are in
+`eval/results/pilot/renders/<render>/`; the grades are blank until people fill them.
+
 ## Not done yet
 
 E-01 stays open until these are done.

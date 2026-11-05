@@ -39,3 +39,8 @@ gen:
 .PHONY: eval
 eval:
 	cd backend && PYTHONPATH=..:../eval uv run $(ENV_FILE) python -m eval run --variant $(or $(VARIANT),baseline) --repeats 3
+
+# Several variants in one report with charts (eval/ablation.py): eval/results/ablation-<time>/. `make ablate ARGS="--judge --repeats 1"`
+.PHONY: ablate
+ablate:
+	cd backend && PYTHONPATH=..:../eval uv run $(ENV_FILE) python -m eval ablate $(ARGS)
