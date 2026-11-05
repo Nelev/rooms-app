@@ -1,11 +1,16 @@
 """The stub API end to end: a thread's design run to the confirm_room interrupt, its resume and chat runs, all on fixtures."""
 
+import io
 import json
 from collections.abc import Iterator
+from pathlib import Path
 from typing import Any
+from unittest.mock import Mock
 
+import pillow_heif
 import pytest
 from fastapi.testclient import TestClient
+from PIL import Image
 from pydantic import TypeAdapter
 
 from app.api.export import OUT, render
@@ -16,6 +21,7 @@ from app.graph.stub import fixture
 from app.main import app
 from app.schemas import CatalogItem, ConfirmRoom, Layout, LayoutDiff, Scene
 from app.schemas.run import NodeName
+from app.storage import local_path
 
 PARTS = TypeAdapter(list[StreamPart])
 
@@ -27,7 +33,8 @@ def as_sent(type_: Any, data: Any) -> Any:
 
 
 @pytest.fixture
-def client() -> Iterator[TestClient]:
+def client(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Iterator[TestClient]:
+    monkeypatch.setenv("UPLOAD_DIR", str(tmp_path))  # uploads without object storage, never in the developer's backend/.uploads
     with TestClient(app) as client:
         yield client
 
@@ -120,6 +127,72 @@ def test_catalog_and_upload(client: TestClient) -> None:
     assert client.post("/uploads", files={"file": ("notes.txt", b"text", "text/plain")}).status_code == 415
     too_big = b"0" * (MAX_UPLOAD_BYTES + 1)
     assert client.post("/uploads", files={"file": ("room.jpg", too_big, "image/jpeg")}).status_code == 413
+
+
+PHOTO = Path(__file__).parents[2] / "fixtures" / "small-bedroom" / "photo-1.jpg"
+
+
+def test_uploaded_photo_is_served_back_without_object_storage(client: TestClient, tmp_path: Path) -> None:
+    key = client.post("/uploads", files={"file": ("Room.JPG", PHOTO.read_bytes(), "image/jpeg")}).json()["key"]
+    assert key.startswith("uploads/") and key.endswith(".jpg")
+    assert (tmp_path / key).read_bytes() == PHOTO.read_bytes()
+    response = client.get(f"/uploads/{key}")
+    assert response.status_code == 200
+    assert (response.content, response.headers["content-type"]) == (PHOTO.read_bytes(), "image/jpeg")
+
+    heic = io.BytesIO()
+    pillow_heif.from_pillow(Image.open(PHOTO)).save(heic, quality=50)
+    key = client.post("/uploads", files={"file": ("IMG_0001.HEIC", heic.getvalue(), "image/heic")}).json()["key"]
+    assert key.endswith(".jpg")  # as object storage stores it
+    assert Image.open(io.BytesIO(client.get(f"/uploads/{key}").content)).format == "JPEG"
+    key = client.post("/uploads", files={"file": ("blob", b"png", "image/png")}).json()["key"]  # no extension: the type's
+    assert key.endswith(".png") and client.get(f"/uploads/{key}").content == b"png"
+
+
+def test_fixture_photos_are_served_and_other_keys_are_not(client: TestClient) -> None:
+    response = client.get("/uploads/fixtures/small-bedroom/photo-1.jpg")  # the stub runs' photo keys
+    assert (response.status_code, response.content) == (200, PHOTO.read_bytes())
+    for key in (
+        "uploads/nope.jpg",  # not uploaded
+        "fixtures/small-bedroom/room_spec.json",  # not an image
+        "backend/pyproject.toml",
+        "renders/x.png",  # not a photo's directory
+        "uploads/%2e%2e/%2e%2e/fixtures/small-bedroom/photo-1.jpg",  # out of its directory (httpx would collapse a plain ..)
+        "uploads/%00.jpg",
+    ):
+        assert client.get(f"/uploads/{key}").status_code == 404, key
+    svg = b'<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script></svg>'
+    assert client.post("/uploads", files={"file": ("x.svg", svg, "image/svg+xml")}).status_code == 415  # active content
+    assert client.post("/uploads", files={"file": ("x.txt", b"png", "image/png")}).status_code == 415
+
+
+@pytest.mark.parametrize(
+    "key",
+    [
+        "uploads/../../fixtures/small-bedroom/photo-1.jpg",
+        "uploads/../x.jpg",
+        "fixtures/../backend/x.jpg",
+        "fixtures//etc/passwd.jpg",
+        "uploads//etc/x.jpg",
+        "uploads/x.svg",
+        "uploads/x\0.jpg",
+        "renders/x.png",
+    ],
+)
+def test_local_path_rejects_keys_out_of_photo_directories(key: str) -> None:
+    assert local_path(key) is None
+
+
+def test_uploaded_photo_redirects_to_a_signed_url_with_object_storage(client: TestClient) -> None:
+    storage = Mock()
+    storage.put.side_effect = lambda key, data, content_type: key
+    storage.url.side_effect = lambda key: f"https://storage.example/{key}?X-Amz-Signature=s"
+    app.state.storage = storage  # the client's app started without one; the next client's starts again from the env
+    key = client.post("/uploads", files={"file": ("room.jpg", b"jpeg", "image/jpeg")}).json()["key"]
+    response = client.get(f"/uploads/{key}", follow_redirects=False)
+    assert (response.status_code, response.headers["location"]) == (307, f"https://storage.example/{key}?X-Amz-Signature=s")
+    assert client.get("/uploads/uploads/x.svg", follow_redirects=False).status_code == 404  # checked before the redirect
+    assert client.get("/uploads/fixtures/small-bedroom/photo-1.jpg").content == PHOTO.read_bytes()  # fixtures are not in the bucket
 
 
 def test_exported_openapi_is_current() -> None:

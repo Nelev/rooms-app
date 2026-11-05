@@ -156,9 +156,29 @@ export interface paths {
         put?: never;
         /**
          * Upload
-         * @description Store a room photo (a HEIC one as a JPEG) and return its key. Without object storage (STORAGE_* unset), check it and drop it.
+         * @description Store a room photo (a HEIC one as a JPEG) and return its key: in object storage, or in UPLOAD_DIR without it (STORAGE_* unset).
          */
         post: operations["upload_uploads_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/uploads/{key}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Photo
+         * @description A room photo by its key: an uploaded one (uploads/...) or a fixture's (fixtures/..., the stub runs' photos).
+         */
+        get: operations["photo_uploads__key__get"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -2088,6 +2108,51 @@ export interface operations {
             };
             /** @description The file is not an image */
             415: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    photo_uploads__key__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                key: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The photo */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "image/*": unknown;
+                };
+            };
+            /** @description With object storage, a redirect to a signed URL of the photo */
+            307: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No such photo, or the key is not an uploads/ or fixtures/ image */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };

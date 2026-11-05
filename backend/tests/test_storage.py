@@ -70,5 +70,8 @@ def test_upload_endpoint_stores_the_photo(storage: Storage, monkeypatch: pytest.
         monkeypatch.setenv(f"STORAGE_{name}", value)
     with TestClient(app) as client:
         key = client.post("/uploads", files={"file": ("room.JPG", PHOTO.read_bytes(), "image/jpeg")}).json()["key"]
+        redirect = client.get(f"/uploads/{key}", follow_redirects=False)
     assert key.startswith("uploads/") and key.endswith(".jpg")
     assert storage.get(key) == PHOTO.read_bytes()
+    assert redirect.status_code == 307  # to a signed URL of the photo
+    assert httpx.get(redirect.headers["location"]).content == PHOTO.read_bytes()
