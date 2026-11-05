@@ -12,7 +12,7 @@ from app.graph.graph import build_graph, serde
 from app.graph.nodes.refine import refine_graph
 from app.graph.stub import fixture
 from app.schemas import SceneGraph
-from app.schemas.design import SceneEdge
+from app.schemas.design import SceneEdge, SceneNode
 from tests.test_api import design_input
 from tests.test_fixtures import CASES, FIXTURES, case, load
 
@@ -70,6 +70,25 @@ def test_facing_and_adjacent_children_are_not_siblings() -> None:
         ),
     )
     assert refine_graph(graph) == graph
+
+
+@pytest.mark.parametrize("relation,parent", [("against_wall", "wall_A"), ("in_corner", "wall_C"), ("left_of", "door_1")])
+def test_children_of_walls_doors_and_windows_are_not_ordered(relation: str, parent: str) -> None:
+    door = SceneNode(id="door_1", kind="door", name="door")
+    graph = SceneGraph(
+        nodes=[*AMBIGUOUS.nodes, door],
+        edges=edges(("chair_1", relation, parent), ("chair_2", relation, parent)),
+    )
+    assert refine_graph(graph) == graph
+
+
+def test_a_sibling_with_copies_is_not_ordered() -> None:
+    # two chairs right_of a single chair would be too_small for B-07 (it lines copies up along chair_1's 0.5 m depth)
+    nodes = [n.model_copy(update={"quantity": 2}) if n.id == "chair_2" else n for n in AMBIGUOUS.nodes]
+    graph = AMBIGUOUS.model_copy(update={"nodes": nodes})
+    refined = refine_graph(graph)
+    assert refined.edges == [*graph.edges, *edges(("desk_lamp", "right_of", "monitor"), ("plant", "right_of", "desk_lamp"))]
+    assert validate_graph(refined, LIVING_ROOM) == validate_graph(graph, LIVING_ROOM)  # no new issues
 
 
 def test_in_the_graph_the_live_refiner_streams_its_own_steps(monkeypatch: pytest.MonkeyPatch) -> None:

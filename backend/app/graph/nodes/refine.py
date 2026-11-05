@@ -1,10 +1,13 @@
 """The Refiner: orders the siblings that share a parent and a relation, so the solver has one interpretation of them.
 
-Siblings are the children of one parent through one relation, read as the B-07 validator reads parents (facing and adjacent
-give none); this includes the children of walls, doors and windows (against_wall, in_corner, beside_*). Each sibling after
-the first, in graph order, gets a `right_of` edge to the one before it (the solver's left/right convention). A pair that
-already has an edge between them, either way, keeps it, and an edge that would close a loop is not added (the newest edge
-goes). The edges are appended, so each node's first placing edge, which the solver places it by, stays the one to its parent.
+Siblings are the children of one item (an object node) through one relation, read as the B-07 validator reads parents (facing
+and adjacent give none). Children of walls, doors and windows (against_wall, in_corner, left_of a door...) are left alone: the
+solver spreads them along their wall, and an item-to-item order there could fight the corner it picks. Siblings with
+quantity > 1 are left alone too: B-07 lines their copies up along their left neighbour's depth (too_small). Each remaining
+sibling after the first, in graph order, gets a `right_of` edge to the one before it (the solver's left/right convention). A
+pair that already has an edge between them, either way, keeps it, and an edge that would close a loop is not added (the
+newest edge goes). The edges are appended, so each node's first placing edge, which the solver places it by, stays the one
+to its parent.
 
 Limit: the solver places each node only by its first placing edge, so these ordering edges do not yet change layouts; they
 record the order (and feed B-07's footprint checks) until the solver honours a node's other edges.
@@ -28,12 +31,14 @@ from app.schemas.design import SceneEdge
 
 def refine_graph(graph: SceneGraph) -> SceneGraph:
     """`graph` with ordering edges between its siblings."""
+    nodes = {n.id: n for n in graph.nodes}
     parents: defaultdict[str, set[str]] = defaultdict(set)
     siblings: defaultdict[tuple[str, str], list[str]] = defaultdict(list)
     for e in graph.edges:
         if e.relation not in ("facing", "adjacent"):
             parents[e.source].add(e.target)
-            if e.source not in siblings[e.target, e.relation]:
+            orderable = e.target in nodes and nodes[e.target].kind == "object" and e.source in nodes and nodes[e.source].quantity == 1
+            if orderable and e.source not in siblings[e.target, e.relation]:
                 siblings[e.target, e.relation].append(e.source)
 
     def ancestor(node: str, of: str) -> bool:
