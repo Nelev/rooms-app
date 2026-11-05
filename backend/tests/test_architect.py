@@ -8,15 +8,15 @@ from langgraph.types import Command
 
 from app import llm
 from app.graph.graph import build_graph, serde
+from app.graph.nodes import design
 from app.graph.nodes.architect import Edges, check, scene_graph, scene_nodes
 from app.graph.state import RunState
 from app.graph.stub import fixture
 from app.llm.fake import CALL_USAGE, FakeLLM
-from app.schemas import Critique, SceneGraph
+from app.schemas import Critique, DesignBrief, SceneGraph
 from app.schemas.design import SceneEdge
 from app.schemas.layout import CritiqueAction
 from app.schemas.run import StepEvent
-from tests.conftest import LIVE_KEY
 from tests.test_api import design_input
 from tests.test_fixtures import CASES, case
 
@@ -161,6 +161,10 @@ def test_in_the_graph_the_architect_streams_its_steps_and_applies_the_critic_fix
     facing = edges(*(e for e in EDGES if e.source != "desk"))
     # round 1 draws the graph; the fixture critic sends round 2 back, on the stub refine's fixture graph, which has no facing edges
     fake = install(monkeypatch, edges(*EDGES), fix, facing)
+    no_usage = llm.Usage(cost=0.0, input_tokens=0, output_tokens=0)
+    monkeypatch.setattr(
+        design, "plan", lambda brief, room: (DesignBrief.model_validate(fixture("design_brief")), no_usage)
+    )  # only the architect is real
     graph = build_graph(InMemorySaver(serde=serde()))
     config: Any = {"configurable": {"thread_id": "t1"}}
     graph.invoke(design_input(), config)
@@ -173,13 +177,12 @@ def test_in_the_graph_the_architect_streams_its_steps_and_applies_the_critic_fix
     assert [e for e in fixed.edges if e.source == "desk"] == Edges.model_validate_json(fix).edges
 
 
-@pytest.mark.skipif(not LIVE_KEY, reason="live: needs OPENROUTER_API_KEY")
-def test_live_most_fixture_runs_give_a_valid_graph_without_the_critic(monkeypatch: pytest.MonkeyPatch) -> None:
+@pytest.mark.live
+def test_live_most_fixture_runs_give_a_valid_graph_without_the_critic() -> None:
     """Done-when of B-15: >= 90% of runs valid. UNVERIFIED: no real-model rate has been measured yet (no key exists).
 
     Run: `OPENROUTER_API_KEY=... uv run pytest tests/test_architect.py -k live -s`.
     """
-    monkeypatch.setenv("OPENROUTER_API_KEY", str(LIVE_KEY))
     runs = [(name, *scene_graph(state(room_spec=case(name)["room_spec"], design_brief=case(name)["design_brief"]))) for name in CASES * 4]
     for name, graph, usage, issues in runs:
         print(name, usage, [i.message for i in issues], graph.model_dump_json(exclude_none=True))
