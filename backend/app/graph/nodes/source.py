@@ -7,7 +7,8 @@ then must-haves): it takes the item most like it that fits its box and its share
 the object's box with its real size, so the solver places the real furniture.
 
 Swaps come from the Critic's `sourcer` actions on a node ("smaller sofa", "cheaper desk"): the current item is excluded, and the
-instruction's words decide the constraint: cheaper (a lower price), smaller or larger (a smaller or larger footprint).
+instruction's words decide the constraint: cheaper (a lower price), smaller or larger (a smaller or larger footprint), shorter (a
+lower height, for an item above the ceiling).
 """
 
 import re
@@ -43,7 +44,9 @@ def swap_rule(instruction: str, current: CatalogItem) -> Callable[[CatalogItem],
     asked = words(instruction)
     if asked & {"cheaper", "inexpensive", "budget", "affordable"}:
         return lambda i: i.price < current.price
-    if asked & {"smaller", "compact", "narrower", "shorter"}:
+    if "shorter" in asked:  # the Critic's ask for an item above the ceiling
+        return lambda i: i.size.height < current.size.height
+    if asked & {"smaller", "compact", "narrower"}:
         return lambda i: footprint(i) < footprint(current)
     if asked & LARGER:
         return lambda i: footprint(i) > footprint(current)

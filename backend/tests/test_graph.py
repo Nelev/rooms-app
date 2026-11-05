@@ -13,16 +13,18 @@ from langgraph.types import Command
 from langsmith import Client
 
 from app.graph.graph import RECURSION_LIMIT, build_graph, serde
+from app.graph.nodes import critic
 from app.graph.routing import MAX_ROUNDS, after_critic, flags
 from app.graph.state import RunState
 from app.graph.stub import fixture, load
 from app.observability.tracing import traced
-from app.schemas import Critique, Layout, RoomSpec
+from app.schemas import Critique, RoomSpec
 from app.schemas.layout import CritiqueAction
-from tests.test_api import design_input
+from tests.test_api import design_input, one_round, stub_cost
 
 DESIGN = ["route_input", "analyze_room", "confirm_room"]
-RESUMED = ["confirm_room", "design", *["architect", "refine", "source", "solve", "critic"] * 2, "present"]  # the fixture's 2 critic rounds
+ROUND = ["architect", "refine", "source", "solve", "critic"]
+RESUMED = ["confirm_room", "design", *ROUND, "present"]  # the real critic accepts the fixture design in one round
 CHAT = ["route_input", "chat_edit", "solve", "present"]
 
 
@@ -48,16 +50,17 @@ def test_design_run_pauses_at_confirm_room_then_chat_runs_take_the_chat_branch()
 
     assert traced_nodes(graph, Command(resume=fixture("room_spec"))) == RESUMED
     values: RunState = graph.get_state(config).values
-    assert values["layout"] == load("layout", Layout)
-    assert values["critique"].round == 2 and not graph.get_state(config).next
+    assert values["best"] is None and values["fallback"].changes == []  # best is the loop's, cleared at the end
+    assert (values["critique"].round, values["critique"].actions) == (1, []) and not graph.get_state(config).next
 
     applied, refused = fixture("chat")
     assert traced_nodes(graph, applied["input"]) == CHAT
     assert traced_nodes(graph, refused["input"]) == CHAT[:2]  # a refused edit ends at chat_edit
     values = graph.get_state(config).values
     assert [m.role for m in values["messages"]] == ["user", "assistant"] * 2
+    events = fixture("stream_events")
     assert values["cost"] == pytest.approx(  # the thread's usage, added up across its runs
-        sum(e.get("cost", 0) for e in [*fixture("stream_events")["first_run"], *fixture("stream_events")["resumed_run"]])
+        stub_cost(events["first_run"] + one_round(events["resumed_run"]))
         + sum(e.get("cost", 0) for turn in fixture("chat") for e in turn["events"])
     )
 
@@ -84,3 +87,25 @@ def test_flags_come_from_the_configurable() -> None:
         "analyst_mode": False,
     }
     assert not flags({}).no_critic
+
+
+def test_a_critic_that_always_asks_for_fixes_ends_after_max_rounds_with_the_best_layout(monkeypatch: pytest.MonkeyPatch) -> None:
+    hard = {1: 2, 2: 0, 3: 1}  # round 2's design is the best
+
+    def judge(state: RunState) -> tuple[Critique, int, int]:
+        fix = CritiqueAction(target="architect", instruction="Fix it")
+        return Critique(round=state["round"], actions=[fix], summary=f"round {state['round']}"), hard[state["round"]], 0
+
+    monkeypatch.setattr(critic, "judge", judge)
+    graph = build_graph(InMemorySaver(serde=serde()), InMemoryStore())
+    config: Any = {"configurable": {"thread_id": "t1"}}
+    graph.invoke(design_input(), config)
+    updates = list(graph.stream(Command(resume=fixture("room_spec")), config, stream_mode="updates"))
+    assert [node for update in updates for node in update] == [*RESUMED[:2], *ROUND * MAX_ROUNDS, "present"]
+    layouts = [u["solve"]["layout"] for u in updates if "solve" in u]  # each round samples its own layout
+    values = graph.get_state(config).values
+    assert values["layout"] == layouts[1] != layouts[2]
+    assert [i.x for i in values["scene"].items] == [p.x for p in layouts[1].placements]
+    critique = values["critique"]
+    assert (critique.round, critique.actions) == (2, [])
+    assert critique.summary == f"round 2; not fixed in {MAX_ROUNDS} rounds; round 2's design is the best"

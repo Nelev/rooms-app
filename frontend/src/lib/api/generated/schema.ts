@@ -226,6 +226,29 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /**
+         * Best
+         * @description INTERNAL loop bookkeeping: the best design of the critic loop so far, the fewest hard issues, then the fewest soft ones
+         *     (routing.keep_best); cleared when the run ends.
+         */
+        Best: {
+            /** Hard */
+            hard: number;
+            /** Soft */
+            soft: number;
+            scene_graph: components["schemas"]["SceneGraph"];
+            /**
+             * Candidates
+             * @default {}
+             */
+            candidates: {
+                [key: string]: components["schemas"]["CatalogItem"][];
+            };
+            layout: components["schemas"]["Layout"];
+            validation: components["schemas"]["ValidationReport"];
+            fallback: components["schemas"]["FallbackReport"];
+            critique: components["schemas"]["Critique"];
+        };
         /** Body_upload_uploads_post */
         Body_upload_uploads_post: {
             /** File */
@@ -769,6 +792,56 @@ export interface components {
             event: "error";
             data: components["schemas"]["RunError"];
         };
+        /** FallbackChange */
+        FallbackChange: {
+            /** Node Id */
+            node_id: string;
+            /**
+             * Action
+             * @enum {string}
+             */
+            action: "dropped" | "resized";
+            /**
+             * Code
+             * @description Why: too big for the room on its own, no space left beside the items kept, its parent was dropped, never tried
+             * @enum {string}
+             */
+            code: "too_big" | "no_space" | "depends_on_dropped" | "out_of_time";
+            /**
+             * Message
+             * @description One short sentence the Critic and the Presenter can pass on
+             */
+            message: string;
+            /**
+             * Item Id
+             * @description For resized: the smaller catalog item placed instead
+             */
+            item_id?: string | null;
+        };
+        /**
+         * FallbackReport
+         * @description What the solver fallback dropped or swapped for a smaller item to find a layout, and why; no changes means none were needed.
+         * @example {
+         *       "changes": [
+         *         {
+         *           "action": "dropped",
+         *           "code": "no_space",
+         *           "message": "upright piano does not fit beside king-size bed, desk",
+         *           "node_id": "piano"
+         *         }
+         *       ],
+         *       "summary": "Placed 2 of 3 items; dropped: upright piano"
+         *     }
+         */
+        FallbackReport: {
+            /**
+             * Changes
+             * @default []
+             */
+            changes: components["schemas"]["FallbackChange"][];
+            /** Summary */
+            summary: string;
+        };
         /** Feature */
         Feature: {
             /** Id */
@@ -1231,7 +1304,9 @@ export interface components {
             };
             layout?: components["schemas"]["Layout"];
             validation?: components["schemas"]["ValidationReport"];
+            fallback?: components["schemas"]["FallbackReport"];
             critique?: components["schemas"]["Critique"];
+            best?: components["schemas"]["Best"] | null;
             /** Round */
             round?: number;
             scene?: components["schemas"]["Scene"];

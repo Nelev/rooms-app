@@ -52,7 +52,8 @@ class Frame:
     fixed: bool
 
 
-def _fixed_frames(spec: RoomSpec) -> dict[str, Frame]:
+def fixed_frames(spec: RoomSpec) -> dict[str, Frame]:
+    """The frames of the room's walls, doors and windows, by id (also used by the Critic's relation check)."""
     frames: dict[str, Frame] = {}
     for i, w in enumerate(get_args(Wall)):
         (x0, y0), (dx, dy), length = wall_frame(spec, w)
@@ -64,7 +65,7 @@ def _fixed_frames(spec: RoomSpec) -> dict[str, Frame]:
     return frames
 
 
-def _box(relation: str, parent: Frame, size: Size) -> tuple[float, float, float, float, float]:
+def child_box(relation: str, parent: Frame, size: Size) -> tuple[float, float, float, float, float]:
     """(x range, y range, rotation relative to the parent) of a child's center in the parent's frame, x to the parent's right."""
     pw, pd, cw, cd = parent.width, parent.depth, size.width, size.depth
     gap = 0 if parent.fixed else GAP
@@ -89,7 +90,7 @@ def _cluster(node: str, size: Size, children: dict[str, list[tuple[str, str]]], 
     for child, relation in children.get(node, []):
         if relation in ("on", "adjacent"):  # on stays within the parent, adjacent may go either side
             continue
-        x0, x1, y0, y1, turn = _box(relation, parent, sizes[child])
+        x0, x1, y0, y1, turn = child_box(relation, parent, sizes[child])
         sideways = relation in ("left_of", "right_of")
         x = {"left_of": x0, "right_of": x1}.get(relation, (x0 + x1) / 2)
         y = (y0 + y1) / 2 if sideways else y1 if relation == "behind" else y0
@@ -103,7 +104,7 @@ def solve(graph: SceneGraph, spec: RoomSpec, seed: int = 0, budget: float = 2.0)
     Only each node's parent edge and `in_front`'s turn are honoured: other edges of a node with several, and `facing`, are not
     checked, so a caller (B-18's solve node) should run the layout checks it needs on the result."""
     deadline, rng, room = monotonic() + budget, Random(seed), room_model(spec)
-    frames = _fixed_frames(spec)
+    frames = fixed_frames(spec)
     objects = [n for n in graph.nodes if n.kind == "object"]
     sizes = {n.id: n.size for n in objects if n.size}
     if missing := [n.id for n in objects if not n.size]:
@@ -149,7 +150,7 @@ def solve(graph: SceneGraph, spec: RoomSpec, seed: int = 0, budget: float = 2.0)
                 frame = frames[target]
             if relation == "adjacent":
                 relation = rng.choice(["left_of", "right_of"])
-            x0, x1, y0, y1, turn = _box(relation, frame, size)
+            x0, x1, y0, y1, turn = child_box(relation, frame, size)
             lx = rng.choice([x0, x1]) if relation == "in_corner" else rng.uniform(x0, x1)
             ly = rng.uniform(y0, y1)
             a = radians(frame.rotation)

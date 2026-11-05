@@ -613,6 +613,57 @@
   },
   "components": {
     "schemas": {
+      "Best": {
+        "properties": {
+          "hard": {
+            "type": "integer",
+            "title": "Hard"
+          },
+          "soft": {
+            "type": "integer",
+            "title": "Soft"
+          },
+          "scene_graph": {
+            "$ref": "#/components/schemas/SceneGraph"
+          },
+          "candidates": {
+            "additionalProperties": {
+              "items": {
+                "$ref": "#/components/schemas/CatalogItem"
+              },
+              "type": "array"
+            },
+            "type": "object",
+            "title": "Candidates",
+            "default": {}
+          },
+          "layout": {
+            "$ref": "#/components/schemas/Layout"
+          },
+          "validation": {
+            "$ref": "#/components/schemas/ValidationReport"
+          },
+          "fallback": {
+            "$ref": "#/components/schemas/FallbackReport"
+          },
+          "critique": {
+            "$ref": "#/components/schemas/Critique"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "hard",
+          "soft",
+          "scene_graph",
+          "layout",
+          "validation",
+          "fallback",
+          "critique"
+        ],
+        "title": "Best",
+        "description": "INTERNAL loop bookkeeping: the best design of the critic loop so far, the fewest hard issues, then the fewest soft ones\n(routing.keep_best); cleared when the run ends."
+      },
       "Body_upload_uploads_post": {
         "properties": {
           "file": {
@@ -1550,6 +1601,95 @@
         "title": "ErrorPart",
         "description": "The run failed; the stream ends."
       },
+      "FallbackChange": {
+        "properties": {
+          "node_id": {
+            "type": "string",
+            "title": "Node Id"
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "dropped",
+              "resized"
+            ],
+            "title": "Action"
+          },
+          "code": {
+            "type": "string",
+            "enum": [
+              "too_big",
+              "no_space",
+              "depends_on_dropped",
+              "out_of_time"
+            ],
+            "title": "Code",
+            "description": "Why: too big for the room on its own, no space left beside the items kept, its parent was dropped, never tried"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message",
+            "description": "One short sentence the Critic and the Presenter can pass on"
+          },
+          "item_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Item Id",
+            "description": "For resized: the smaller catalog item placed instead"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "node_id",
+          "action",
+          "code",
+          "message"
+        ],
+        "title": "FallbackChange"
+      },
+      "FallbackReport": {
+        "properties": {
+          "changes": {
+            "items": {
+              "$ref": "#/components/schemas/FallbackChange"
+            },
+            "type": "array",
+            "title": "Changes",
+            "default": []
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "summary"
+        ],
+        "title": "FallbackReport",
+        "description": "What the solver fallback dropped or swapped for a smaller item to find a layout, and why; no changes means none were needed.",
+        "examples": [
+          {
+            "changes": [
+              {
+                "action": "dropped",
+                "code": "no_space",
+                "message": "upright piano does not fit beside king-size bed, desk",
+                "node_id": "piano"
+              }
+            ],
+            "summary": "Placed 2 of 3 items; dropped: upright piano"
+          }
+        ]
+      },
       "Feature": {
         "properties": {
           "id": {
@@ -2410,8 +2550,21 @@
           "validation": {
             "$ref": "#/components/schemas/ValidationReport"
           },
+          "fallback": {
+            "$ref": "#/components/schemas/FallbackReport"
+          },
           "critique": {
             "$ref": "#/components/schemas/Critique"
+          },
+          "best": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Best"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "round": {
             "type": "integer",

@@ -1,7 +1,19 @@
 import operator
 from typing import Annotated, Literal, TypedDict
 
-from app.schemas import Brief, CatalogItem, Critique, DesignBrief, Layout, LayoutDiff, RoomSpec, Scene, SceneGraph, ValidationReport
+from app.schemas import (
+    Brief,
+    CatalogItem,
+    Critique,
+    DesignBrief,
+    FallbackReport,
+    Layout,
+    LayoutDiff,
+    RoomSpec,
+    Scene,
+    SceneGraph,
+    ValidationReport,
+)
 from app.schemas.base import Model
 from app.schemas.room import Dimensions
 
@@ -9,6 +21,20 @@ from app.schemas.room import Dimensions
 class ChatEntry(Model):
     role: Literal["user", "assistant"]
     content: str
+
+
+class Best(Model):
+    """INTERNAL loop bookkeeping: the best design of the critic loop so far, the fewest hard issues, then the fewest soft ones
+    (routing.keep_best); cleared when the run ends."""
+
+    hard: int
+    soft: int
+    scene_graph: SceneGraph
+    candidates: dict[str, list[CatalogItem]] = {}
+    layout: Layout
+    validation: ValidationReport
+    fallback: FallbackReport
+    critique: Critique
 
 
 class RunState(TypedDict, total=False):
@@ -27,7 +53,9 @@ class RunState(TypedDict, total=False):
     candidates: dict[str, list[CatalogItem]]  # scene-graph node id -> catalog items that fit it
     layout: Layout
     validation: ValidationReport
+    fallback: FallbackReport  # what the solver fallback dropped or shrank to find the layout
     critique: Critique
+    best: Best | None  # INTERNAL: the critic loop's best design so far, which the run ends with; None once the run ends
     round: int  # critic loop round, from 1
     scene: Scene
     layout_diff: LayoutDiff  # what the last chat edit changed

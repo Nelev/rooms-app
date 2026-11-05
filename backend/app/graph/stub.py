@@ -67,7 +67,10 @@ def _run_events(state: RunState, node: str) -> list[Event]:
 
 
 def _step(events: list[Event], node: str, round_: int | None) -> tuple[int, int]:
-    """Where `node`'s step (its started event to its done event, tool events included) is in `events`."""
+    """Where `node`'s step (its started event to its done event, tool events included) is in `events`; a critic round past the
+    fixture's replays the node's last fixture round."""
+    if rounds := [e["round"] for e in events if e.get("node") == node and e.get("round")]:
+        round_ = min(round_ or 1, max(rounds))
 
     def match(e: Event, status: str) -> bool:
         return e.get("node") == node and e["status"] == status and e.get("round") in (round_, None)
@@ -76,19 +79,15 @@ def _step(events: list[Event], node: str, round_: int | None) -> tuple[int, int]
     return max(i for i in range(end) if match(events[i], "started")), end  # a resumed node starts twice: the last start
 
 
-def next_node(state: RunState, node: str) -> str:
-    """The node the fixture run goes to after `node`'s step."""
-    events = _run_events(state, node)
-    return str(events[_step(events, node, state.get("round"))[1] + 1]["node"])
-
-
 def stub_node(fn: Callable[[RunState], dict[str, Any]]) -> Callable[..., dict[str, Any]]:
     """Wrap a stub node: it streams its fixture step events around the node's work and adds the step's cost to the usage."""
 
     @wraps(fn)
     def node(state: RunState) -> dict[str, Any]:
+        round_ = state.get("round")
         events = _run_events(state, fn.__name__)
-        start, end = _step(events, fn.__name__, state.get("round"))
+        start, end = _step(events, fn.__name__, round_)
+        events = [{**e, "round": round_} if e.get("round") else e for e in events]  # a replayed fixture round has the run's round
         write = get_stream_writer()
         write(events[start])
         update = fn(state)  # may interrupt: the node starts over on resume
