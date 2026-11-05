@@ -64,6 +64,9 @@ export function stubApi() {
         latest = runs[step++];
         return sse(latest, init?.signal, () => held);
       }
+      // not recorded: the fixture's pose, whatever the points (the stub API solves them, and the placeholder photo shows too few corners)
+      case "POST /threads/{thread_id}/camera-pose":
+        return answer(JSON.parse(readFileSync(join(import.meta.dirname, "../../../../fixtures/small-bedroom/camera_pose.json"), "utf8")));
       case "GET /threads/{thread_id}/runs/current/stream":
         return latest ? sse(latest, init?.signal, () => held) : answer({ detail: "No run on this thread" }, 404);
     }
