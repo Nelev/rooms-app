@@ -27,6 +27,7 @@ export function RoomConfirm({ threadId }: { threadId: string }) {
   const [sent, setSent] = useState(false);
   // the stream has the interrupt as soon as the run pauses, before the thread's state is fetched again
   const interrupt = run.interrupt ?? thread.data?.interrupts[0];
+  // a project is its thread (the contract's Thread and GraphState; the wizard routes to /projects/{thread_id}), so the ids are the same
   const back = <Link href={`/projects/${threadId}`}>Back to the project</Link>;
   const error = run.error ?? thread.error;
 
