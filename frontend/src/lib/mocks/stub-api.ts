@@ -39,6 +39,8 @@ export function stubApi() {
   const states: ThreadState[] = ["state-new.json", "state-interrupt.json", "state-done.json", "state-chat-1.json", "state-chat-2.json"].map((name) =>
     JSON.parse(read(name)),
   );
+  // History is recorded up to the end of the design run; the chat turns reuse the last one.
+  const histories: ThreadState[][] = ["new", "interrupt", "done"].map((name) => JSON.parse(read(`history-${name}.json`)));
   const runs = ["first-run.sse", "resumed-run.sse", "chat-1.sse", "chat-2.sse"].map(read);
   let step = 0; // the runs done: the state is states[step]
   let latest: string | undefined;
@@ -54,6 +56,8 @@ export function stubApi() {
         return answer([{ ...thread, status: states[step].status }]);
       case "GET /threads/{thread_id}/state":
         return answer(states[step]);
+      case "GET /threads/{thread_id}/history":
+        return answer(histories[Math.min(step, histories.length - 1)]);
       case "POST /threads/{thread_id}/runs/stream": {
         const resume = "command" in JSON.parse(String(init?.body));
         if (step === runs.length || resume !== (step === 1)) return answer({ detail: "The thread has no open interrupt to resume" }, 409);
@@ -71,5 +75,5 @@ export function stubApi() {
       release = resolve;
     });
   }
-  return { fetch, thread, states, hold, release: () => release() };
+  return { fetch, thread, states, histories, hold, release: () => release() };
 }

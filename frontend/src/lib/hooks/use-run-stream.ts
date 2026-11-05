@@ -70,26 +70,38 @@ async function follow(
 export function useRunStream(threadId: string) {
   const [state, setState] = useState(() => idle(threadId));
   const controller = useRef<AbortController>(null);
+  const [last, setLast] = useState<{ again: () => void; resume: boolean }>(); // F-06: what retry starts again
 
   // a new stream replaces the one being read; `running` from the start for a run that is being started
-  function start(open: (signal: AbortSignal) => Promise<Response>, running: boolean) {
+  function start(open: (signal: AbortSignal) => Promise<Response>, running: boolean, resume = false) {
     controller.current?.abort();
     controller.current = new AbortController();
+    setLast({ again: () => start(open, running, resume), resume });
     setState({ ...idle(threadId), running });
     void follow(threadId, open, controller.current.signal, setState);
   }
 
+  function rejoin() {
+    start((signal) => request(path("/threads/{thread_id}/runs/current/stream", { thread_id: threadId }), { signal, timeout: null }), false);
+  }
+
   // biome-ignore lint/correctness/useExhaustiveDependencies: rejoins once per thread
   useEffect(() => {
-    start((signal) => request(path("/threads/{thread_id}/runs/current/stream", { thread_id: threadId }), { signal, timeout: null }), false);
+    rejoin();
     return () => controller.current?.abort();
   }, [threadId]);
 
   function submit(body: RunCreate) {
     const url = path("/threads/{thread_id}/runs/stream", { thread_id: threadId });
     const init = { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body), timeout: null };
-    start((signal) => request(url, { ...init, signal }), true);
+    start((signal) => request(url, { ...init, signal }), true, !!body.command);
   }
 
-  return { ...(state.threadId === threadId ? state : idle(threadId)), submit };
+  // F-06: after an error, rejoin the thread's run when its stream broke while it ran, or when the request was refused with a 409 (a run
+  // is active, or the interrupt was resumed already); or else start again the request that could not be sent, or the new run that
+  // failed on the server. A resumed run that failed has no retry: its interrupt is gone, so sending the resume again would get a 409.
+  const retry =
+    state.error?.status === 409 || (state.runId && state.error?.kind === "network") ? rejoin : state.runId && last?.resume ? undefined : last?.again;
+
+  return { ...(state.threadId === threadId ? state : idle(threadId)), submit, retry };
 }
