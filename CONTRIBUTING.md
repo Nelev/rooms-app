@@ -24,4 +24,4 @@ make lint   # ruff, mypy, Biome, tsc
 
 `docker compose up -d --build` runs the whole stack in containers.
 
-CI runs the backend or frontend workflow when a PR changes that side (any base branch, so stacked PRs are checked too).
+CI runs the backend or frontend workflow when a PR changes that side (any base branch, so stacked PRs are checked too). A PR that touches neither side (root files, docs) runs no checks, so do not make these checks required in branch protection: a required check that never runs leaves the PR pending forever.

@@ -20,8 +20,11 @@ defaults:
 
 jobs:
   ci:
-    name: Backend
+    name: Backend (Python ${{ matrix.python }})
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.12", "3.14"] # the oldest version requires-python allows, and the one the backend is developed on
     timeout-minutes: 10
     services:
       postgres: # with pgvector: the agent's checkpoints, the store and the projects registry live in Postgres
@@ -43,7 +46,7 @@ jobs:
 
       - uses: astral-sh/setup-uv@v10.3.3
         with:
-          python-version: "3.14" # the version the backend is developed on
+          python-version: ${{ matrix.python }}
           enable-cache: true
           cache-dependency-glob: backend/uv.lock
 
