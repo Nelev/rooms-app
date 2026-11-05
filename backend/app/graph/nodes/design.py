@@ -6,6 +6,7 @@ I-Design's main failure: objects other than the must-haves are dropped until the
 
 import os
 import re
+from collections import Counter
 from functools import cache
 from pathlib import Path
 from typing import Any
@@ -15,11 +16,15 @@ from app.catalog.loader import load_catalog
 from app.graph.state import RunState
 from app.graph.stub import ask, load, stub_node
 from app.schemas import Brief, DesignBrief, RoomSpec, coords
+from app.schemas.coords import Size
 from app.schemas.design import DesignObject
 
 PROMPT = (Path(__file__).resolve().parents[2] / "prompts" / "designer" / "design.md").read_text()
 MAX_FILL = 0.4  # the share of the free floor area the objects' footprints may cover (the fixture designs cover up to 0.35)
 AREA_PER_OBJECT = 1.5  # m2 of free floor area per object
+# a must-have of no catalog category ("upright piano"): a small item, so a guess does not crowd the room; the solver and the
+# Sourcer size it for real
+OTHER_SIZE = Size(width=0.6, depth=0.6, height=1.0)
 FLAT = {"rug"}  # categories that lie on the floor without taking it up
 
 
@@ -76,20 +81,30 @@ def covers(obj: DesignObject, must_have: str) -> bool:
     return set(_words(must_have)) <= set(_words(obj.name)) and category_of(must_have) in (obj.category, "other")
 
 
-def _must_object(must_have: str, brief: Brief, ids: set[str]) -> DesignObject:
+def _must_object(must_have: str, brief: Brief, design: DesignBrief, ids: set[str]) -> DesignObject:
     """An object for a must-have the model left out: of the must-have's category, with the size of that category's median catalog
-    item (of the whole catalog's for "other")."""
-    catalog = list(load_catalog().values())
+    item (OTHER_SIZE when it names no category), the design's most used material (to match its look), and the zone that mentions
+    the must-have or its category (None when no zone does: zone is optional and nothing downstream reads it)."""
     category = category_of(must_have)
-    items = sorted([i for i in catalog if i.category == category] or catalog, key=lambda i: i.size.width * i.size.depth)
+    items = sorted((i for i in load_catalog().values() if i.category == category), key=lambda i: i.size.width * i.size.depth)
     id_ = base = "_".join(_words(must_have)) or "object"
     n = 1
     while id_ in ids:
         n += 1
         id_ = f"{base}_{n}"
-    style = brief.styles[0] if brief.styles else ""
+    materials = Counter(o.material for o in design.objects if o.material).most_common(1)
+    words = {*_words(must_have), *category.split("_")} - {"other"}
+    zone = next((z.name for z in design.zones if words & set(_words(f"{z.name} {z.purpose}"))), None)
     return DesignObject(
-        id=id_, name=must_have, category=category, style=style, material="", size=items[len(items) // 2].size, quantity=1, priority="must"
+        id=id_,
+        name=must_have,
+        category=category,
+        style=brief.styles[0] if brief.styles else "",
+        material=materials[0][0] if materials else "",
+        size=items[len(items) // 2].size if items else OTHER_SIZE,
+        quantity=1,
+        priority="must",
+        zone=zone,
     )
 
 
@@ -99,7 +114,7 @@ def add_must_haves(design: DesignBrief, brief: Brief) -> DesignBrief:
     for must_have in brief.must_haves:
         matches = [i for i, o in enumerate(objects) if covers(o, must_have)]
         if not matches:
-            objects.append(_must_object(must_have, brief, {o.id for o in objects}))
+            objects.append(_must_object(must_have, brief, design, {o.id for o in objects}))
         elif all(objects[i].priority == "nice" for i in matches):
             objects[matches[0]] = objects[matches[0]].model_copy(update={"priority": "must"})
     return design.model_copy(update={"objects": objects})

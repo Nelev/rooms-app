@@ -84,7 +84,10 @@ def test_a_missing_must_have_is_added_with_its_category_and_a_nice_one_is_promot
     nightstand, chair, piano = design.objects
     assert (nightstand.id, nightstand.priority, nightstand.quantity) == ("nightstand", "must", 2)  # promoted, not added twice
     assert (chair.id, chair.category, chair.style, chair.priority) == ("desk_chair", "chair", "japandi", "must")
-    assert (piano.category, piano.priority) == ("other", "must")
+    assert (chair.material, chair.zone, piano.zone) == ("oak", "work", None)  # the design's material; the zone mentioning a desk
+    assert (piano.category, piano.priority, piano.size) == ("other", "must", node.OTHER_SIZE)
+    zoned = node.add_must_haves(EXAMPLE, Brief(room_use="bedroom", budget=1000, must_haves=["desk"]))
+    assert zoned.objects[-1].zone == "work"  # the zone whose purpose mentions it
 
 
 def test_near_miss_names_do_not_count_as_must_haves() -> None:
