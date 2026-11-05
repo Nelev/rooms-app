@@ -50,7 +50,7 @@ jobs:
       - name: Start MinIO
         run: |
           docker run -d -p 9000:9000 pgsty/minio:RELEASE.2026-08-04T00-00-00Z server /data
-          curl -sf --retry 15 --retry-connrefused --retry-delay 1 http://localhost:9000/minio/health/live
+          curl -sf --retry 30 --retry-all-errors --retry-delay 1 http://localhost:9000/minio/health/live
 
       - uses: astral-sh/setup-uv@v10.3.3
         with:
