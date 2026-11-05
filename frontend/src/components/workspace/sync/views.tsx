@@ -1,13 +1,62 @@
 "use client";
 
 import { Undo2 } from "lucide-react";
+import Link from "next/link";
 import { ChatPanel } from "@/components/chat/chat-panel";
+import { FloorPlan } from "@/components/plan/floor-plan";
 import { Results, WithDesign } from "@/components/results/results-view";
+import { RunTimeline } from "@/components/run/run-timeline";
 import { LitSceneViewer } from "@/components/scene3d/look";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Empty, EmptyHeader, EmptyTitle } from "@/components/ui/empty";
+import { Skeleton } from "@/components/ui/skeleton";
+import { photoUrl } from "@/lib/api";
 import { useWorkspace } from "./store";
 
 // The workspace's views, all from its store: a chat edit updates them together.
+
+// The run's progress, then the room: its photos and its plan once analyzed, and the way to confirm it while the run waits for that.
+export function WorkspaceRoom() {
+  const { threadId, values, status, error, run } = useWorkspace();
+  const room = values?.room_spec;
+  return (
+    <div className="flex flex-col gap-4">
+      <RunTimeline run={run} />
+      {status === "needs_input" && !run.running && (
+        <Link href={`/projects/${threadId}/room`} className={buttonVariants({ className: "self-start" })}>
+          Confirm the room
+        </Link>
+      )}
+      {error && !values ? (
+        <p role="alert" className="text-destructive text-sm">
+          {error.message}
+        </p>
+      ) : !values ? (
+        <Skeleton role="status" aria-label="Loading the room" className="h-96 w-full" />
+      ) : (
+        <>
+          {!!values.photo_keys?.length && (
+            <div className="flex flex-wrap gap-2">
+              {values.photo_keys.map((key, i) => (
+                // biome-ignore lint/performance/noImgElement: a user's photo from the API or a signed URL, nothing for next/image to optimize
+                <img key={key} src={photoUrl(key)} alt={`Your room, view ${i + 1}`} className="h-40 rounded-lg border object-cover" />
+              ))}
+            </div>
+          )}
+          {room ? (
+            <FloorPlan room={room} className="max-h-96" />
+          ) : (
+            <Empty>
+              <EmptyHeader>
+                <EmptyTitle>The room is not analyzed yet.</EmptyTitle>
+              </EmptyHeader>
+            </Empty>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
 
 export function WorkspaceResults() {
   const { values, error, highlighted, reference } = useWorkspace();
@@ -32,7 +81,7 @@ export function WorkspaceScene() {
 }
 
 export function WorkspaceChat() {
-  const { threadId, edit, undo, undoing, undoError, reverts, draft, setDraft, sent } = useWorkspace();
+  const { threadId, run, edit, undo, undoing, undoError, reverts, draft, setDraft, sent } = useWorkspace();
   return (
     <>
       {edit && (
@@ -51,7 +100,7 @@ export function WorkspaceChat() {
           {undoError.message}
         </p>
       )}
-      <ChatPanel key={reverts} threadId={threadId} draft={draft} onDraftChange={setDraft} onSend={sent} />
+      <ChatPanel key={reverts} threadId={threadId} run={run} draft={draft} onDraftChange={setDraft} onSend={sent} />
     </>
   );
 }

@@ -4,7 +4,7 @@ import { Ban, Check, SendHorizontal } from "lucide-react";
 import { type FormEvent, Fragment, useState } from "react";
 import { Button } from "@/components/ui/button";
 import type { components } from "@/lib/api/generated/schema";
-import { type Run, useRunStream } from "@/lib/hooks/use-run-stream";
+import type { Run, useRunStream } from "@/lib/hooks/use-run-stream";
 import { useThread } from "@/lib/hooks/use-threads";
 
 type ChatEntry = components["schemas"]["ChatEntry"];
@@ -76,22 +76,23 @@ function Bubble({ from, children }: { from: ChatEntry["role"]; children: React.R
 // The project's chat: its history, the turn in progress as it streams, and a composer with suggested replies and the design's items
 // to reference. Earlier turns come from the thread's state; the step chips and a refusal are those of the latest run.
 // F-13: the workspace keeps the composer's text (`draft`, `onDraftChange`: it inserts the references of items clicked in its views)
-// and is told when a message is sent (`onSend`).
+// and is told when a message is sent (`onSend`). FIX-room-tab: the page streams the thread's run (`run`), for its run timeline too.
 export function ChatPanel({
   threadId,
   suggestions = SUGGESTIONS,
   draft: shared,
   onDraftChange,
   onSend,
+  run,
 }: {
   threadId: string;
+  run: ReturnType<typeof useRunStream>; // the page's run, shared with its run timeline
   suggestions?: string[];
   draft?: string;
   onDraftChange?: (draft: string) => void;
   onSend?: () => void;
 }) {
   const thread = useThread(threadId);
-  const run = useRunStream(threadId);
   const [sent, setSent] = useState("");
   const [base, setBase] = useState<number>(); // the history's length when the turn was sent
   const [own, setOwn] = useState("");

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { WorkspaceProvider } from "@/components/workspace/sync/store";
-import { WorkspaceChat, WorkspaceResults, WorkspaceScene } from "@/components/workspace/sync/views";
+import { WorkspaceChat, WorkspaceResults, WorkspaceRoom, WorkspaceScene } from "@/components/workspace/sync/views";
 
 export const metadata: Metadata = { title: "Project" };
 
@@ -13,9 +13,10 @@ const TABS = [
   { value: "photo", label: "Photo" },
 ];
 
-const LINKS: Record<string, string> = { room: "Confirm the room", photo: "See it in your photo" };
+const LINKS: Record<string, string> = { photo: "See it in your photo" };
 
-// The project's workspace: the design, its 3D view and the chat share one store (F-13); the other tabs link to their own views.
+// The project's workspace: the room with the run's progress, the design, its 3D view and the chat share one store (F-13); the photo
+// tab links to its own view.
 export default async function ProjectPage({ params }: PageProps<"/projects/[id]">) {
   const { id } = await params;
   return (
@@ -32,7 +33,9 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[id]"
           </TabsList>
           {TABS.map(({ value, label }) => (
             <TabsContent key={value} value={value} className="rounded-lg border p-4">
-              {value === "design" ? (
+              {value === "room" ? (
+                <WorkspaceRoom />
+              ) : value === "design" ? (
                 <WorkspaceResults />
               ) : value === "3d" ? (
                 <WorkspaceScene />
