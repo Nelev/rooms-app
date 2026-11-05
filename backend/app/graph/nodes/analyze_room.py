@@ -32,12 +32,10 @@ from app.schemas import RoomSpec, coords
 from app.schemas.base import Model
 from app.schemas.coords import Fraction, Wall
 from app.schemas.room import Dimensions, Feature, FeatureType, WallSpec
-from app.storage import Storage
+from app.storage import Storage, local_path
 
 logger = logging.getLogger(__name__)
 
-REPO = Path(__file__).resolve().parents[4]
-PHOTOS = REPO / "fixtures"  # where photo keys are read from without object storage
 PROMPT = (Path(__file__).resolve().parents[2] / "prompts" / "analyst" / "room.md").read_text()
 RUNS, MIN_VOTES = 3, 2
 TOLERANCE = 0.5  # m along the wall: two features of a type on a wall closer than this are the same feature
@@ -192,10 +190,11 @@ def analyze(
 
 
 def image_urls(keys: Sequence[str]) -> list[str]:
-    """Photos as data: URLs, read from object storage when it is configured, else from fixtures/ (the fixtures' photo keys).
+    """Photos as data: URLs, read from object storage when it is configured, else from the local files of their keys (local_path:
+    uploads/ keys from UPLOAD_DIR, the fixtures' photo keys from fixtures/).
 
-    A key that is not an image, outside fixtures/ without storage, or unreadable raises a ValueError naming it; the run's error event
-    carries it.
+    A key that is not an image, outside fixtures/ and uploads/ without storage, or unreadable raises a ValueError naming it; the run's
+    error event carries it.
     """
     storage = Storage.from_env() if os.environ.get("STORAGE_ENDPOINT_URL") else None
     urls = []
@@ -203,10 +202,15 @@ def image_urls(keys: Sequence[str]) -> list[str]:
         mimetype = mimetypes.guess_type(key)[0] or ""
         if not mimetype.startswith("image/"):
             raise ValueError(f"photo key is not an image: {key}")
-        if not storage and not (path := (REPO / key).resolve()).is_relative_to(PHOTOS):
-            raise ValueError(f"photo key outside fixtures/ and object storage is not configured (STORAGE_ENDPOINT_URL): {key}")
         try:
-            data = storage.get(key) if storage else path.read_bytes()
+            if storage:
+                data = storage.get(key)
+            elif path := local_path(key):
+                data = path.read_bytes()
+            else:
+                raise ValueError(
+                    f"photo key outside fixtures/ and uploads/ and object storage is not configured (STORAGE_ENDPOINT_URL): {key}"
+                )
         except (OSError, ClientError) as e:
             raise ValueError(f"photo {key} could not be read: {e}") from e
         urls.append(f"data:{mimetype};base64,{base64.b64encode(data).decode()}")

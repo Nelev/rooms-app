@@ -1,6 +1,8 @@
 """The Room Analyst, offline: the fake model replies readings of the E-01 cases' labeled rooms. The live test reads the real photos."""
 
+import base64
 from collections.abc import Callable
+from pathlib import Path
 from typing import Any
 
 import pytest
@@ -13,6 +15,7 @@ from app.graph.nodes.analyze_room import RUNS, Estimate, RoomReading, SeenFeatur
 from app.llm.fake import CALL_USAGE, FakeLLM
 from app.schemas import RoomSpec
 from app.schemas.room import Feature
+from app.storage import put_local
 from tests.test_api import design_input
 
 CASES = {name: case for name, case in load_cases().items() if case.photos_match_room}  # the cases photo analysis is scored on
@@ -140,6 +143,12 @@ def test_image_urls_reads_fixture_photos_only() -> None:
         image_urls(["backend/pyproject.toml"])
     with pytest.raises(ValueError, match="photo fixtures/nope.jpg could not be read"):
         image_urls(["fixtures/nope.jpg"])
+
+
+def test_image_urls_reads_uploaded_photos_without_object_storage(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("UPLOAD_DIR", str(tmp_path))
+    put_local("uploads/room.png", b"png", "image/png")  # what POST /uploads does without object storage
+    assert image_urls(["uploads/room.png"]) == [f"data:image/png;base64,{base64.b64encode(b'png').decode()}"]
 
 
 @pytest.mark.live

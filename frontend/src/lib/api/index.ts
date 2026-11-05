@@ -23,6 +23,12 @@ export function path(template: Path, params: Record<string, string> = {}): strin
   return template.replace(/\{(\w+)\}/g, (_, name: string) => encodeURIComponent(params[name]));
 }
 
+// Where a photo is read, by its key (an upload's or a fixture's): the API serves it or redirects to a signed URL of it. An <img> sends no
+// Authorization header: once there is sign-in (A-01), this route needs another way to know the person (a cookie or a token in the query).
+export function photoUrl(key: string): string {
+  return API_URL + path("/uploads/{key}", { key });
+}
+
 // The access token of the signed-in person, once there is sign-in (A-01): until then requests go without one.
 export const session = {
   accessToken: async (): Promise<string | undefined> => undefined,

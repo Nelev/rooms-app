@@ -40,7 +40,8 @@ test("without an open interrupt there is nothing to confirm", async () => {
 
 test("shows the detected features, the unsure ones highlighted, next to the photos and the plan", async () => {
   await analyzed();
-  expect(screen.getByText("fixtures/small-bedroom/photo-1.jpg")).toBeTruthy(); // no overlays yet: the photo stands in
+  const photo = screen.getByRole("img", { name: "Your room, view 1" }) as HTMLImageElement; // no overlays yet: the photo stands in
+  expect(photo.src).toBe("http://localhost:8000/uploads/fixtures%2Fsmall-bedroom%2Fphoto-1.jpg");
   expect(within(entry("radiator_1")).getByText("70% sure: check it")).toBeTruthy();
   expect(within(entry("door_1")).getByText("95% sure")).toBeTruthy();
   expect(document.querySelector('svg [data-id="radiator_1"] .fill-amber-500\\/30')).not.toBeNull();

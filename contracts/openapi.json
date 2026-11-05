@@ -458,7 +458,7 @@
           "uploads"
         ],
         "summary": "Upload",
-        "description": "Store a room photo (a HEIC one as a JPEG) and return its key. Without object storage (STORAGE_* unset), check it and drop it.",
+        "description": "Store a room photo (a HEIC one as a JPEG) and return its key: in object storage, or in UPLOAD_DIR without it (STORAGE_* unset).",
         "operationId": "upload_uploads_post",
         "requestBody": {
           "content": {
@@ -486,6 +486,51 @@
           },
           "415": {
             "description": "The file is not an image"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/uploads/{key}": {
+      "get": {
+        "tags": [
+          "uploads"
+        ],
+        "summary": "Photo",
+        "description": "A room photo by its key: an uploaded one (uploads/...) or a fixture's (fixtures/..., the stub runs' photos).",
+        "operationId": "photo_uploads__key__get",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The photo",
+            "content": {
+              "image/*": {}
+            }
+          },
+          "307": {
+            "description": "With object storage, a redirect to a signed URL of the photo"
+          },
+          "404": {
+            "description": "No such photo, or the key is not an uploads/ or fixtures/ image"
           },
           "422": {
             "description": "Validation Error",
