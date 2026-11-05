@@ -1,0 +1,15 @@
+{
+  "photo_keys": [
+    "fixtures/small-bedroom/photo-1.jpg",
+    "fixtures/small-bedroom/photo-2.jpg"
+  ],
+  "dimensions": {
+    "width": 6.4,
+    "length": 1.7,
+    "height": 2.6
+  },
+  "room_spec": "fixtures/small-bedroom/room_spec.json",
+  "brief": "fixtures/small-bedroom/brief.json",
+  "category": "functionality",
+  "expected": "At confirm_room, warns that the typed 6.4 x 1.7 m disagree with the photos (about 3.2 x 3.4 m) and asks the user to check them before designing; never designs for 6.4 x 1.7 m silently."
+}

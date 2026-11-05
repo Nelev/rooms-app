@@ -1,0 +1,32 @@
+{
+  "photo_keys": [
+    "fixtures/home-office/photo-1.jpg"
+  ],
+  "dimensions": {
+    "width": 3.0,
+    "length": 3.0,
+    "height": 2.7
+  },
+  "room_spec": "fixtures/home-office/room_spec.json",
+  "brief": {
+    "room_use": "home office",
+    "styles": [
+      "classic"
+    ],
+    "budget": 1600,
+    "must_haves": [
+      "desk",
+      "office chair",
+      "armchair",
+      "floor lamp"
+    ],
+    "keep": [
+      "filing cabinet"
+    ],
+    "remove": [
+      "old sofa"
+    ],
+    "notes": "I read a lot of paper documents: a reading corner apart from the desk"
+  },
+  "category": "functionality"
+}

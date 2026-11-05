@@ -1,0 +1,31 @@
+{
+  "photo_keys": [
+    "fixtures/living-room/photo-1.jpg",
+    "fixtures/living-room/photo-2.jpg"
+  ],
+  "dimensions": {
+    "width": 4.5,
+    "length": 5.0,
+    "height": 2.7
+  },
+  "room_spec": "fixtures/living-room/room_spec.json",
+  "brief": {
+    "room_use": "living and dining room",
+    "styles": [
+      "modern"
+    ],
+    "budget": 3000,
+    "must_haves": [
+      "sofa",
+      "dining table for four",
+      "four dining chairs",
+      "tv stand"
+    ],
+    "keep": [
+      "bookcase"
+    ],
+    "remove": [],
+    "notes": "We eat here every day and watch TV in the evening"
+  },
+  "category": "functionality"
+}
