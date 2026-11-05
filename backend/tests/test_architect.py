@@ -69,7 +69,7 @@ def test_an_invalid_graph_is_repaired_once_with_the_validator_messages(monkeypat
     bad = [e for e in EDGES if e.source != "desk"] + [SceneEdge(source="desk", relation="against_wall", target="window_1")]  # no facing
     fake = install(monkeypatch, edges(*bad), edges(("desk", "against_wall", "wall_D"), ("desk", "facing", "wall_B")))
     graph, usage, issues = scene_graph(state())
-    assert (issues, fake.calls, usage) == ([], 2, llm._add(CALL_USAGE, CALL_USAGE))
+    assert (issues, fake.calls, usage) == ([], 2, llm.add_usage(CALL_USAGE, CALL_USAGE))
     assert sorted(graph.edges, key=str) == sorted(EDGES, key=str)  # only the desk's edges were replaced
     repair = str(fake.prompts[1][0].content)
     assert "desk cannot be against wall window_1, which is not a wall" in repair and "desk needs exactly one facing edge" in repair
@@ -115,7 +115,7 @@ def test_a_critic_fix_left_invalid_is_repaired_once(monkeypatch: pytest.MonkeyPa
         monkeypatch, edges(("desk", "in_front", "window_1")), edges(("desk", "in_front", "window_1"), ("desk", "facing", "window_1"))
     )
     graph, usage, issues = scene_graph(state(scene_graph=current, critique=critique, round=2))
-    assert (issues, fake.calls, usage) == ([], 2, llm._add(CALL_USAGE, CALL_USAGE))
+    assert (issues, fake.calls, usage) == ([], 2, llm.add_usage(CALL_USAGE, CALL_USAGE))
     assert "cheaper" not in str(fake.prompts[0][0].content)  # the sourcer's action is not the Architect's
     assert "desk needs exactly one facing edge" in str(fake.prompts[1][0].content)
 
@@ -175,7 +175,10 @@ def test_in_the_graph_the_architect_streams_its_steps_and_applies_the_critic_fix
 
 @pytest.mark.skipif(not LIVE_KEY, reason="live: needs OPENROUTER_API_KEY")
 def test_live_most_fixture_runs_give_a_valid_graph_without_the_critic(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Done-when of B-15: >= 90% of runs valid. Run: `OPENROUTER_API_KEY=... uv run pytest tests/test_architect.py -k live -s`."""
+    """Done-when of B-15: >= 90% of runs valid. UNVERIFIED: no real-model rate has been measured yet (no key exists).
+
+    Run: `OPENROUTER_API_KEY=... uv run pytest tests/test_architect.py -k live -s`.
+    """
     monkeypatch.setenv("OPENROUTER_API_KEY", str(LIVE_KEY))
     runs = [(name, *scene_graph(state(room_spec=case(name)["room_spec"], design_brief=case(name)["design_brief"]))) for name in CASES * 4]
     for name, graph, usage, issues in runs:

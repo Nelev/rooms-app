@@ -103,7 +103,7 @@ def scene_graph(state: RunState) -> tuple[SceneGraph, llm.Usage, list[Validation
         graph = SceneGraph(nodes=all_nodes, edges=reply.edges)
     if issues := check(graph, spec):  # one repair round
         graph, repair_usage = revise(graph, spec, [i.message for i in issues])
-        usage = llm._add(usage, repair_usage)
+        usage = llm.add_usage(usage, repair_usage)
         issues = check(graph, spec)
     return graph, usage, issues
 
