@@ -22,6 +22,7 @@ Sample data for frontend mocks, backend unit tests, the stub graph and the eval 
 `negative/` holds data that is schema-valid but must be rejected or handled downstream:
 
 - `invalid_scene_graph.json` (`SceneGraph`): a duplicate node id (`desk`), a cycle (`desk_chair` in front of `desk`, `desk` behind `desk_chair`), `against_wall` pointing at a non-wall, and an edge from an unknown node (`lamp`).
+- `ambiguous_scene_graph.json` (`SceneGraph`): use with `living-room/room_spec.json`; valid, but with siblings that share a parent and a relation (`monitor`, `desk_lamp` and `plant` on `desk`, `chair_1` and `chair_2` in front of `table`), for the Refiner to order.
 - `impossible_brief.json` (`Brief`): use with `small-bedroom/room_spec.json`; the must-haves fit neither the room nor the budget.
 - `wrong_dimensions.json` (`RunInput`, a new design): the `small-bedroom` photos with typed dimensions of 6.4 x 1.7 m instead of 3.2 x 3.4 m, for the depth cross-check.
 

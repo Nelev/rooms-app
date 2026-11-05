@@ -40,6 +40,7 @@ CASE_FILES: dict[str, Any] = {
 }
 NEGATIVE_FILES: dict[str, Any] = {
     "invalid_scene_graph.json": SceneGraph,
+    "ambiguous_scene_graph.json": SceneGraph,
     "impossible_brief.json": Brief,
     "wrong_dimensions.json": RunInput,
 }
