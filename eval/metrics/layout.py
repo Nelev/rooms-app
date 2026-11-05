@@ -31,8 +31,9 @@ def out_of_bounds(spec: RoomSpec, layout: Layout) -> bool:
 def out_of_bounds_rate(scenes: Iterable[tuple[RoomSpec, Layout]]) -> float:
     """I-Design's Out-of-Boundary rate (OOB, Celen et al. 2024, arXiv:2404.02838, section 4.2): "if any bounding boxes are outside
     the designated room boundaries within a scene, that scene is deemed invalid"; OOB is "the ratio of invalid scenes to the total
-    number of generated scenes"."""
-    return fmean(out_of_bounds(spec, layout) for spec, layout in scenes)
+    number of generated scenes"; 0 for no scenes."""
+    invalid = [out_of_bounds(spec, layout) for spec, layout in scenes]
+    return fmean(invalid) if invalid else 0.0
 
 
 def _intersection_volume(a: Solid, b: Solid) -> float:
@@ -50,8 +51,9 @@ def overlap_volume(spec: RoomSpec, layout: Layout) -> float:
 
 def bbox_loss(scenes: Iterable[tuple[RoomSpec, Layout]]) -> float:
     """I-Design's Bounding Box Loss (BBL, Celen et al. 2024, arXiv:2404.02838, section 4.2): "the average volume of bounding box
-    intersections across generated scenes", here in m3 (see `overlap_volume`)."""
-    return fmean(overlap_volume(spec, layout) for spec, layout in scenes)
+    intersections across generated scenes", here in m3 (see `overlap_volume`); 0 for no scenes."""
+    volumes = [overlap_volume(spec, layout) for spec, layout in scenes]
+    return fmean(volumes) if volumes else 0.0
 
 
 def clearance_pass_rate(spec: RoomSpec, layout: Layout, min_walkway: float = WALKWAY) -> float:
@@ -101,7 +103,7 @@ def must_have_coverage(layout: Layout, brief: Brief, catalog: dict[str, CatalogI
     return covered / len(brief.must_haves)
 
 
-def layout_metrics(spec: RoomSpec, brief: Brief, layout: Layout, catalog: dict[str, CatalogItem] | None = None) -> dict[str, float]:
+def layout_metrics(spec: RoomSpec, brief: Brief, layout: Layout, catalog: dict[str, CatalogItem] | None = None) -> dict[str, float | bool]:
     """Every layout metric of one design, by name."""
     catalog = load_catalog() if catalog is None else catalog
     return {
