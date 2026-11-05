@@ -452,6 +452,64 @@
         }
       }
     },
+    "/threads/{thread_id}/runs/{run_id}/result": {
+      "get": {
+        "tags": [
+          "runs"
+        ],
+        "summary": "Get Result",
+        "description": "What a finished run left, from its last checkpoint (the run's ID is in each one's metadata); 404 for an unknown run, 409\nwhile it has not finished (running, paused at an interrupt, failed or cut off).",
+        "operationId": "get_result_threads__thread_id__runs__run_id__result_get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          },
+          {
+            "name": "thread_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Thread Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunOutput"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such run"
+          },
+          "409": {
+            "description": "The run has not finished"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/uploads": {
       "post": {
         "tags": [
@@ -2490,6 +2548,123 @@
           "run_id"
         ],
         "title": "RunMetadata"
+      },
+      "RunOutput": {
+        "properties": {
+          "scene": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Scene"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "layout": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Layout"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "critique": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Critique"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "layout_diff": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/LayoutDiff"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "rationale": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rationale"
+          },
+          "total": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total",
+            "description": "EUR: the shopping list, the catalog items of the scene"
+          },
+          "budget": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Budget",
+            "description": "EUR: the brief's"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "RunOutput",
+        "description": "What a finished run leaves for the frontend.",
+        "examples": [
+          {
+            "layout": {
+              "placements": [
+                {
+                  "node_id": "bed",
+                  "rotation": 90,
+                  "size": {
+                    "depth": 2.1,
+                    "height": 1.0,
+                    "width": 1.6
+                  },
+                  "x": 2.15,
+                  "y": 2.0
+                },
+                {
+                  "item_id": "ikea-micke-desk",
+                  "node_id": "desk",
+                  "rotation": 180,
+                  "size": {
+                    "depth": 0.5,
+                    "height": 0.75,
+                    "width": 1.05
+                  },
+                  "x": 1.6,
+                  "y": 3.7
+                }
+              ]
+            },
+            "rationale": "The bed sits against wall B, away from the door"
+          }
+        ]
       },
       "RunState": {
         "properties": {

@@ -145,6 +145,27 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/threads/{thread_id}/runs/{run_id}/result": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Result
+         * @description What a finished run left, from its last checkpoint (the run's ID is in each one's metadata); 404 for an unknown run, 409
+         *     while it has not finished (running, paused at an interrupt, failed or cut off).
+         */
+        get: operations["get_result_threads__thread_id__runs__run_id__result_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/uploads": {
         parameters: {
             query?: never;
@@ -1280,6 +1301,58 @@ export interface components {
             run_id: string;
         };
         /**
+         * RunOutput
+         * @description What a finished run leaves for the frontend.
+         * @example {
+         *       "layout": {
+         *         "placements": [
+         *           {
+         *             "node_id": "bed",
+         *             "rotation": 90,
+         *             "size": {
+         *               "depth": 2.1,
+         *               "height": 1,
+         *               "width": 1.6
+         *             },
+         *             "x": 2.15,
+         *             "y": 2
+         *           },
+         *           {
+         *             "item_id": "ikea-micke-desk",
+         *             "node_id": "desk",
+         *             "rotation": 180,
+         *             "size": {
+         *               "depth": 0.5,
+         *               "height": 0.75,
+         *               "width": 1.05
+         *             },
+         *             "x": 1.6,
+         *             "y": 3.7
+         *           }
+         *         ]
+         *       },
+         *       "rationale": "The bed sits against wall B, away from the door"
+         *     }
+         */
+        RunOutput: {
+            scene?: components["schemas"]["Scene"] | null;
+            layout?: components["schemas"]["Layout"] | null;
+            critique?: components["schemas"]["Critique"] | null;
+            layout_diff?: components["schemas"]["LayoutDiff"] | null;
+            /** Rationale */
+            rationale?: string | null;
+            /**
+             * Total
+             * @description EUR: the shopping list, the catalog items of the scene
+             */
+            total?: number | null;
+            /**
+             * Budget
+             * @description EUR: the brief's
+             */
+            budget?: number | null;
+        };
+        /**
          * RunState
          * @description The graph's state, kept per thread (project) across its runs; also the `values` the API returns.
          */
@@ -2140,6 +2213,52 @@ export interface operations {
                 content: {
                     "text/event-stream": components["schemas"]["MetadataPart"] | components["schemas"]["UpdatesPart"] | components["schemas"]["CustomPart"] | components["schemas"]["MessagesPart"] | components["schemas"]["ErrorPart"];
                 };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_result_threads__thread_id__runs__run_id__result_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                run_id: string;
+                thread_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RunOutput"];
+                };
+            };
+            /** @description No such run */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The run has not finished */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Validation Error */
             422: {
