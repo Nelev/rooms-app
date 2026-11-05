@@ -2,6 +2,7 @@
   "title": "DesignBrief",
   "$defs": {
     "DesignObject": {
+      "additionalProperties": false,
       "properties": {
         "id": {
           "title": "Id",
@@ -66,6 +67,7 @@
       "type": "object"
     },
     "Size": {
+      "additionalProperties": false,
       "properties": {
         "width": {
           "minimum": 0,
@@ -92,6 +94,7 @@
       "type": "object"
     },
     "Zone": {
+      "additionalProperties": false,
       "properties": {
         "name": {
           "title": "Name",
@@ -110,6 +113,7 @@
       "type": "object"
     }
   },
+  "additionalProperties": false,
   "description": "The Designer's plan: zones, palette and the objects to place.",
   "examples": [
     {

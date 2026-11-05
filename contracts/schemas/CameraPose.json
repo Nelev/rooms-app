@@ -1,5 +1,6 @@
 {
   "title": "CameraPose",
+  "additionalProperties": false,
   "description": "A camera in the three.js convention (y-up: room (x, y, z) is three.js (x, z, -y)), e.g. the one that took a photo.",
   "examples": [
     {

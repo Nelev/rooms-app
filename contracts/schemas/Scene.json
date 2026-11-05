@@ -2,6 +2,7 @@
   "title": "Scene",
   "$defs": {
     "CameraPose": {
+      "additionalProperties": false,
       "description": "A camera in the three.js convention (y-up: room (x, y, z) is three.js (x, z, -y)), e.g. the one that took a photo.",
       "examples": [
         {
@@ -117,6 +118,7 @@
       "type": "object"
     },
     "CatalogItem": {
+      "additionalProperties": false,
       "examples": [
         {
           "category": "nightstand",
@@ -259,6 +261,7 @@
       "type": "object"
     },
     "Dimensions": {
+      "additionalProperties": false,
       "properties": {
         "width": {
           "description": "Length of walls A and C (x)",
@@ -288,6 +291,7 @@
       "type": "object"
     },
     "Feature": {
+      "additionalProperties": false,
       "properties": {
         "id": {
           "title": "Id",
@@ -360,6 +364,7 @@
       "type": "object"
     },
     "KeptItem": {
+      "additionalProperties": false,
       "properties": {
         "id": {
           "title": "Id",
@@ -400,6 +405,7 @@
       "type": "object"
     },
     "Light": {
+      "additionalProperties": false,
       "properties": {
         "kind": {
           "enum": [
@@ -429,6 +435,7 @@
       "type": "object"
     },
     "RoomSpec": {
+      "additionalProperties": false,
       "description": "The room as analyzed from the photos and confirmed by the user.",
       "examples": [
         {
@@ -562,6 +569,7 @@
       "type": "object"
     },
     "SceneItem": {
+      "additionalProperties": false,
       "properties": {
         "node_id": {
           "title": "Node Id",
@@ -627,6 +635,7 @@
       "type": "object"
     },
     "Size": {
+      "additionalProperties": false,
       "properties": {
         "width": {
           "minimum": 0,
@@ -653,6 +662,7 @@
       "type": "object"
     },
     "WallSpec": {
+      "additionalProperties": false,
       "properties": {
         "wall": {
           "enum": [
@@ -685,6 +695,7 @@
       "type": "object"
     }
   },
+  "additionalProperties": false,
   "description": "Everything the 2D plan and the 3D viewer need to render the design.",
   "examples": [
     {

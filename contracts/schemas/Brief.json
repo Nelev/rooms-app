@@ -1,5 +1,6 @@
 {
   "title": "Brief",
+  "additionalProperties": false,
   "description": "What the user asks for in the new-project wizard.",
   "examples": [
     {

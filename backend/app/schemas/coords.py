@@ -14,7 +14,9 @@
 
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from app.schemas.base import Model
 
 Meters = Annotated[float, Field(ge=0)]
 Fraction = Annotated[float, Field(ge=0, le=1)]
@@ -22,7 +24,7 @@ Degrees = Annotated[float, Field(ge=0, lt=360, description="Counterclockwise abo
 Wall = Literal["A", "B", "C", "D"]
 
 
-class Size(BaseModel):
+class Size(Model):
     width: Meters
     depth: Meters
     height: Meters

@@ -1,12 +1,13 @@
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, JsonValue
+from pydantic import ConfigDict, Field, JsonValue
 
+from app.schemas.base import Model
 from app.schemas.coords import Degrees, Meters, Size
 from app.schemas.design import DESK_EDGE, DESK_NODE, SceneEdge, SceneNode
 
 
-class Placement(BaseModel):
+class Placement(Model):
     node_id: str
     item_id: str | None = None
     x: float
@@ -38,7 +39,7 @@ LAYOUT_EXAMPLE: dict[str, JsonValue] = {
 }
 
 
-class Layout(BaseModel):
+class Layout(Model):
     """Where each SceneGraph node ended up, in room coordinates."""
 
     model_config = ConfigDict(json_schema_extra={"examples": [LAYOUT_EXAMPLE]})
@@ -46,14 +47,14 @@ class Layout(BaseModel):
     placements: list[Placement]
 
 
-class ValidationIssue(BaseModel):
+class ValidationIssue(Model):
     code: str = Field(description="Machine-readable, e.g. cycle, unknown_node, blocks_opening")
     message: str = Field(description="One short sentence the Critic can pass on")
     severity: Literal["error", "warning"] = "error"
     node_ids: list[str] = []
 
 
-class ValidationReport(BaseModel):
+class ValidationReport(Model):
     """Problems found in a SceneGraph or Layout; no error issues means valid."""
 
     model_config = ConfigDict(
@@ -67,19 +68,19 @@ class ValidationReport(BaseModel):
     issues: list[ValidationIssue] = []
 
 
-class RuleResult(BaseModel):
+class RuleResult(Model):
     rule: str
     passed: bool
     message: str = ""
 
 
-class CritiqueAction(BaseModel):
+class CritiqueAction(Model):
     target: Literal["architect", "sourcer"]
     node_id: str | None = None
     instruction: str
 
 
-class Critique(BaseModel):
+class Critique(Model):
     model_config = ConfigDict(
         json_schema_extra={
             "examples": [
@@ -102,7 +103,7 @@ class Critique(BaseModel):
     summary: str
 
 
-class MoveOp(BaseModel):
+class MoveOp(Model):
     model_config = ConfigDict(json_schema_extra={"examples": [{"op": "move", "node_id": "desk", "x": 1.2, "y": 3.7}]})
 
     op: Literal["move"] = "move"
@@ -111,7 +112,7 @@ class MoveOp(BaseModel):
     y: float
 
 
-class RotateOp(BaseModel):
+class RotateOp(Model):
     model_config = ConfigDict(json_schema_extra={"examples": [{"op": "rotate", "node_id": "desk", "rotation": 90}]})
 
     op: Literal["rotate"] = "rotate"
@@ -119,7 +120,7 @@ class RotateOp(BaseModel):
     rotation: Degrees
 
 
-class SwapOp(BaseModel):
+class SwapOp(Model):
     model_config = ConfigDict(json_schema_extra={"examples": [{"op": "swap", "node_id": "desk", "item_id": "ikea-lagkapten-desk"}]})
 
     op: Literal["swap"] = "swap"
@@ -127,7 +128,7 @@ class SwapOp(BaseModel):
     item_id: str
 
 
-class AddOp(BaseModel):
+class AddOp(Model):
     model_config = ConfigDict(
         json_schema_extra={
             "examples": [
@@ -145,7 +146,7 @@ class AddOp(BaseModel):
     edges: list[SceneEdge] = []
 
 
-class RemoveOp(BaseModel):
+class RemoveOp(Model):
     model_config = ConfigDict(json_schema_extra={"examples": [{"op": "remove", "node_id": "nightstand"}]})
 
     op: Literal["remove"] = "remove"
@@ -155,7 +156,7 @@ class RemoveOp(BaseModel):
 ChatEdit = Annotated[MoveOp | RotateOp | SwapOp | AddOp | RemoveOp, Field(discriminator="op")]
 
 
-class LayoutDiff(BaseModel):
+class LayoutDiff(Model):
     """What a chat edit changed, by node id, so the views can highlight it."""
 
     model_config = ConfigDict(json_schema_extra={"examples": [{"added": [], "removed": ["nightstand"], "changed": ["desk"]}]})

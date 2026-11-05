@@ -1,7 +1,8 @@
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field, JsonValue
+from pydantic import ConfigDict, Field, JsonValue
 
+from app.schemas.base import Model
 from app.schemas.coords import Size
 
 Priority = Literal["must", "nice"]
@@ -18,7 +19,7 @@ BRIEF_EXAMPLE: dict[str, JsonValue] = {
 }
 
 
-class Brief(BaseModel):
+class Brief(Model):
     """What the user asks for in the new-project wizard."""
 
     model_config = ConfigDict(json_schema_extra={"examples": [BRIEF_EXAMPLE]})
@@ -32,12 +33,12 @@ class Brief(BaseModel):
     notes: str = ""
 
 
-class Zone(BaseModel):
+class Zone(Model):
     name: str
     purpose: str
 
 
-class DesignObject(BaseModel):
+class DesignObject(Model):
     id: str
     name: str
     category: str
@@ -79,7 +80,7 @@ DESIGN_BRIEF_EXAMPLE: dict[str, JsonValue] = {
 }
 
 
-class DesignBrief(BaseModel):
+class DesignBrief(Model):
     """The Designer's plan: zones, palette and the objects to place."""
 
     model_config = ConfigDict(json_schema_extra={"examples": [DESIGN_BRIEF_EXAMPLE]})
@@ -90,7 +91,7 @@ class DesignBrief(BaseModel):
     summary: str = ""
 
 
-class SceneNode(BaseModel):
+class SceneNode(Model):
     id: str = Field(description="For fixed nodes: the RoomSpec feature id, or wall_A to wall_D")
     kind: Literal["object", "wall", "door", "window"] = "object"
     name: str
@@ -102,7 +103,7 @@ class SceneNode(BaseModel):
     item_id: str | None = Field(None, description="The CatalogItem chosen by the Sourcer")
 
 
-class SceneEdge(BaseModel):
+class SceneEdge(Model):
     source: str = Field(description="The node placed relative to target")
     relation: Relation
     target: str
@@ -139,7 +140,7 @@ SCENE_GRAPH_EXAMPLE: dict[str, JsonValue] = {
 }
 
 
-class SceneGraph(BaseModel):
+class SceneGraph(Model):
     """Objects and the relations between them; the solver turns it into a Layout."""
 
     model_config = ConfigDict(json_schema_extra={"examples": [SCENE_GRAPH_EXAMPLE]})
@@ -163,7 +164,7 @@ CATALOG_ITEM_EXAMPLE: dict[str, JsonValue] = {
 }
 
 
-class CatalogItem(BaseModel):
+class CatalogItem(Model):
     model_config = ConfigDict(json_schema_extra={"examples": [CATALOG_ITEM_EXAMPLE]})
 
     id: str

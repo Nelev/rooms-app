@@ -1,7 +1,8 @@
-from typing import Annotated, Literal, Self
+from typing import Annotated, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import ConfigDict, Field
 
+from app.schemas.base import Model
 from app.schemas.design import BRIEF_EXAMPLE, Brief
 from app.schemas.layout import LAYOUT_EXAMPLE, Critique, Layout, LayoutDiff
 from app.schemas.room import ROOM_SPEC_EXAMPLE, Dimensions, RoomSpec
@@ -12,7 +13,7 @@ NodeName = Literal[
 ]
 
 
-class StepEvent(BaseModel):
+class StepEvent(Model):
     """Emitted by a node when it starts and ends, for the run timeline."""
 
     model_config = ConfigDict(
@@ -40,7 +41,7 @@ class StepEvent(BaseModel):
     cost: float | None = Field(None, ge=0, description="USD")
 
 
-class ToolEvent(BaseModel):
+class ToolEvent(Model):
     """Emitted by chat_edit for each tool it runs, shown as a step chip in the chat."""
 
     model_config = ConfigDict(json_schema_extra={"examples": [{"type": "tool", "tool": "move_item", "summary": "moved desk", "ok": True}]})
@@ -54,38 +55,35 @@ class ToolEvent(BaseModel):
 StreamEvent = Annotated[StepEvent | ToolEvent, Field(discriminator="type")]
 
 
-class RunInput(BaseModel):
-    """The graph's input: a new design (photos, dimensions and brief) or a chat message on an existing design."""
+class NewDesign(Model):
+    """Run input for a new design."""
 
     model_config = ConfigDict(
         json_schema_extra={
             "examples": [
-                {"photo_keys": ["uploads/3f2a/photo-1.jpg"], "dimensions": ROOM_SPEC_EXAMPLE["dimensions"], "brief": BRIEF_EXAMPLE},
-                {"chat_message": "Move the desk closer to the window"},
-            ],
-            # the same rule as _one_kind, for clients generated from the JSON Schema
-            "oneOf": [
-                {"required": ["photo_keys", "dimensions", "brief"]},
-                {"required": ["chat_message"], "properties": {"photo_keys": False, "dimensions": False, "brief": False}},
-            ],
+                {"photo_keys": ["uploads/3f2a/photo-1.jpg"], "dimensions": ROOM_SPEC_EXAMPLE["dimensions"], "brief": BRIEF_EXAMPLE}
+            ]
         }
     )
 
-    photo_keys: list[str] = Field([], max_length=3, description="Object-storage keys of the uploaded photos")
-    dimensions: Dimensions | None = None
-    brief: Brief | None = None
-    chat_message: str | None = None
-
-    @model_validator(mode="after")
-    def _one_kind(self) -> Self:
-        parts = (self.photo_keys, self.dimensions, self.brief)
-        chat = self.chat_message is not None
-        if (chat and any(parts)) or (not chat and not all(parts)):
-            raise ValueError("give either photo_keys, dimensions and brief, or chat_message")
-        return self
+    photo_keys: list[str] = Field(min_length=1, max_length=3, description="Object-storage keys of the uploaded photos")
+    dimensions: Dimensions
+    brief: Brief
 
 
-class RunOutput(BaseModel):
+class ChatMessage(Model):
+    """Run input for a chat edit on an existing design."""
+
+    model_config = ConfigDict(json_schema_extra={"examples": [{"chat_message": "Move the desk closer to the window"}]})
+
+    chat_message: str = Field(min_length=1)
+
+
+# extra="forbid" makes the two shapes mutually exclusive, so no tag field is needed
+RunInput = Annotated[NewDesign | ChatMessage, Field(description="The graph's input: a new design or a chat message on an existing design")]
+
+
+class RunOutput(Model):
     """What a finished run leaves for the frontend."""
 
     model_config = ConfigDict(
@@ -99,7 +97,7 @@ class RunOutput(BaseModel):
     rationale: str | None = None
 
 
-class ConfirmRoom(BaseModel):
+class ConfirmRoom(Model):
     """The confirm_room interrupt payload; the run resumes with the corrected RoomSpec (ConfirmRoomResume)."""
 
     model_config = ConfigDict(json_schema_extra={"examples": [{"room": ROOM_SPEC_EXAMPLE, "overlay_keys": ["overlays/3f2a/photo-1.png"]}]})

@@ -2,6 +2,7 @@
   "title": "StreamEvent",
   "$defs": {
     "StepEvent": {
+      "additionalProperties": false,
       "description": "Emitted by a node when it starts and ends, for the run timeline.",
       "examples": [
         {
@@ -102,6 +103,7 @@
       "type": "object"
     },
     "ToolEvent": {
+      "additionalProperties": false,
       "description": "Emitted by chat_edit for each tool it runs, shown as a step chip in the chat.",
       "examples": [
         {

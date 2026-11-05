@@ -2,6 +2,7 @@
   "title": "RunInput",
   "$defs": {
     "Brief": {
+      "additionalProperties": false,
       "description": "What the user asks for in the new-project wizard.",
       "examples": [
         {
@@ -79,7 +80,29 @@
       "title": "Brief",
       "type": "object"
     },
+    "ChatMessage": {
+      "additionalProperties": false,
+      "description": "Run input for a chat edit on an existing design.",
+      "examples": [
+        {
+          "chat_message": "Move the desk closer to the window"
+        }
+      ],
+      "properties": {
+        "chat_message": {
+          "minLength": 1,
+          "title": "Chat Message",
+          "type": "string"
+        }
+      },
+      "required": [
+        "chat_message"
+      ],
+      "title": "ChatMessage",
+      "type": "object"
+    },
     "Dimensions": {
+      "additionalProperties": false,
       "properties": {
         "width": {
           "description": "Length of walls A and C (x)",
@@ -107,106 +130,74 @@
       ],
       "title": "Dimensions",
       "type": "object"
-    }
-  },
-  "description": "The graph's input: a new design (photos, dimensions and brief) or a chat message on an existing design.",
-  "examples": [
-    {
-      "brief": {
-        "budget": 1500,
-        "keep": [
-          "wardrobe"
-        ],
-        "must_haves": [
-          "double bed",
-          "desk"
-        ],
-        "notes": "I work from home two days a week",
-        "remove": [
-          "old armchair"
-        ],
-        "room_use": "bedroom",
-        "styles": [
-          "scandinavian"
-        ]
-      },
-      "dimensions": {
-        "height": 2.6,
-        "length": 4.0,
-        "width": 3.2
-      },
-      "photo_keys": [
-        "uploads/3f2a/photo-1.jpg"
-      ]
     },
-    {
-      "chat_message": "Move the desk closer to the window"
-    }
-  ],
-  "oneOf": [
-    {
+    "NewDesign": {
+      "additionalProperties": false,
+      "description": "Run input for a new design.",
+      "examples": [
+        {
+          "brief": {
+            "budget": 1500,
+            "keep": [
+              "wardrobe"
+            ],
+            "must_haves": [
+              "double bed",
+              "desk"
+            ],
+            "notes": "I work from home two days a week",
+            "remove": [
+              "old armchair"
+            ],
+            "room_use": "bedroom",
+            "styles": [
+              "scandinavian"
+            ]
+          },
+          "dimensions": {
+            "height": 2.6,
+            "length": 4.0,
+            "width": 3.2
+          },
+          "photo_keys": [
+            "uploads/3f2a/photo-1.jpg"
+          ]
+        }
+      ],
+      "properties": {
+        "photo_keys": {
+          "description": "Object-storage keys of the uploaded photos",
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 3,
+          "minItems": 1,
+          "title": "Photo Keys",
+          "type": "array"
+        },
+        "dimensions": {
+          "$ref": "#/$defs/Dimensions"
+        },
+        "brief": {
+          "$ref": "#/$defs/Brief"
+        }
+      },
       "required": [
         "photo_keys",
         "dimensions",
         "brief"
-      ]
-    },
-    {
-      "properties": {
-        "photo_keys": false,
-        "dimensions": false,
-        "brief": false
-      },
-      "required": [
-        "chat_message"
-      ]
-    }
-  ],
-  "properties": {
-    "photo_keys": {
-      "default": [],
-      "description": "Object-storage keys of the uploaded photos",
-      "items": {
-        "type": "string"
-      },
-      "maxItems": 3,
-      "title": "Photo Keys",
-      "type": "array"
-    },
-    "dimensions": {
-      "anyOf": [
-        {
-          "$ref": "#/$defs/Dimensions"
-        },
-        {
-          "type": "null"
-        }
       ],
-      "default": null
-    },
-    "brief": {
-      "anyOf": [
-        {
-          "$ref": "#/$defs/Brief"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null
-    },
-    "chat_message": {
-      "anyOf": [
-        {
-          "type": "string"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null,
-      "title": "Chat Message"
+      "title": "NewDesign",
+      "type": "object"
     }
   },
-  "type": "object"
+  "anyOf": [
+    {
+      "$ref": "#/$defs/NewDesign"
+    },
+    {
+      "$ref": "#/$defs/ChatMessage"
+    }
+  ],
+  "description": "The graph's input: a new design or a chat message on an existing design"
 }

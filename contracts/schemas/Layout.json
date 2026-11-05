@@ -2,6 +2,7 @@
   "title": "Layout",
   "$defs": {
     "Placement": {
+      "additionalProperties": false,
       "properties": {
         "node_id": {
           "title": "Node Id",
@@ -55,6 +56,7 @@
       "type": "object"
     },
     "Size": {
+      "additionalProperties": false,
       "properties": {
         "width": {
           "minimum": 0,
@@ -81,6 +83,7 @@
       "type": "object"
     }
   },
+  "additionalProperties": false,
   "description": "Where each SceneGraph node ended up, in room coordinates.",
   "examples": [
     {

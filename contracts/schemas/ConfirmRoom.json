@@ -2,6 +2,7 @@
   "title": "ConfirmRoom",
   "$defs": {
     "Dimensions": {
+      "additionalProperties": false,
       "properties": {
         "width": {
           "description": "Length of walls A and C (x)",
@@ -31,6 +32,7 @@
       "type": "object"
     },
     "Feature": {
+      "additionalProperties": false,
       "properties": {
         "id": {
           "title": "Id",
@@ -103,6 +105,7 @@
       "type": "object"
     },
     "KeptItem": {
+      "additionalProperties": false,
       "properties": {
         "id": {
           "title": "Id",
@@ -143,6 +146,7 @@
       "type": "object"
     },
     "RoomSpec": {
+      "additionalProperties": false,
       "description": "The room as analyzed from the photos and confirmed by the user.",
       "examples": [
         {
@@ -276,6 +280,7 @@
       "type": "object"
     },
     "Size": {
+      "additionalProperties": false,
       "properties": {
         "width": {
           "minimum": 0,
@@ -302,6 +307,7 @@
       "type": "object"
     },
     "WallSpec": {
+      "additionalProperties": false,
       "properties": {
         "wall": {
           "enum": [
@@ -334,6 +340,7 @@
       "type": "object"
     }
   },
+  "additionalProperties": false,
   "description": "The confirm_room interrupt payload; the run resumes with the corrected RoomSpec (ConfirmRoomResume).",
   "examples": [
     {

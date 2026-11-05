@@ -2,6 +2,7 @@
   "title": "Critique",
   "$defs": {
     "CritiqueAction": {
+      "additionalProperties": false,
       "properties": {
         "target": {
           "enum": [
@@ -36,6 +37,7 @@
       "type": "object"
     },
     "RuleResult": {
+      "additionalProperties": false,
       "properties": {
         "rule": {
           "title": "Rule",
@@ -59,6 +61,7 @@
       "type": "object"
     }
   },
+  "additionalProperties": false,
   "examples": [
     {
       "actions": [

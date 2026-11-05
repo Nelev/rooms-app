@@ -2,6 +2,7 @@
   "title": "ValidationReport",
   "$defs": {
     "ValidationIssue": {
+      "additionalProperties": false,
       "properties": {
         "code": {
           "description": "Machine-readable, e.g. cycle, unknown_node, blocks_opening",
@@ -39,6 +40,7 @@
       "type": "object"
     }
   },
+  "additionalProperties": false,
   "description": "Problems found in a SceneGraph or Layout; no error issues means valid.",
   "examples": [
     {

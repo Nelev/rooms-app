@@ -1,5 +1,6 @@
 {
   "title": "LayoutDiff",
+  "additionalProperties": false,
   "description": "What a chat edit changed, by node id, so the views can highlight it.",
   "examples": [
     {

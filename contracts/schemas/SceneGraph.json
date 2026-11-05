@@ -2,6 +2,7 @@
   "title": "SceneGraph",
   "$defs": {
     "SceneEdge": {
+      "additionalProperties": false,
       "properties": {
         "source": {
           "description": "The node placed relative to target",
@@ -37,6 +38,7 @@
       "type": "object"
     },
     "SceneNode": {
+      "additionalProperties": false,
       "properties": {
         "id": {
           "description": "For fixed nodes: the RoomSpec feature id, or wall_A to wall_D",
@@ -131,6 +133,7 @@
       "type": "object"
     },
     "Size": {
+      "additionalProperties": false,
       "properties": {
         "width": {
           "minimum": 0,
@@ -157,6 +160,7 @@
       "type": "object"
     }
   },
+  "additionalProperties": false,
   "description": "Objects and the relations between them; the solver turns it into a Layout.",
   "examples": [
     {

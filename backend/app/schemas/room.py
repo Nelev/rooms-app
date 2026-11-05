@@ -1,24 +1,25 @@
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field, JsonValue
+from pydantic import ConfigDict, Field, JsonValue
 
+from app.schemas.base import Model
 from app.schemas.coords import Degrees, Fraction, Meters, Size, Wall
 
 FeatureType = Literal["window", "door", "radiator", "outlet", "built_in", "column", "other"]
 
 
-class Dimensions(BaseModel):
+class Dimensions(Model):
     width: Meters = Field(description="Length of walls A and C (x)")
     length: Meters = Field(description="Length of walls B and D (y)")
     height: Meters = Field(description="Ceiling height")
 
 
-class WallSpec(BaseModel):
+class WallSpec(Model):
     wall: Wall
     color: str | None = Field(None, description="Hex color, e.g. #f2efe9")
 
 
-class Feature(BaseModel):
+class Feature(Model):
     id: str
     type: FeatureType
     wall: Wall
@@ -29,7 +30,7 @@ class Feature(BaseModel):
     confidence: Fraction = 1
 
 
-class KeptItem(BaseModel):
+class KeptItem(Model):
     id: str
     name: str
     x: float
@@ -72,7 +73,7 @@ ROOM_SPEC_EXAMPLE: dict[str, JsonValue] = {
 }
 
 
-class RoomSpec(BaseModel):
+class RoomSpec(Model):
     """The room as analyzed from the photos and confirmed by the user."""
 
     model_config = ConfigDict(json_schema_extra={"examples": [ROOM_SPEC_EXAMPLE]})

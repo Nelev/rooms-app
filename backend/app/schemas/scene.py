@@ -1,7 +1,8 @@
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field, JsonValue
+from pydantic import ConfigDict, Field, JsonValue
 
+from app.schemas.base import Model
 from app.schemas.design import CATALOG_ITEM_EXAMPLE, CatalogItem
 from app.schemas.layout import BED_PLACEMENT, Placement
 from app.schemas.room import ROOM_SPEC_EXAMPLE, RoomSpec
@@ -17,7 +18,7 @@ CAMERA_POSE_EXAMPLE: dict[str, JsonValue] = {
 }
 
 
-class CameraPose(BaseModel):
+class CameraPose(Model):
     """A camera in the three.js convention (y-up: room (x, y, z) is three.js (x, z, -y)), e.g. the one that took a photo."""
 
     model_config = ConfigDict(json_schema_extra={"examples": [CAMERA_POSE_EXAMPLE]})
@@ -31,7 +32,7 @@ class CameraPose(BaseModel):
     reprojection_error: float | None = Field(None, ge=0, description="Pixels")
 
 
-class Light(BaseModel):
+class Light(Model):
     kind: Literal["area", "directional"]
     window_id: str = Field(description="The RoomSpec window feature the light comes through")
     intensity: float = Field(ge=0)
@@ -41,7 +42,7 @@ class SceneItem(Placement):
     item: CatalogItem | None = Field(None, description="None renders a box")
 
 
-class Scene(BaseModel):
+class Scene(Model):
     """Everything the 2D plan and the 3D viewer need to render the design."""
 
     model_config = ConfigDict(
