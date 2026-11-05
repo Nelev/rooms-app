@@ -80,7 +80,7 @@ class Fallback extends Component<{ fallback: ReactNode; children: ReactNode }, {
 }
 
 // `highlighted`: outlined in its box; `onPick`: a click on it calls it with its node id
-function Item({ item, highlighted, onPick }: { item: Scene["items"][number]; highlighted: boolean; onPick?: (id: string) => void }) {
+export function Item({ item, highlighted = false, onPick }: { item: Scene["items"][number]; highlighted?: boolean; onPick?: (id: string) => void }) {
   const { position, rotation } = itemPose(item);
   const box = <Box size={item.size} />;
   const url = item.item?.glb_url;

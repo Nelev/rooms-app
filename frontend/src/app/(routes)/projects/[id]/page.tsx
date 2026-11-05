@@ -13,7 +13,9 @@ const TABS = [
   { value: "photo", label: "Photo" },
 ];
 
-// The project's workspace: the design, its 3D view and the chat share one store (F-13); the other tabs get their content later.
+const LINKS: Record<string, string> = { room: "Confirm the room", photo: "See it in your photo" };
+
+// The project's workspace: the design, its 3D view and the chat share one store (F-13); the other tabs link to their own views.
 export default async function ProjectPage({ params }: PageProps<"/projects/[id]">) {
   const { id } = await params;
   return (
@@ -37,9 +39,9 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[id]"
               ) : (
                 <span className="text-muted-foreground">{label} view</span>
               )}
-              {value === "room" && (
-                <Link href={`/projects/${id}/room`} className="ml-2 text-primary underline-offset-4 hover:underline">
-                  Confirm the room
+              {value in LINKS && (
+                <Link href={`/projects/${id}/${value}`} className="ml-2 text-primary underline-offset-4 hover:underline">
+                  {LINKS[value]}
                 </Link>
               )}
             </TabsContent>
