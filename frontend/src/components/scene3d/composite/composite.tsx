@@ -8,7 +8,7 @@ import { Slider } from "@/components/ui/slider";
 import { itemPose, type Scene, toThree } from "../core/geometry";
 import { Item } from "../core/viewer";
 import { Lights } from "../look/lights";
-import { NEAR } from "./occlusion";
+import { fitsPose, NEAR } from "./occlusion";
 
 const SHADOW_OPACITY = 0.35;
 
@@ -32,13 +32,15 @@ type Props = { scene: Scene; camera: number; photoUrl: string };
 export function Composite({ scene, camera, photoUrl }: Props) {
   const pose = scene.cameras[camera];
   const { width, length } = scene.room.dimensions;
+  const [size, setSize] = useState<[number, number]>(); // the photo's, once loaded
+  const fits = !size || fitsPose(pose, ...size);
   const [split, setSplit] = useState(50); // % of the width, from the left, that shows the photo alone
   const photo = useRef<HTMLImageElement>(null);
   const three = useRef<RootState>(null);
   const id = useId();
 
   function download() {
-    if (!photo.current || !three.current) return;
+    if (!photo.current || !three.current || !size || !fits) return;
     // Render once more at the photo's own resolution, so the furniture is as sharp as the photo, and read the canvas back in the
     // same task: the drawing buffer is not cleared before then, so it need not be preserved.
     const { gl, scene: world, camera: view, invalidate } = three.current;
@@ -58,8 +60,15 @@ export function Composite({ scene, camera, photoUrl }: Props) {
     <div className="flex flex-col gap-3">
       <div className="relative w-full overflow-hidden rounded-lg bg-muted" style={{ aspectRatio: `${pose.image_width} / ${pose.image_height}` }}>
         {/* biome-ignore lint/performance/noImgElement: a user's photo, read back into the exported PNG */}
-        <img ref={photo} src={photoUrl} alt="Your room" crossOrigin="anonymous" className="absolute inset-0 size-full" />
-        <div className="absolute inset-0" style={{ clipPath: `inset(0 0 0 ${split}%)` }}>
+        <img
+          ref={photo}
+          src={photoUrl}
+          alt="Your room"
+          crossOrigin="anonymous"
+          onLoad={(e) => setSize([e.currentTarget.naturalWidth, e.currentTarget.naturalHeight])}
+          className="absolute inset-0 size-full"
+        />
+        <div className="absolute inset-0" hidden={!fits} style={{ clipPath: `inset(0 0 0 ${split}%)` }}>
           <Canvas
             onCreated={(state) => {
               three.current = state;
@@ -89,6 +98,11 @@ export function Composite({ scene, camera, photoUrl }: Props) {
         </div>
         <div className="pointer-events-none absolute inset-y-0 w-0.5 bg-white/80" style={{ left: `${split}%` }} />
       </div>
+      {fits ? null : (
+        <p role="alert" className="text-destructive text-sm">
+          This photo is {size?.join(" × ")}, but the camera was matched to a {pose.image_width} × {pose.image_height} photo: open that photo.
+        </p>
+      )}
       <div className="flex items-center gap-3 text-sm">
         <span id={`${id}-split`} className="sr-only">
           Before and after
@@ -96,7 +110,7 @@ export function Composite({ scene, camera, photoUrl }: Props) {
         <span aria-hidden>Before</span>
         <Slider aria-labelledby={`${id}-split`} value={[split]} onValueChange={(v) => setSplit(Array.isArray(v) ? v[0] : v)} />
         <span aria-hidden>After</span>
-        <Button size="sm" onClick={download}>
+        <Button size="sm" onClick={download} disabled={!size || !fits}>
           Export PNG
         </Button>
       </div>

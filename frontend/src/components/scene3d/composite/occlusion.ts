@@ -7,6 +7,7 @@ export type Visibility = "visible" | "partly hidden" | "hidden" | "out of view";
 type Placed = Scene["room"]["kept_furniture"][number] | Scene["items"][number];
 
 export const NEAR = 0.05; // m, the composite camera's near plane
+const ASPECT_TOLERANCE = 0.01; // relative: a photo resized or re-encoded keeps its aspect, a cropped or rotated one does not
 const INSET = 0.98; // samples sit just inside the box, so one that only grazes an occluder's edge counts as seen
 
 // The pose's camera, as the composite renders it
@@ -16,6 +17,13 @@ function poseCamera(pose: CameraPose): PerspectiveCamera {
   camera.quaternion.set(...pose.quaternion);
   camera.updateMatrixWorld();
   return camera;
+}
+
+// Whether a photo of this size is the one the pose was matched to (or a resized copy of it): the composite draws the photo and the
+// render at the pose's aspect, so any other photo would be stretched under furniture that no longer lines up with it.
+export function fitsPose(pose: CameraPose, width: number, height: number): boolean {
+  const aspect = pose.image_width / pose.image_height;
+  return Math.abs(width / height - aspect) <= ASPECT_TOLERANCE * aspect;
 }
 
 // The item's box where the viewer puts it (its group, the box on its base)

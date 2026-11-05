@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { Euler, Quaternion } from "three";
 import { expect, it } from "vitest";
 import type { CameraPose, Scene } from "../core/geometry";
-import { visibility } from "./occlusion";
+import { fitsPose, visibility } from "./occlusion";
 
 const scene: Scene = JSON.parse(readFileSync(join(import.meta.dirname, "../../../../../fixtures/small-bedroom/scene.json"), "utf8"));
 const pose = scene.cameras[0];
@@ -26,4 +26,11 @@ it("from above the wardrobe, it hides what stands behind it and the near corner 
   // without kept furniture, nothing is hidden
   const empty = { ...scene, room: { ...scene.room, kept_furniture: [] } };
   expect(visibility(empty, raised)).toEqual({ bed: "visible", nightstand: "visible", desk: "visible", desk_chair: "visible" });
+});
+
+it("takes only a photo with the matched pose's aspect", () => {
+  expect(fitsPose(pose, 640, 480)).toBe(true); // the 640 x 480 photo the fixture camera was matched to
+  expect(fitsPose(pose, 4032, 3024)).toBe(true); // the same photo, full size
+  expect(fitsPose(pose, 4032, 2268)).toBe(false); // 16:9
+  expect(fitsPose(pose, 480, 640)).toBe(false); // rotated
 });
