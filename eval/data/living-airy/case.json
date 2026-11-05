@@ -1,0 +1,30 @@
+{
+  "photo_keys": [
+    "fixtures/living-room/photo-1.jpg",
+    "fixtures/living-room/photo-2.jpg"
+  ],
+  "dimensions": {
+    "width": 4.5,
+    "length": 5.0,
+    "height": 2.7
+  },
+  "room_spec": "fixtures/living-room/room_spec.json",
+  "brief": {
+    "room_use": "living room",
+    "styles": [
+      "scandinavian"
+    ],
+    "budget": 2000,
+    "must_haves": [
+      "sofa",
+      "coffee table",
+      "plant stand"
+    ],
+    "keep": [
+      "bookcase"
+    ],
+    "remove": [],
+    "notes": "Light, airy and open, with lots of plants"
+  },
+  "category": "atmosphere"
+}

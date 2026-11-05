@@ -1,0 +1,30 @@
+{
+  "photo_keys": [
+    "fixtures/home-office/photo-1.jpg"
+  ],
+  "dimensions": {
+    "width": 3.0,
+    "length": 3.0,
+    "height": 2.7
+  },
+  "room_spec": "fixtures/home-office/room_spec.json",
+  "brief": {
+    "room_use": "home office",
+    "styles": [
+      "industrial"
+    ],
+    "budget": 2000,
+    "must_haves": [
+      "two desks",
+      "two office chairs"
+    ],
+    "keep": [
+      "filing cabinet"
+    ],
+    "remove": [
+      "old sofa"
+    ],
+    "notes": "Two of us work here at the same time, often both on calls"
+  },
+  "category": "functionality"
+}

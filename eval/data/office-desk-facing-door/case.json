@@ -1,0 +1,31 @@
+{
+  "photo_keys": [
+    "fixtures/home-office/photo-1.jpg"
+  ],
+  "dimensions": {
+    "width": 3.0,
+    "length": 3.0,
+    "height": 2.7
+  },
+  "room_spec": "fixtures/home-office/room_spec.json",
+  "brief": {
+    "room_use": "home office",
+    "styles": [
+      "modern"
+    ],
+    "budget": 1500,
+    "must_haves": [
+      "desk",
+      "office chair",
+      "bookshelf"
+    ],
+    "keep": [
+      "filing cabinet"
+    ],
+    "remove": [
+      "old sofa"
+    ],
+    "notes": "Desk facing the door, never with my back to it, and the window to my side"
+  },
+  "category": "layout"
+}

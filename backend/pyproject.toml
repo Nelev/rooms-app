@@ -24,7 +24,7 @@ line-length = 140
 select = ["E", "F", "I", "UP", "B"]
 
 [tool.pytest.ini_options]
-pythonpath = ["."]
+pythonpath = [".", "../eval"]
 testpaths = ["tests"]
 
 [tool.mypy]
