@@ -7,6 +7,7 @@ dependencies = [
     "langgraph>=1.2.20",
     "langgraph-checkpoint-postgres>=3.2.0",
     "psycopg[binary,pool]>=3.3.8",
+    "shapely>=2.2.0",
 ]
 
 [dependency-groups]
@@ -14,6 +15,7 @@ dev = [
     "mypy>=2.4.1",
     "pytest>=9.2.0",
     "ruff>=0.17.3",
+    "types-shapely>=2.1.0.20261030",
 ]
 
 [tool.ruff]
