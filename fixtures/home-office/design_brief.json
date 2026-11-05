@@ -1,0 +1,76 @@
+{
+  "zones": [
+    {
+      "name": "work",
+      "purpose": "desk facing the window"
+    },
+    {
+      "name": "storage",
+      "purpose": "books and files"
+    }
+  ],
+  "palette": [
+    "#ffffff",
+    "#2f3640",
+    "#d9a441"
+  ],
+  "objects": [
+    {
+      "id": "desk",
+      "name": "desk",
+      "category": "desk",
+      "style": "modern",
+      "material": "white laminate",
+      "size": {
+        "width": 1.4,
+        "depth": 0.7,
+        "height": 0.75
+      },
+      "priority": "must",
+      "zone": "work"
+    },
+    {
+      "id": "desk_chair",
+      "name": "ergonomic chair",
+      "category": "chair",
+      "style": "modern",
+      "material": "mesh",
+      "size": {
+        "width": 0.6,
+        "depth": 0.6,
+        "height": 1.1
+      },
+      "priority": "must",
+      "zone": "work"
+    },
+    {
+      "id": "bookshelf",
+      "name": "bookshelf",
+      "category": "shelf",
+      "style": "modern",
+      "material": "white laminate",
+      "size": {
+        "width": 0.8,
+        "depth": 0.35,
+        "height": 1.8
+      },
+      "priority": "must",
+      "zone": "storage"
+    },
+    {
+      "id": "floor_lamp",
+      "name": "floor lamp",
+      "category": "lamp",
+      "style": "modern",
+      "material": "steel",
+      "size": {
+        "width": 0.3,
+        "depth": 0.3,
+        "height": 1.6
+      },
+      "priority": "nice",
+      "zone": "work"
+    }
+  ],
+  "summary": "Bright modern office with the desk facing the window"
+}

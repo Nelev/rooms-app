@@ -1,0 +1,52 @@
+{
+  "placements": [
+    {
+      "node_id": "desk",
+      "item_id": "white-desk-140",
+      "x": 2.65,
+      "y": 1.5,
+      "rotation": 90,
+      "size": {
+        "width": 1.4,
+        "depth": 0.7,
+        "height": 0.75
+      }
+    },
+    {
+      "node_id": "desk_chair",
+      "item_id": "mesh-office-chair",
+      "x": 1.9,
+      "y": 1.5,
+      "rotation": 270,
+      "size": {
+        "width": 0.6,
+        "depth": 0.6,
+        "height": 1.1
+      }
+    },
+    {
+      "node_id": "bookshelf",
+      "item_id": "white-bookshelf-80",
+      "x": 0.6,
+      "y": 2.825,
+      "rotation": 180,
+      "size": {
+        "width": 0.8,
+        "depth": 0.35,
+        "height": 1.8
+      }
+    },
+    {
+      "node_id": "floor_lamp",
+      "item_id": "steel-floor-lamp",
+      "x": 2.75,
+      "y": 2.75,
+      "rotation": 0,
+      "size": {
+        "width": 0.3,
+        "depth": 0.3,
+        "height": 1.6
+      }
+    }
+  ]
+}

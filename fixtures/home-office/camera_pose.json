@@ -1,0 +1,18 @@
+{
+  "photo_key": "fixtures/home-office/photo-1.jpg",
+  "position": [
+    0.3,
+    1.5,
+    -2.3
+  ],
+  "quaternion": [
+    0.0,
+    -0.9239,
+    0.0,
+    0.3827
+  ],
+  "fov": 60.0,
+  "image_width": 640,
+  "image_height": 480,
+  "reprojection_error": 3.4
+}

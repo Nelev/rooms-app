@@ -1,0 +1,19 @@
+{
+  "room_use": "bedroom",
+  "styles": [
+    "classic"
+  ],
+  "budget": 300,
+  "must_haves": [
+    "king-size bed",
+    "three-seat sofa",
+    "dining table for six",
+    "upright piano",
+    "desk"
+  ],
+  "keep": [
+    "wardrobe"
+  ],
+  "remove": [],
+  "notes": "Pair with small-bedroom/room_spec.json: the must-haves cannot fit in 3.2 x 3.4 m or in the budget"
+}

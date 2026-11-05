@@ -1,0 +1,63 @@
+{
+  "nodes": [
+    {
+      "id": "wall_A",
+      "kind": "wall",
+      "name": "wall A"
+    },
+    {
+      "id": "desk",
+      "name": "desk",
+      "size": {
+        "width": 1.2,
+        "depth": 0.6,
+        "height": 0.75
+      }
+    },
+    {
+      "id": "desk_chair",
+      "name": "desk chair",
+      "size": {
+        "width": 0.5,
+        "depth": 0.5,
+        "height": 0.9
+      }
+    },
+    {
+      "id": "desk",
+      "name": "second desk",
+      "size": {
+        "width": 1.0,
+        "depth": 0.5,
+        "height": 0.75
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source": "desk",
+      "relation": "against_wall",
+      "target": "wall_A"
+    },
+    {
+      "source": "desk_chair",
+      "relation": "in_front",
+      "target": "desk"
+    },
+    {
+      "source": "desk",
+      "relation": "behind",
+      "target": "desk_chair"
+    },
+    {
+      "source": "desk_chair",
+      "relation": "against_wall",
+      "target": "desk"
+    },
+    {
+      "source": "lamp",
+      "relation": "on",
+      "target": "desk"
+    }
+  ]
+}
