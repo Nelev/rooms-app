@@ -38,7 +38,7 @@ function Sun({ light, intensity, reach }: { light: WindowLight; intensity: numbe
         intensity={intensity}
         color="#fff4e0"
         castShadow
-        shadow-mapSize={[2048, 2048]}
+        shadow-mapSize={[1024, 1024]}
         shadow-bias={-0.0005}
         shadow-normalBias={0.02}
         shadow-camera-left={-reach}

@@ -1,6 +1,6 @@
 // The pure part of the viewer's look (materials and lights), kept apart from react-three-fiber so it can be tested without WebGL.
 import { Euler, Vector3 } from "three";
-import { type RoomSpec, type Scene, type Vec3, wallMeshes } from "../core/geometry";
+import { type RoomSpec, type Scene, type Vec3, type WallMesh, wallMeshes } from "../core/geometry";
 
 export type Pattern = "planks" | "tiles" | "carpet";
 // `tile` is the real-world size in meters that one copy of the pattern's texture covers
@@ -72,19 +72,22 @@ export type WindowLight = {
 
 const AREA_INTENSITY = 5;
 const SUN_INTENSITY = 3;
+// Each sun renders the scene once more into its shadow map, so the cost grows with them: at most this many
+export const MAX_SUNS = 2;
 
 // One light per window, with Scene.lights' intensities. The main windows, with a sun, are those with a directional light
-// in Scene.lights, or the largest window when it has none.
+// in Scene.lights (the MAX_SUNS brightest), or the largest window when it has none.
 export function windowLights(scene: Scene): WindowLight[] {
   const lights = scene.lights ?? [];
-  const suns = lights.filter((l) => l.kind === "directional");
+  const named = lights.filter((l) => l.kind === "directional");
+  const suns = named.toSorted((a, b) => b.intensity - a.intensity).slice(0, MAX_SUNS);
   const windows = scene.room.features.filter((f) => f.type === "window");
   const largest = windows.reduce<(typeof windows)[number] | undefined>((a, f) => (a && a.width * a.height >= f.width * f.height ? a : f), undefined);
-  const walls = wallMeshes(scene.room);
   return windows.map((f) => {
-    const wall = walls.find((w) => w.wall === f.wall) as (typeof walls)[number];
+    // core's wall mesh for a room with only this window: its one hole is this window's, whatever the features' order
+    const wall = wallMeshes({ ...scene.room, features: [f] }).find((w) => w.wall === f.wall) as WallMesh;
     const turn = new Euler(...wall.rotation);
-    const hole = wall.holes[windows.filter((w) => w.wall === f.wall).indexOf(f)]; // wallMeshes keeps the windows' order
+    const hole = wall.holes[0];
     const [u, v] = [(hole[0][0] + hole[2][0]) / 2, (hole[0][1] + hole[2][1]) / 2];
     const center = new Vector3(u, v, 0).applyEuler(turn).add(new Vector3(...wall.position));
     return {
@@ -95,7 +98,7 @@ export function windowLights(scene: Scene): WindowLight[] {
       width: hole[1][0] - hole[0][0],
       height: hole[2][1] - hole[0][1],
       intensity: lights.find((l) => l.kind === "area" && l.window_id === f.id)?.intensity ?? AREA_INTENSITY,
-      sun: suns.length ? (suns.find((l) => l.window_id === f.id)?.intensity ?? null) : f === largest ? SUN_INTENSITY : null,
+      sun: named.length ? (suns.find((l) => l.window_id === f.id)?.intensity ?? null) : f === largest ? SUN_INTENSITY : null,
     };
   });
 }

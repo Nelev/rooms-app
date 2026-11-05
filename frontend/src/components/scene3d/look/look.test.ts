@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { type Scene, toThree } from "../core/geometry";
-import { floorLook, floorRepeat, sunPosition, windowLights } from "./look";
+import { floorLook, floorRepeat, MAX_SUNS, sunPosition, windowLights } from "./look";
 
 const read = (name: string): Scene => JSON.parse(readFileSync(join(import.meta.dirname, "../../../../../fixtures", name, "scene.json"), "utf8"));
 const close = (a: number[], b: number[]) => a.forEach((v, i) => void expect(v).toBeCloseTo(b[i], 6));
@@ -61,6 +61,31 @@ describe("windowLights", () => {
       ["window_1", null, 5],
       ["window_2", 2, 5],
     ]);
+  });
+
+  it("matches each light to its own window when windows share a wall, in any order", () => {
+    // living-room's wall B (x = 4.5) is 5 m long: a narrow window near its end listed first, a wide one near its start after
+    const scene = read("living-room");
+    const base = scene.room.features.find((f) => f.id === "window_1") as Scene["room"]["features"][number];
+    scene.room.features = [
+      { ...base, id: "near_end", offset: 0.8, width: 0.6 },
+      { ...base, id: "near_start", offset: 0.2, width: 1.2 },
+    ];
+    const lights = windowLights(scene);
+    expect(lights.map((l) => [l.id, l.width])).toEqual([
+      ["near_end", expect.closeTo(0.6)],
+      ["near_start", expect.closeTo(1.2)],
+    ]);
+    close(lights[0].center, toThree(4.5, 4, 1.35));
+    close(lights[1].center, toThree(4.5, 1, 1.35));
+  });
+
+  it(`casts shadows from at most ${MAX_SUNS} suns, the brightest`, () => {
+    const scene = read("living-room");
+    const base = scene.room.features.find((f) => f.id === "window_1") as Scene["room"]["features"][number];
+    scene.room.features = ["A", "B", "C", "D"].map((wall, i) => ({ ...base, id: `w${i}`, wall }) as typeof base);
+    scene.lights = [1, 4, 2, 3].map((intensity, i) => ({ kind: "directional", window_id: `w${i}`, intensity }));
+    expect(windowLights(scene).map((l) => l.sun)).toEqual([null, 4, null, 3]);
   });
 
   it("gives a windowless room no window lights", () => {
