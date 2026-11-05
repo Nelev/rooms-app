@@ -98,6 +98,19 @@ def test_a_dead_end_resamples_the_group_above(monkeypatch: pytest.MonkeyPatch) -
     assert sampled["side"] > TRIES and sampled["cabinet"] > 1
 
 
+# Three 0.36 m items in a row in wall C's free 1.2 m: when the first stands too far from an end the third never fits, whatever
+# the second does, so backtracking must go two groups up.
+ROW = graph(
+    [node("a", 0.36, 0.4, 0.9), node("b", 0.36, 0.4, 0.9), node("c", 0.36, 0.4, 0.9)],
+    [edge("a", "against_wall", "wall_C"), edge("b", "adjacent", "a"), edge("c", "adjacent", "b")],
+)
+
+
+@pytest.mark.parametrize("seed", range(20))
+def test_deep_dead_ends_backtrack_further_up(seed: int) -> None:
+    assert problems(solve(ROW, BEDROOM, seed=seed), BEDROOM) == []
+
+
 def test_gives_up_after_the_budget() -> None:
     g = graph([node(f"box_{i}", 1.0, 1.0, 1.0) for i in range(20)], [])
     start = monotonic()

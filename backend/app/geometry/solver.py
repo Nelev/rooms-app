@@ -5,7 +5,8 @@ are fixed roots; a node's first placing edge (adjacent ones last, none that clos
 placing edges are not enforced; a node without one is free anywhere in the room. Nodes are
 placed depth group by depth group, each at a position sampled inside the box its relation allows (in the parent's frame), and
 rejected if it collides, blocks a door, window or radiator, or leaves no room inside the room for its cluster (it and its
-children). On a dead end the current group is cleared and the group above re-sampled. `facing` is not used. Sides are the
+children). On a dead end the current group is cleared and the group above re-sampled, going one group further up after
+every few dead ends in the same group. `facing` is not used. Sides are the
 parent's own: left_of is its left as seen from it, facing its front; children of an item face the same way, except that a child
 in_front of an item turns to face it. A node with quantity n is placed n times, copies after the first as `<id>_2`, `<id>_3`...
 """
@@ -21,9 +22,9 @@ from shapely import box
 from shapely.affinity import rotate, translate
 from shapely.geometry.base import BaseGeometry
 
-from app.geometry.checks import EPS, _overlap
+from app.geometry.checks import EPS, overlap
 from app.geometry.graph_validate import ON_WALL
-from app.geometry.room import Solid, _wall_frame, room_model, solid
+from app.geometry.room import Solid, room_model, solid, wall_frame
 from app.schemas.coords import Size, Wall
 from app.schemas.design import SceneGraph
 from app.schemas.layout import Layout, Placement
@@ -31,6 +32,7 @@ from app.schemas.room import RoomSpec
 
 GAP = 0.2  # m: the most free space a child leaves between itself and an item parent (none for a wall, door or window)
 TRIES = 50  # positions sampled per item before its group is a dead end
+RETRIES = 3  # dead ends in a group before backtracking goes one group further up
 
 
 class Unsolvable(Exception):
@@ -53,10 +55,10 @@ class Frame:
 def _fixed_frames(spec: RoomSpec) -> dict[str, Frame]:
     frames: dict[str, Frame] = {}
     for i, w in enumerate(get_args(Wall)):
-        (x0, y0), (dx, dy), length = _wall_frame(spec, w)
+        (x0, y0), (dx, dy), length = wall_frame(spec, w)
         frames[f"wall_{w}"] = Frame(x0 + dx * length / 2, y0 + dy * length / 2, 90 * i, length, 0, 0, True)
     for f in spec.features:
-        (x0, y0), (dx, dy), length = _wall_frame(spec, f.wall)
+        (x0, y0), (dx, dy), length = wall_frame(spec, f.wall)
         t = f.offset * length
         frames[f.id] = Frame(x0 + dx * t, y0 + dy * t, 90 * get_args(Wall).index(f.wall), f.width, 0, 0, True)
     return frames
@@ -96,7 +98,10 @@ def _cluster(node: str, size: Size, children: dict[str, list[tuple[str, str]]], 
 
 
 def solve(graph: SceneGraph, spec: RoomSpec, seed: int = 0, budget: float = 2.0) -> Layout:
-    """Place every object node; the same seed gives the same layout. Raises Unsolvable after `budget` seconds."""
+    """Place every object node; the same seed gives the same layout. Raises Unsolvable after `budget` seconds.
+
+    Only each node's parent edge and `in_front`'s turn are honoured: other edges of a node with several, and `facing`, are not
+    checked, so a caller (B-18's solve node) should run the layout checks it needs on the result."""
     deadline, rng, room = monotonic() + budget, Random(seed), room_model(spec)
     frames = _fixed_frames(spec)
     objects = [n for n in graph.nodes if n.kind == "object"]
@@ -157,8 +162,8 @@ def solve(graph: SceneGraph, spec: RoomSpec, seed: int = 0, budget: float = 2.0)
         return (
             s.top <= room.height + EPS
             and floor.contains(cluster)
-            and not any(_overlap(s, b) for b in blockers)
-            and not any(_overlap(s, o) for _, o in placed.values())
+            and not any(overlap(s, b) for b in blockers)
+            and not any(overlap(s, o) for _, o in placed.values())
         )
 
     def place(level: list[tuple[str, str]]) -> bool:
@@ -173,14 +178,17 @@ def solve(graph: SceneGraph, spec: RoomSpec, seed: int = 0, budget: float = 2.0)
                 return False
         return True
 
-    i = 0
+    i, dead_ends = 0, [0] * len(levels)
     while i < len(levels):
         if monotonic() > deadline:
             raise Unsolvable(f"No layout found in {budget} s")
         if place(levels[i]):
             i += 1
             continue
-        for pid, _ in levels[i] + (levels[i - 1] if i else []):  # dead end: clear this group and re-sample the one above
+        # dead end: clear this group and re-sample the one above, or one more group up after every RETRIES dead ends here
+        dead_ends[i] += 1
+        up = min(i, 1 + dead_ends[i] // RETRIES)
+        for pid, _ in (p for level in levels[i - up : i + 1] for p in level):
             placed.pop(pid, None)
-        i = max(i - 1, 0)
+        i -= up
     return Layout(placements=[placed[pid][0] for level in levels for pid, _ in level])
