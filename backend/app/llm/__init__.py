@@ -24,11 +24,11 @@ class RoleModel(NamedTuple):
 
 
 ROLES: dict[Role, RoleModel] = {
-    "analyze_room": RoleModel("openai/gpt-5", 16_000, 180),  # reads the photos
+    "analyze_room": RoleModel("openai/gpt-6.1-sol", 16_000, 180),  # reads the photos
     "design": RoleModel("openai/gpt-5-mini", 8_000, 90),
-    "architect": RoleModel("openai/gpt-5", 16_000, 180),
+    "architect": RoleModel("openai/gpt-6.1-sol", 16_000, 180),
     "refine": RoleModel("openai/gpt-5-mini", 8_000, 90),
-    "critic": RoleModel("openai/gpt-5", 16_000, 180),  # reads the renders
+    "critic": RoleModel("openai/gpt-6.1-sol", 16_000, 180),  # reads the renders
     "chat_edit": RoleModel("openai/gpt-5-mini", 8_000, 90),
 }
 
