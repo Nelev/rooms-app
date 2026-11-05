@@ -57,13 +57,16 @@ def validate_graph(graph: SceneGraph, spec: RoomSpec) -> ValidationReport:
 
     parents: defaultdict[str, set[str]] = defaultdict(set)
     for e in edges:
-        if e.relation != "facing":  # facing only turns an item, so two items may face each other
+        if e.relation not in ("facing", "adjacent"):  # facing only turns an item and adjacent is symmetric, so neither has a parent
             parents[e.source].add(e.target)
-    try:
-        TopologicalSorter(parents).prepare()
-    except CycleError as err:
-        loop: list[str] = err.args[1]
-        issues.append(_issue("cycle", f"The relations go round in a loop: {' -> '.join(loop)}", *loop[:-1]))
+    while True:  # report every loop: break each one found and look again
+        try:
+            TopologicalSorter(parents).prepare()
+            break
+        except CycleError as err:
+            loop: list[str] = err.args[1]  # each node is a parent of the next
+            issues.append(_issue("cycle", f"The relations go round in a loop: {' -> '.join(loop)}", *loop[:-1]))
+            parents[loop[1]].discard(loop[0])
 
     sizes = {i: n.size for i, n in nodes.items() if n.size}
     along = {w: _wall_frame(spec, w)[2] for w in get_args(Wall)}

@@ -76,12 +76,22 @@ def test_fixed_node_of_the_wrong_kind_is_unknown(fixed: dict[str, str], relation
 def test_cycles_fail_and_chains_pass() -> None:
     chain = bedroom(edges=[edge("bed", "left_of", "desk_chair")])  # bed -> desk_chair -> desk -> wall_D
     assert issues(chain, BEDROOM["room_spec"]) == []
-    assert issues(bedroom(edges=[edge("bed", "adjacent", "bed")]), BEDROOM["room_spec"]) == [("cycle", ["bed"])]
-    assert issues(bedroom(edges=[edge("bed", "adjacent", "nightstand")]), BEDROOM["room_spec"]) == [("cycle", ["bed", "nightstand"])]
+    assert issues(bedroom(edges=[edge("bed", "left_of", "bed")]), BEDROOM["room_spec"]) == [("cycle", ["bed"])]
+    assert issues(bedroom(edges=[edge("desk", "behind", "desk_chair")]), BEDROOM["room_spec"]) == [("cycle", ["desk", "desk_chair"])]
 
 
-def test_items_facing_each_other_are_not_a_cycle() -> None:
-    graph = bedroom(edges=[edge("bed", "facing", "desk_chair"), edge("desk_chair", "facing", "bed")])
+def test_every_cycle_is_reported() -> None:
+    loops = [edge("nightstand", "left_of", "bed"), edge("bed", "behind", "nightstand"), edge("desk", "left_of", "desk_chair")]
+    graph = bedroom(edges=loops)
+    assert sorted(i for i in issues(graph, BEDROOM["room_spec"]) if i[0] == "cycle") == [
+        ("cycle", ["bed", "nightstand"]),
+        ("cycle", ["desk", "desk_chair"]),
+    ]
+
+
+@pytest.mark.parametrize("relation", ["facing", "adjacent"])
+def test_symmetric_relations_both_ways_are_not_a_cycle(relation: str) -> None:
+    graph = bedroom(edges=[edge("bed", relation, "desk_chair"), edge("desk_chair", relation, "bed")])
     assert issues(graph, BEDROOM["room_spec"]) == []
 
 
