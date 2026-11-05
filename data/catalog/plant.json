@@ -1,0 +1,162 @@
+[
+  {
+    "id": "black-potted-plant-small",
+    "name": "Small potted plant in a black pot",
+    "category": "plant",
+    "size": {
+      "width": 0.25,
+      "depth": 0.25,
+      "height": 0.5
+    },
+    "price": 29.0,
+    "style_tags": [
+      "industrial",
+      "modern"
+    ],
+    "color": "black",
+    "front": "+z",
+    "description": "Artificial plant in a pot"
+  },
+  {
+    "id": "black-potted-plant-tall",
+    "name": "Tall potted plant in a black pot",
+    "category": "plant",
+    "size": {
+      "width": 0.5,
+      "depth": 0.5,
+      "height": 1.6
+    },
+    "price": 79.0,
+    "style_tags": [
+      "industrial",
+      "modern"
+    ],
+    "color": "black",
+    "front": "+z",
+    "description": "Artificial fiddle-leaf fig in a pot"
+  },
+  {
+    "id": "potted-plant",
+    "name": "Potted plant",
+    "category": "plant",
+    "size": {
+      "width": 0.4,
+      "depth": 0.4,
+      "height": 1.0
+    },
+    "price": 49.0,
+    "style_tags": [
+      "modern",
+      "boho"
+    ],
+    "color": "green",
+    "front": "+z",
+    "description": "Artificial olive tree in a ceramic pot"
+  },
+  {
+    "id": "rattan-potted-plant-small",
+    "name": "Small potted plant in a natural pot",
+    "category": "plant",
+    "size": {
+      "width": 0.25,
+      "depth": 0.25,
+      "height": 0.5
+    },
+    "price": 29.0,
+    "style_tags": [
+      "boho"
+    ],
+    "color": "natural",
+    "front": "+z",
+    "description": "Artificial plant in a pot"
+  },
+  {
+    "id": "rattan-potted-plant-tall",
+    "name": "Tall potted plant in a natural pot",
+    "category": "plant",
+    "size": {
+      "width": 0.5,
+      "depth": 0.5,
+      "height": 1.6
+    },
+    "price": 89.0,
+    "style_tags": [
+      "boho"
+    ],
+    "color": "natural",
+    "front": "+z",
+    "description": "Artificial fiddle-leaf fig in a pot"
+  },
+  {
+    "id": "terracotta-potted-plant-small",
+    "name": "Small potted plant in a terracotta pot",
+    "category": "plant",
+    "size": {
+      "width": 0.25,
+      "depth": 0.25,
+      "height": 0.5
+    },
+    "price": 29.0,
+    "style_tags": [
+      "boho"
+    ],
+    "color": "terracotta",
+    "front": "+z",
+    "description": "Artificial plant in a pot"
+  },
+  {
+    "id": "terracotta-potted-plant-tall",
+    "name": "Tall potted plant in a terracotta pot",
+    "category": "plant",
+    "size": {
+      "width": 0.5,
+      "depth": 0.5,
+      "height": 1.6
+    },
+    "price": 89.0,
+    "style_tags": [
+      "boho"
+    ],
+    "color": "terracotta",
+    "front": "+z",
+    "description": "Artificial fiddle-leaf fig in a pot"
+  },
+  {
+    "id": "white-potted-plant-small",
+    "name": "Small potted plant in a white pot",
+    "category": "plant",
+    "size": {
+      "width": 0.25,
+      "depth": 0.25,
+      "height": 0.5
+    },
+    "price": 19.0,
+    "style_tags": [
+      "modern",
+      "minimalist",
+      "scandinavian"
+    ],
+    "color": "white",
+    "front": "+z",
+    "description": "Artificial plant in a pot"
+  },
+  {
+    "id": "white-potted-plant-tall",
+    "name": "Tall potted plant in a white pot",
+    "category": "plant",
+    "size": {
+      "width": 0.5,
+      "depth": 0.5,
+      "height": 1.6
+    },
+    "price": 79.0,
+    "style_tags": [
+      "modern",
+      "minimalist",
+      "scandinavian"
+    ],
+    "color": "white",
+    "front": "+z",
+    "description": "Artificial fiddle-leaf fig in a pot"
+  }
+]

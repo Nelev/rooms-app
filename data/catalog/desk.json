@@ -1,0 +1,308 @@
+[
+  {
+    "id": "ash-desk-120",
+    "name": "Light ash desk",
+    "category": "desk",
+    "size": {
+      "width": 1.2,
+      "depth": 0.6,
+      "height": 0.75
+    },
+    "price": 189.0,
+    "style_tags": [
+      "japandi",
+      "minimalist"
+    ],
+    "color": "ash",
+    "front": "+z",
+    "description": "Desk with a cable tray"
+  },
+  {
+    "id": "ash-desk-160",
+    "name": "Light ash large desk",
+    "category": "desk",
+    "size": {
+      "width": 1.6,
+      "depth": 0.8,
+      "height": 0.75
+    },
+    "price": 299.0,
+    "style_tags": [
+      "japandi",
+      "minimalist"
+    ],
+    "color": "ash",
+    "front": "+z",
+    "description": "Large desk for two monitors"
+  },
+  {
+    "id": "ash-desk-80",
+    "name": "Light ash small desk",
+    "category": "desk",
+    "size": {
+      "width": 0.8,
+      "depth": 0.5,
+      "height": 0.75
+    },
+    "price": 109.0,
+    "style_tags": [
+      "japandi",
+      "minimalist"
+    ],
+    "color": "ash",
+    "front": "+z",
+    "description": "Compact desk with a cable hole"
+  },
+  {
+    "id": "birch-desk-100",
+    "name": "Birch desk 100",
+    "category": "desk",
+    "size": {
+      "width": 1.0,
+      "depth": 0.5,
+      "height": 0.75
+    },
+    "price": 149.0,
+    "style_tags": [
+      "scandinavian"
+    ],
+    "color": "birch",
+    "front": "+z",
+    "license": "CC0-1.0",
+    "description": "Compact desk"
+  },
+  {
+    "id": "black-desk-120",
+    "name": "Black steel desk",
+    "category": "desk",
+    "size": {
+      "width": 1.2,
+      "depth": 0.6,
+      "height": 0.75
+    },
+    "price": 159.0,
+    "style_tags": [
+      "industrial",
+      "modern"
+    ],
+    "color": "black",
+    "front": "+z",
+    "description": "Desk with a cable tray"
+  },
+  {
+    "id": "black-desk-160",
+    "name": "Black steel large desk",
+    "category": "desk",
+    "size": {
+      "width": 1.6,
+      "depth": 0.8,
+      "height": 0.75
+    },
+    "price": 249.0,
+    "style_tags": [
+      "industrial",
+      "modern"
+    ],
+    "color": "black",
+    "front": "+z",
+    "description": "Large desk for two monitors"
+  },
+  {
+    "id": "black-desk-80",
+    "name": "Black steel small desk",
+    "category": "desk",
+    "size": {
+      "width": 0.8,
+      "depth": 0.5,
+      "height": 0.75
+    },
+    "price": 89.0,
+    "style_tags": [
+      "industrial",
+      "modern"
+    ],
+    "color": "black",
+    "front": "+z",
+    "description": "Compact desk with a cable hole"
+  },
+  {
+    "id": "oak-desk-120",
+    "name": "Oak desk",
+    "category": "desk",
+    "size": {
+      "width": 1.2,
+      "depth": 0.6,
+      "height": 0.75
+    },
+    "price": 169.0,
+    "style_tags": [
+      "scandinavian",
+      "japandi"
+    ],
+    "color": "oak",
+    "front": "+z",
+    "description": "Desk with a cable tray"
+  },
+  {
+    "id": "oak-desk-160",
+    "name": "Oak large desk",
+    "category": "desk",
+    "size": {
+      "width": 1.6,
+      "depth": 0.8,
+      "height": 0.75
+    },
+    "price": 259.0,
+    "style_tags": [
+      "scandinavian",
+      "japandi"
+    ],
+    "color": "oak",
+    "front": "+z",
+    "description": "Large desk for two monitors"
+  },
+  {
+    "id": "oak-desk-80",
+    "name": "Oak small desk",
+    "category": "desk",
+    "size": {
+      "width": 0.8,
+      "depth": 0.5,
+      "height": 0.75
+    },
+    "price": 99.0,
+    "style_tags": [
+      "scandinavian",
+      "japandi"
+    ],
+    "color": "oak",
+    "front": "+z",
+    "description": "Compact desk with a cable hole"
+  },
+  {
+    "id": "walnut-desk-120",
+    "name": "Walnut desk",
+    "category": "desk",
+    "size": {
+      "width": 1.2,
+      "depth": 0.6,
+      "height": 0.75
+    },
+    "price": 229.0,
+    "style_tags": [
+      "mid-century"
+    ],
+    "color": "walnut",
+    "front": "+z",
+    "description": "Desk with a cable tray"
+  },
+  {
+    "id": "walnut-desk-160",
+    "name": "Walnut large desk",
+    "category": "desk",
+    "size": {
+      "width": 1.6,
+      "depth": 0.8,
+      "height": 0.75
+    },
+    "price": 349.0,
+    "style_tags": [
+      "mid-century"
+    ],
+    "color": "walnut",
+    "front": "+z",
+    "description": "Large desk for two monitors"
+  },
+  {
+    "id": "walnut-desk-80",
+    "name": "Walnut small desk",
+    "category": "desk",
+    "size": {
+      "width": 0.8,
+      "depth": 0.5,
+      "height": 0.75
+    },
+    "price": 129.0,
+    "style_tags": [
+      "mid-century"
+    ],
+    "color": "walnut",
+    "front": "+z",
+    "description": "Compact desk with a cable hole"
+  },
+  {
+    "id": "white-desk-120",
+    "name": "White lacquered desk",
+    "category": "desk",
+    "size": {
+      "width": 1.2,
+      "depth": 0.6,
+      "height": 0.75
+    },
+    "price": 139.0,
+    "style_tags": [
+      "modern",
+      "minimalist",
+      "scandinavian"
+    ],
+    "color": "white",
+    "front": "+z",
+    "description": "Desk with a cable tray"
+  },
+  {
+    "id": "white-desk-140",
+    "name": "White desk 140",
+    "category": "desk",
+    "size": {
+      "width": 1.4,
+      "depth": 0.7,
+      "height": 0.75
+    },
+    "price": 199.0,
+    "style_tags": [
+      "modern"
+    ],
+    "color": "white",
+    "front": "+z",
+    "license": "CC0-1.0",
+    "description": "Large desk"
+  },
+  {
+    "id": "white-desk-160",
+    "name": "White lacquered large desk",
+    "category": "desk",
+    "size": {
+      "width": 1.6,
+      "depth": 0.8,
+      "height": 0.75
+    },
+    "price": 219.0,
+    "style_tags": [
+      "modern",
+      "minimalist",
+      "scandinavian"
+    ],
+    "color": "white",
+    "front": "+z",
+    "description": "Large desk for two monitors"
+  },
+  {
+    "id": "white-desk-80",
+    "name": "White lacquered small desk",
+    "category": "desk",
+    "size": {
+      "width": 0.8,
+      "depth": 0.5,
+      "height": 0.75
+    },
+    "price": 79.0,
+    "style_tags": [
+      "modern",
+      "minimalist",
+      "scandinavian"
+    ],
+    "color": "white",
+    "front": "+z",
+    "description": "Compact desk with a cable hole"
+  }
+]

@@ -1,0 +1,272 @@
+[
+  {
+    "id": "black-wardrobe-100",
+    "name": "Black steel two-door wardrobe",
+    "category": "wardrobe",
+    "size": {
+      "width": 1.0,
+      "depth": 0.58,
+      "height": 2.0
+    },
+    "price": 279.0,
+    "style_tags": [
+      "industrial",
+      "modern"
+    ],
+    "color": "black",
+    "front": "+z",
+    "description": "Hanging rail and one shelf"
+  },
+  {
+    "id": "black-wardrobe-150",
+    "name": "Black steel three-door wardrobe",
+    "category": "wardrobe",
+    "size": {
+      "width": 1.5,
+      "depth": 0.58,
+      "height": 2.1
+    },
+    "price": 429.0,
+    "style_tags": [
+      "industrial",
+      "modern"
+    ],
+    "color": "black",
+    "front": "+z",
+    "description": "Hanging rail, shelves and two drawers"
+  },
+  {
+    "id": "black-wardrobe-200",
+    "name": "Black steel sliding-door wardrobe",
+    "category": "wardrobe",
+    "size": {
+      "width": 2.0,
+      "depth": 0.65,
+      "height": 2.2
+    },
+    "price": 619.0,
+    "style_tags": [
+      "industrial",
+      "modern"
+    ],
+    "color": "black",
+    "front": "+z",
+    "description": "Sliding doors, hanging rails and shelves"
+  },
+  {
+    "id": "oak-wardrobe-100",
+    "name": "Oak two-door wardrobe",
+    "category": "wardrobe",
+    "size": {
+      "width": 1.0,
+      "depth": 0.58,
+      "height": 2.0
+    },
+    "price": 299.0,
+    "style_tags": [
+      "scandinavian",
+      "japandi"
+    ],
+    "color": "oak",
+    "front": "+z",
+    "description": "Hanging rail and one shelf"
+  },
+  {
+    "id": "oak-wardrobe-150",
+    "name": "Oak three-door wardrobe",
+    "category": "wardrobe",
+    "size": {
+      "width": 1.5,
+      "depth": 0.58,
+      "height": 2.1
+    },
+    "price": 449.0,
+    "style_tags": [
+      "scandinavian",
+      "japandi"
+    ],
+    "color": "oak",
+    "front": "+z",
+    "description": "Hanging rail, shelves and two drawers"
+  },
+  {
+    "id": "oak-wardrobe-200",
+    "name": "Oak sliding-door wardrobe",
+    "category": "wardrobe",
+    "size": {
+      "width": 2.0,
+      "depth": 0.65,
+      "height": 2.2
+    },
+    "price": 649.0,
+    "style_tags": [
+      "scandinavian",
+      "japandi"
+    ],
+    "color": "oak",
+    "front": "+z",
+    "description": "Sliding doors, hanging rails and shelves"
+  },
+  {
+    "id": "pine-wardrobe-100",
+    "name": "Solid pine two-door wardrobe",
+    "category": "wardrobe",
+    "size": {
+      "width": 1.0,
+      "depth": 0.58,
+      "height": 2.0
+    },
+    "price": 239.0,
+    "style_tags": [
+      "traditional",
+      "scandinavian"
+    ],
+    "color": "pine",
+    "front": "+z",
+    "description": "Hanging rail and one shelf"
+  },
+  {
+    "id": "pine-wardrobe-150",
+    "name": "Solid pine three-door wardrobe",
+    "category": "wardrobe",
+    "size": {
+      "width": 1.5,
+      "depth": 0.58,
+      "height": 2.1
+    },
+    "price": 359.0,
+    "style_tags": [
+      "traditional",
+      "scandinavian"
+    ],
+    "color": "pine",
+    "front": "+z",
+    "description": "Hanging rail, shelves and two drawers"
+  },
+  {
+    "id": "pine-wardrobe-200",
+    "name": "Solid pine sliding-door wardrobe",
+    "category": "wardrobe",
+    "size": {
+      "width": 2.0,
+      "depth": 0.65,
+      "height": 2.2
+    },
+    "price": 519.0,
+    "style_tags": [
+      "traditional",
+      "scandinavian"
+    ],
+    "color": "pine",
+    "front": "+z",
+    "description": "Sliding doors, hanging rails and shelves"
+  },
+  {
+    "id": "walnut-wardrobe-100",
+    "name": "Walnut two-door wardrobe",
+    "category": "wardrobe",
+    "size": {
+      "width": 1.0,
+      "depth": 0.58,
+      "height": 2.0
+    },
+    "price": 399.0,
+    "style_tags": [
+      "mid-century"
+    ],
+    "color": "walnut",
+    "front": "+z",
+    "description": "Hanging rail and one shelf"
+  },
+  {
+    "id": "walnut-wardrobe-150",
+    "name": "Walnut three-door wardrobe",
+    "category": "wardrobe",
+    "size": {
+      "width": 1.5,
+      "depth": 0.58,
+      "height": 2.1
+    },
+    "price": 609.0,
+    "style_tags": [
+      "mid-century"
+    ],
+    "color": "walnut",
+    "front": "+z",
+    "description": "Hanging rail, shelves and two drawers"
+  },
+  {
+    "id": "walnut-wardrobe-200",
+    "name": "Walnut sliding-door wardrobe",
+    "category": "wardrobe",
+    "size": {
+      "width": 2.0,
+      "depth": 0.65,
+      "height": 2.2
+    },
+    "price": 879.0,
+    "style_tags": [
+      "mid-century"
+    ],
+    "color": "walnut",
+    "front": "+z",
+    "description": "Sliding doors, hanging rails and shelves"
+  },
+  {
+    "id": "white-wardrobe-100",
+    "name": "White lacquered two-door wardrobe",
+    "category": "wardrobe",
+    "size": {
+      "width": 1.0,
+      "depth": 0.58,
+      "height": 2.0
+    },
+    "price": 249.0,
+    "style_tags": [
+      "modern",
+      "minimalist",
+      "scandinavian"
+    ],
+    "color": "white",
+    "front": "+z",
+    "description": "Hanging rail and one shelf"
+  },
+  {
+    "id": "white-wardrobe-150",
+    "name": "White lacquered three-door wardrobe",
+    "category": "wardrobe",
+    "size": {
+      "width": 1.5,
+      "depth": 0.58,
+      "height": 2.1
+    },
+    "price": 379.0,
+    "style_tags": [
+      "modern",
+      "minimalist",
+      "scandinavian"
+    ],
+    "color": "white",
+    "front": "+z",
+    "description": "Hanging rail, shelves and two drawers"
+  },
+  {
+    "id": "white-wardrobe-200",
+    "name": "White lacquered sliding-door wardrobe",
+    "category": "wardrobe",
+    "size": {
+      "width": 2.0,
+      "depth": 0.65,
+      "height": 2.2
+    },
+    "price": 549.0,
+    "style_tags": [
+      "modern",
+      "minimalist",
+      "scandinavian"
+    ],
+    "color": "white",
+    "front": "+z",
+    "description": "Sliding doors, hanging rails and shelves"
+  }
+]

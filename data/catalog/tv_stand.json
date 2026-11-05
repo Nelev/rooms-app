@@ -1,0 +1,200 @@
+[
+  {
+    "id": "black-tv-stand-120",
+    "name": "Black steel TV stand",
+    "category": "tv_stand",
+    "size": {
+      "width": 1.2,
+      "depth": 0.4,
+      "height": 0.45
+    },
+    "price": 139.0,
+    "style_tags": [
+      "industrial",
+      "modern"
+    ],
+    "color": "black",
+    "front": "+z",
+    "description": "Two compartments and a cable outlet"
+  },
+  {
+    "id": "black-tv-stand-180",
+    "name": "Black steel wide TV stand",
+    "category": "tv_stand",
+    "size": {
+      "width": 1.8,
+      "depth": 0.42,
+      "height": 0.5
+    },
+    "price": 239.0,
+    "style_tags": [
+      "industrial",
+      "modern"
+    ],
+    "color": "black",
+    "front": "+z",
+    "description": "Two doors and an open shelf"
+  },
+  {
+    "id": "mango-tv-stand-120",
+    "name": "Mango wood TV stand",
+    "category": "tv_stand",
+    "size": {
+      "width": 1.2,
+      "depth": 0.4,
+      "height": 0.45
+    },
+    "price": 159.0,
+    "style_tags": [
+      "boho",
+      "industrial"
+    ],
+    "color": "brown",
+    "front": "+z",
+    "description": "Two compartments and a cable outlet"
+  },
+  {
+    "id": "mango-tv-stand-180",
+    "name": "Mango wood wide TV stand",
+    "category": "tv_stand",
+    "size": {
+      "width": 1.8,
+      "depth": 0.42,
+      "height": 0.5
+    },
+    "price": 269.0,
+    "style_tags": [
+      "boho",
+      "industrial"
+    ],
+    "color": "brown",
+    "front": "+z",
+    "description": "Two doors and an open shelf"
+  },
+  {
+    "id": "oak-tv-stand-120",
+    "name": "Oak TV stand",
+    "category": "tv_stand",
+    "size": {
+      "width": 1.2,
+      "depth": 0.4,
+      "height": 0.45
+    },
+    "price": 149.0,
+    "style_tags": [
+      "scandinavian",
+      "japandi"
+    ],
+    "color": "oak",
+    "front": "+z",
+    "description": "Two compartments and a cable outlet"
+  },
+  {
+    "id": "oak-tv-stand-180",
+    "name": "Oak wide TV stand",
+    "category": "tv_stand",
+    "size": {
+      "width": 1.8,
+      "depth": 0.42,
+      "height": 0.5
+    },
+    "price": 249.0,
+    "style_tags": [
+      "scandinavian",
+      "japandi"
+    ],
+    "color": "oak",
+    "front": "+z",
+    "description": "Two doors and an open shelf"
+  },
+  {
+    "id": "walnut-tv-stand",
+    "name": "Walnut TV stand",
+    "category": "tv_stand",
+    "size": {
+      "width": 1.6,
+      "depth": 0.4,
+      "height": 0.5
+    },
+    "price": 319.0,
+    "style_tags": [
+      "mid-century"
+    ],
+    "color": "walnut",
+    "front": "+z",
+    "license": "CC0-1.0",
+    "description": "Two doors"
+  },
+  {
+    "id": "walnut-tv-stand-120",
+    "name": "Compact walnut TV stand",
+    "category": "tv_stand",
+    "size": {
+      "width": 1.2,
+      "depth": 0.4,
+      "height": 0.45
+    },
+    "price": 199.0,
+    "style_tags": [
+      "mid-century"
+    ],
+    "color": "walnut",
+    "front": "+z",
+    "description": "Two compartments and a cable outlet"
+  },
+  {
+    "id": "walnut-tv-stand-180",
+    "name": "Walnut wide TV stand",
+    "category": "tv_stand",
+    "size": {
+      "width": 1.8,
+      "depth": 0.42,
+      "height": 0.5
+    },
+    "price": 339.0,
+    "style_tags": [
+      "mid-century"
+    ],
+    "color": "walnut",
+    "front": "+z",
+    "description": "Two doors and an open shelf"
+  },
+  {
+    "id": "white-tv-stand-120",
+    "name": "White lacquered TV stand",
+    "category": "tv_stand",
+    "size": {
+      "width": 1.2,
+      "depth": 0.4,
+      "height": 0.45
+    },
+    "price": 129.0,
+    "style_tags": [
+      "modern",
+      "minimalist",
+      "scandinavian"
+    ],
+    "color": "white",
+    "front": "+z",
+    "description": "Two compartments and a cable outlet"
+  },
+  {
+    "id": "white-tv-stand-180",
+    "name": "White lacquered wide TV stand",
+    "category": "tv_stand",
+    "size": {
+      "width": 1.8,
+      "depth": 0.42,
+      "height": 0.5
+    },
+    "price": 209.0,
+    "style_tags": [
+      "modern",
+      "minimalist",
+      "scandinavian"
+    ],
+    "color": "white",
+    "front": "+z",
+    "description": "Two doors and an open shelf"
+  }
+]

@@ -1,0 +1,144 @@
+[
+  {
+    "id": "black-floor-mirror",
+    "name": "Black steel floor mirror",
+    "category": "mirror",
+    "size": {
+      "width": 0.5,
+      "depth": 0.04,
+      "height": 1.6
+    },
+    "price": 79.0,
+    "style_tags": [
+      "industrial",
+      "modern"
+    ],
+    "color": "black",
+    "front": "+z",
+    "description": "Full-length leaning mirror"
+  },
+  {
+    "id": "black-round-mirror",
+    "name": "Black steel round wall mirror",
+    "category": "mirror",
+    "size": {
+      "width": 0.6,
+      "depth": 0.03,
+      "height": 0.6
+    },
+    "price": 49.0,
+    "style_tags": [
+      "industrial",
+      "modern"
+    ],
+    "color": "black",
+    "front": "+z",
+    "description": "Round wall mirror, 60 cm"
+  },
+  {
+    "id": "brass-floor-mirror",
+    "name": "Brushed brass floor mirror",
+    "category": "mirror",
+    "size": {
+      "width": 0.5,
+      "depth": 0.04,
+      "height": 1.6
+    },
+    "price": 109.0,
+    "style_tags": [
+      "mid-century",
+      "traditional"
+    ],
+    "color": "brass",
+    "front": "+z",
+    "description": "Full-length leaning mirror"
+  },
+  {
+    "id": "brass-round-mirror",
+    "name": "Brushed brass round wall mirror",
+    "category": "mirror",
+    "size": {
+      "width": 0.6,
+      "depth": 0.03,
+      "height": 0.6
+    },
+    "price": 59.0,
+    "style_tags": [
+      "mid-century",
+      "traditional"
+    ],
+    "color": "brass",
+    "front": "+z",
+    "description": "Round wall mirror, 60 cm"
+  },
+  {
+    "id": "oak-floor-mirror",
+    "name": "Oak floor mirror",
+    "category": "mirror",
+    "size": {
+      "width": 0.5,
+      "depth": 0.04,
+      "height": 1.6
+    },
+    "price": 89.0,
+    "style_tags": [
+      "scandinavian",
+      "japandi"
+    ],
+    "color": "oak",
+    "front": "+z",
+    "description": "Full-length leaning mirror"
+  },
+  {
+    "id": "oak-round-mirror",
+    "name": "Oak round wall mirror",
+    "category": "mirror",
+    "size": {
+      "width": 0.6,
+      "depth": 0.03,
+      "height": 0.6
+    },
+    "price": 49.0,
+    "style_tags": [
+      "scandinavian",
+      "japandi"
+    ],
+    "color": "oak",
+    "front": "+z",
+    "description": "Round wall mirror, 60 cm"
+  },
+  {
+    "id": "rattan-floor-mirror",
+    "name": "Rattan floor mirror",
+    "category": "mirror",
+    "size": {
+      "width": 0.5,
+      "depth": 0.04,
+      "height": 1.6
+    },
+    "price": 89.0,
+    "style_tags": [
+      "boho"
+    ],
+    "color": "natural",
+    "front": "+z",
+    "description": "Full-length leaning mirror"
+  },
+  {
+    "id": "rattan-round-mirror",
+    "name": "Rattan round wall mirror",
+    "category": "mirror",
+    "size": {
+      "width": 0.6,
+      "depth": 0.03,
+      "height": 0.6
+    },
+    "price": 49.0,
+    "style_tags": [
+      "boho"
+    ],
+    "color": "natural",
+    "front": "+z",
+    "description": "Round wall mirror, 60 cm"
+  }
+]

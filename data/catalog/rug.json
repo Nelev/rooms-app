@@ -1,0 +1,216 @@
+[
+  {
+    "id": "beige-rug-160x230",
+    "name": "Beige wool medium rug",
+    "category": "rug",
+    "size": {
+      "width": 1.6,
+      "depth": 2.3,
+      "height": 0.01
+    },
+    "price": 139.0,
+    "style_tags": [
+      "japandi",
+      "minimalist"
+    ],
+    "color": "beige",
+    "front": "+z",
+    "description": "Low-pile rug, 160 x 230 cm"
+  },
+  {
+    "id": "beige-rug-200x300",
+    "name": "Beige wool large rug",
+    "category": "rug",
+    "size": {
+      "width": 2.0,
+      "depth": 3.0,
+      "height": 0.01
+    },
+    "price": 249.0,
+    "style_tags": [
+      "japandi",
+      "minimalist"
+    ],
+    "color": "beige",
+    "front": "+z",
+    "description": "Low-pile rug, 200 x 300 cm"
+  },
+  {
+    "id": "cream-rug-160x230",
+    "name": "Cream wool medium rug",
+    "category": "rug",
+    "size": {
+      "width": 1.6,
+      "depth": 2.3,
+      "height": 0.01
+    },
+    "price": 159.0,
+    "style_tags": [
+      "japandi",
+      "modern"
+    ],
+    "color": "cream",
+    "front": "+z",
+    "description": "Low-pile rug, 160 x 230 cm"
+  },
+  {
+    "id": "cream-rug-200x300",
+    "name": "Cream wool large rug",
+    "category": "rug",
+    "size": {
+      "width": 2.0,
+      "depth": 3.0,
+      "height": 0.01
+    },
+    "price": 289.0,
+    "style_tags": [
+      "japandi",
+      "modern"
+    ],
+    "color": "cream",
+    "front": "+z",
+    "description": "Low-pile rug, 200 x 300 cm"
+  },
+  {
+    "id": "green-rug-160x230",
+    "name": "Green wool medium rug",
+    "category": "rug",
+    "size": {
+      "width": 1.6,
+      "depth": 2.3,
+      "height": 0.01
+    },
+    "price": 149.0,
+    "style_tags": [
+      "mid-century",
+      "boho"
+    ],
+    "color": "green",
+    "front": "+z",
+    "description": "Low-pile rug, 160 x 230 cm"
+  },
+  {
+    "id": "green-rug-200x300",
+    "name": "Green wool large rug",
+    "category": "rug",
+    "size": {
+      "width": 2.0,
+      "depth": 3.0,
+      "height": 0.01
+    },
+    "price": 269.0,
+    "style_tags": [
+      "mid-century",
+      "boho"
+    ],
+    "color": "green",
+    "front": "+z",
+    "description": "Low-pile rug, 200 x 300 cm"
+  },
+  {
+    "id": "grey-rug-160x230",
+    "name": "Grey wool medium rug",
+    "category": "rug",
+    "size": {
+      "width": 1.6,
+      "depth": 2.3,
+      "height": 0.01
+    },
+    "price": 129.0,
+    "style_tags": [
+      "modern",
+      "scandinavian"
+    ],
+    "color": "grey",
+    "front": "+z",
+    "description": "Low-pile rug, 160 x 230 cm"
+  },
+  {
+    "id": "grey-rug-200x300",
+    "name": "Grey wool large rug",
+    "category": "rug",
+    "size": {
+      "width": 2.0,
+      "depth": 3.0,
+      "height": 0.01
+    },
+    "price": 229.0,
+    "style_tags": [
+      "modern",
+      "scandinavian"
+    ],
+    "color": "grey",
+    "front": "+z",
+    "description": "Low-pile rug, 200 x 300 cm"
+  },
+  {
+    "id": "navy-rug-160x230",
+    "name": "Navy wool medium rug",
+    "category": "rug",
+    "size": {
+      "width": 1.6,
+      "depth": 2.3,
+      "height": 0.01
+    },
+    "price": 149.0,
+    "style_tags": [
+      "traditional",
+      "modern"
+    ],
+    "color": "navy",
+    "front": "+z",
+    "description": "Low-pile rug, 160 x 230 cm"
+  },
+  {
+    "id": "navy-rug-200x300",
+    "name": "Navy wool large rug",
+    "category": "rug",
+    "size": {
+      "width": 2.0,
+      "depth": 3.0,
+      "height": 0.01
+    },
+    "price": 259.0,
+    "style_tags": [
+      "traditional",
+      "modern"
+    ],
+    "color": "navy",
+    "front": "+z",
+    "description": "Low-pile rug, 200 x 300 cm"
+  },
+  {
+    "id": "terracotta-rug-160x230",
+    "name": "Terracotta wool medium rug",
+    "category": "rug",
+    "size": {
+      "width": 1.6,
+      "depth": 2.3,
+      "height": 0.01
+    },
+    "price": 129.0,
+    "style_tags": [
+      "boho"
+    ],
+    "color": "terracotta",
+    "front": "+z",
+    "description": "Low-pile rug, 160 x 230 cm"
+  },
+  {
+    "id": "terracotta-rug-200x300",
+    "name": "Terracotta wool large rug",
+    "category": "rug",
+    "size": {
+      "width": 2.0,
+      "depth": 3.0,
+      "height": 0.01
+    },
+    "price": 229.0,
+    "style_tags": [
+      "boho"
+    ],
+    "color": "terracotta",
+    "front": "+z",
+    "description": "Low-pile rug, 200 x 300 cm"
+  }
+]
