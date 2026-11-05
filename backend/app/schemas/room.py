@@ -1,6 +1,6 @@
-from typing import Literal
+from typing import Literal, Self
 
-from pydantic import ConfigDict, Field, JsonValue
+from pydantic import ConfigDict, Field, JsonValue, model_validator
 
 from app.schemas.base import Model
 from app.schemas.coords import Degrees, Fraction, Meters, Size, Wall
@@ -27,7 +27,19 @@ class Feature(Model):
     width: Meters
     height: Meters
     sill_height: Meters = Field(0, description="Height of the feature's bottom edge above the floor; 0 for doors")
+    swing: Literal["in", "out"] | None = Field(
+        None, description="Doors only: whether the door opens into the room or out of it; a door without it opens in"
+    )
+    hinge: Literal["left", "right"] | None = Field(
+        None, description="Doors only: the hinge side, seen from inside the room facing the door; a door without it is hinged left"
+    )
     confidence: Fraction = 1
+
+    @model_validator(mode="after")
+    def _door_fields_only_on_doors(self) -> Self:
+        if self.type != "door" and (self.swing or self.hinge):
+            raise ValueError("swing and hinge apply to doors only")
+        return self
 
 
 class KeptItem(Model):
@@ -44,7 +56,17 @@ ROOM_SPEC_EXAMPLE: dict[str, JsonValue] = {
     "walls": [{"wall": w, "color": "#f2efe9"} for w in "ABCD"],
     "floor_material": "oak",
     "features": [
-        {"id": "door_1", "type": "door", "wall": "A", "offset": 0.15, "width": 0.8, "height": 2.1, "confidence": 0.95},
+        {
+            "id": "door_1",
+            "type": "door",
+            "wall": "A",
+            "offset": 0.15,
+            "width": 0.8,
+            "height": 2.1,
+            "swing": "in",
+            "hinge": "left",
+            "confidence": 0.95,
+        },
         {
             "id": "window_1",
             "type": "window",

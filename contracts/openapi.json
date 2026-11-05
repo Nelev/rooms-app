@@ -1061,8 +1061,10 @@
                 {
                   "confidence": 0.95,
                   "height": 2.1,
+                  "hinge": "left",
                   "id": "door_1",
                   "offset": 0.15,
+                  "swing": "in",
                   "type": "door",
                   "wall": "A",
                   "width": 0.8
@@ -1555,6 +1557,38 @@
             "title": "Sill Height",
             "description": "Height of the feature's bottom edge above the floor; 0 for doors",
             "default": 0
+          },
+          "swing": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "in",
+                  "out"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Swing",
+            "description": "Doors only: whether the door opens into the room or out of it; a door without it opens in"
+          },
+          "hinge": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "left",
+                  "right"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hinge",
+            "description": "Doors only: the hinge side, seen from inside the room facing the door; a door without it is hinged left"
           },
           "confidence": {
             "type": "number",
@@ -2067,8 +2101,10 @@
               {
                 "confidence": 0.95,
                 "height": 2.1,
+                "hinge": "left",
                 "id": "door_1",
                 "offset": 0.15,
+                "swing": "in",
                 "type": "door",
                 "wall": "A",
                 "width": 0.8
@@ -2492,8 +2528,10 @@
                 {
                   "confidence": 0.95,
                   "height": 2.1,
+                  "hinge": "left",
                   "id": "door_1",
                   "offset": 0.15,
+                  "swing": "in",
                   "type": "door",
                   "wall": "A",
                   "width": 0.8

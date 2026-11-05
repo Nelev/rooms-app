@@ -448,8 +448,10 @@ export interface components {
          *           {
          *             "confidence": 0.95,
          *             "height": 2.1,
+         *             "hinge": "left",
          *             "id": "door_1",
          *             "offset": 0.15,
+         *             "swing": "in",
          *             "type": "door",
          *             "wall": "A",
          *             "width": 0.8
@@ -777,6 +779,16 @@ export interface components {
              */
             sill_height: number;
             /**
+             * Swing
+             * @description Doors only: whether the door opens into the room or out of it; a door without it opens in
+             */
+            swing?: ("in" | "out") | null;
+            /**
+             * Hinge
+             * @description Doors only: the hinge side, seen from inside the room facing the door; a door without it is hinged left
+             */
+            hinge?: ("left" | "right") | null;
+            /**
              * Confidence
              * @default 1
              */
@@ -1018,8 +1030,10 @@ export interface components {
          *         {
          *           "confidence": 0.95,
          *           "height": 2.1,
+         *           "hinge": "left",
          *           "id": "door_1",
          *           "offset": 0.15,
+         *           "swing": "in",
          *           "type": "door",
          *           "wall": "A",
          *           "width": 0.8
@@ -1299,8 +1313,10 @@ export interface components {
          *           {
          *             "confidence": 0.95,
          *             "height": 2.1,
+         *             "hinge": "left",
          *             "id": "door_1",
          *             "offset": 0.15,
+         *             "swing": "in",
          *             "type": "door",
          *             "wall": "A",
          *             "width": 0.8
