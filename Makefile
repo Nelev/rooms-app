@@ -17,7 +17,7 @@ dev: install
 # The same, without Postgres: the API serves the stub graph (fixtures and the fake model, in memory), paced to look live.
 dev-stub: install
 	trap 'kill 0' EXIT; \
-	(cd backend && STUB_PACE=0.3 uv run uvicorn app.main:app --reload $(ENV_FILE)) & \
+	(cd backend && DATABASE_URL= STUB_PACE=0.3 uv run uvicorn app.main:app --reload $(ENV_FILE)) & \
 	(cd frontend && pnpm dev) & \
 	wait
 

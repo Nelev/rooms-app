@@ -5,9 +5,9 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from langgraph.checkpoint.memory import InMemorySaver
-from langgraph.store.memory import InMemoryStore
 
 from app.api import camera, catalog, deps, runs, threads, uploads
+from app.catalog.embed import open_store
 from app.graph.graph import build_graph, serde
 from app.observability.logs import configure_logging
 from app.observability.middleware import RequestId
@@ -17,10 +17,11 @@ configure_logging()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
-    app.state.graph = build_graph(InMemorySaver(serde=serde()), InMemoryStore())  # the stub graph, in memory: B-20 moves it to Postgres
-    deps.THREADS.clear()  # the thread registry lives as long as the checkpoints
-    runs.RUNS.clear()
-    yield
+    async with open_store(os.getenv("DATABASE_URL")) as store:  # the catalog, in Postgres; without DATABASE_URL in memory, empty
+        app.state.graph = build_graph(InMemorySaver(serde=serde()), store)  # the stub graph, checkpoints in memory: B-20 moves them
+        deps.THREADS.clear()  # the thread registry lives as long as the checkpoints
+        runs.RUNS.clear()
+        yield
 
 
 app = FastAPI(title="rooms-app", lifespan=lifespan)
