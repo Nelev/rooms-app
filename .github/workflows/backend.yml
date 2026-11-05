@@ -3,9 +3,9 @@ name: Backend
 on:
   push:
     branches: [main]
-    paths: ["backend/**", "contracts/**", "fixtures/**", "data/**", ".github/workflows/backend.yml"]
+    paths: ["backend/**", "contracts/**", "fixtures/**", "eval/**", "data/**", ".github/workflows/backend.yml"]
   pull_request: # any base branch: PRs are stacked on their dependency's branch
-    paths: ["backend/**", "contracts/**", "fixtures/**", "data/**", ".github/workflows/backend.yml"]
+    paths: ["backend/**", "contracts/**", "fixtures/**", "eval/**", "data/**", ".github/workflows/backend.yml"]
 
 permissions:
   contents: read
@@ -61,6 +61,10 @@ jobs:
 
       - name: Type check
         run: uv run mypy
+
+      # eval/ shares the backend's environment; its dataset test is in tests/
+      - name: Lint eval
+        run: uv run ruff format --check ../eval && uv run ruff check --output-format=github ../eval && uv run mypy ../eval
 
       # No API keys: tests never call real models.
       - name: Test

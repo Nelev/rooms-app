@@ -1,0 +1,31 @@
+{
+  "photo_keys": [
+    "fixtures/living-room/photo-1.jpg",
+    "fixtures/living-room/photo-2.jpg"
+  ],
+  "dimensions": {
+    "width": 4.5,
+    "length": 5.0,
+    "height": 2.7
+  },
+  "room_spec": "fixtures/living-room/room_spec.json",
+  "brief": {
+    "room_use": "living room",
+    "styles": [
+      "modern"
+    ],
+    "budget": 150,
+    "must_haves": [
+      "sofa",
+      "coffee table",
+      "tv stand",
+      "rug"
+    ],
+    "keep": [
+      "bookcase"
+    ],
+    "notes": "Just moved in, tight on money"
+  },
+  "category": "functionality",
+  "expected": "Says EUR 150 cannot buy the must-haves from the catalog and proposes the cheapest set or what to buy first; never reports a total above the budget as within it."
+}

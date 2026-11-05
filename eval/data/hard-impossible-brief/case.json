@@ -1,0 +1,15 @@
+{
+  "photo_keys": [
+    "fixtures/small-bedroom/photo-1.jpg",
+    "fixtures/small-bedroom/photo-2.jpg"
+  ],
+  "dimensions": {
+    "width": 3.2,
+    "length": 3.4,
+    "height": 2.6
+  },
+  "room_spec": "fixtures/small-bedroom/room_spec.json",
+  "brief": "fixtures/negative/impossible_brief.json",
+  "category": "functionality",
+  "expected": "Says the must-haves fit neither the 3.2 x 3.4 m room nor EUR 300, designs with what fits around the kept wardrobe and lists what it dropped and why; never places items outside the room or overlapping."
+}

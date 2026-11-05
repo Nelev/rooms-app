@@ -1,0 +1,30 @@
+{
+  "photo_keys": [
+    "fixtures/living-room/photo-1.jpg",
+    "fixtures/living-room/photo-2.jpg"
+  ],
+  "dimensions": {
+    "width": 4.5,
+    "length": 5.0,
+    "height": 2.7
+  },
+  "room_spec": "fixtures/living-room/room_spec.json",
+  "brief": {
+    "room_use": "living room",
+    "styles": [
+      "japandi"
+    ],
+    "budget": 2200,
+    "must_haves": [
+      "low sofa",
+      "tv stand",
+      "floor cushions"
+    ],
+    "keep": [
+      "bookcase"
+    ],
+    "remove": [],
+    "notes": "Keep the middle of the room open: I do yoga there every morning"
+  },
+  "category": "layout"
+}
