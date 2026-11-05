@@ -3,6 +3,8 @@
 RULE-BASED, no model: the node always runs for real and streams its own step events. It combines
 - the solve node's validation (hard): the B-07 graph issues, the B-04 layout issues and the relations the layout does not keep,
   each an Architect action on its node, except an item above the ceiling, which the Sourcer swaps for a shorter one;
+- the unmet sibling ordering edges (soft, no action): a `right_of` edge between two items that share a parent item and relation,
+  as the B-16 Refiner adds them; the solver only places by each node's first edge, so asking for them would only spend rounds;
 - the solver fallback's report: a dropped must-have is hard, and the Sourcer is asked for a smaller one when it did not fit; a
   dropped nice-to-have or a resized item is soft and only explained (the fallback already tried the smaller catalog items);
 - three soft rules, each an Architect action when it fails:
@@ -14,6 +16,7 @@ Each check is a rule of the Critique; routing.keep_best scores the round (hard i
 """
 
 import time
+from collections import defaultdict
 from typing import Any
 
 from langgraph.config import get_stream_writer
@@ -24,7 +27,7 @@ from app.graph.nodes.solve import local
 from app.graph.routing import keep_best
 from app.graph.state import RunState
 from app.schemas import Critique
-from app.schemas.layout import CritiqueAction, RuleResult
+from app.schemas.layout import CritiqueAction, RuleResult, ValidationIssue
 
 NEAR_LIGHT = 1.0  # m from a desk to the zone in front of a window
 BALANCE = 0.25  # of the room's width and length: how far the furniture's center may be off the room's center
@@ -51,7 +54,16 @@ def judge(state: RunState) -> tuple[Critique, int, int]:
 
     rules: list[RuleResult] = []
     actions: list[CritiqueAction] = []
-    errors = [i for i in state["validation"].issues if i.severity == "error"]
+    parents: defaultdict[str, set[tuple[str, str]]] = defaultdict(set)  # each item's parent items and relations, as refine.py groups
+    for e in graph.edges:
+        if e.relation not in ("facing", "adjacent") and e.target in nodes and nodes[e.target].kind == "object":
+            parents[e.source].add((e.target, e.relation))
+    ordering = {(e.source, e.target) for e in graph.edges if e.relation == "right_of" and parents[e.source] & parents[e.target]}
+    errors: list[ValidationIssue] = []
+    unordered: list[ValidationIssue] = []
+    for i in state["validation"].issues:
+        if i.severity == "error":
+            (unordered if i.code == "relation_unmet" and tuple(i.node_ids) in ordering else errors).append(i)
     rule_of = {code: rule for rule, codes in RULES.items() for code in codes}
     for rule in ("graph_valid", *RULES):
         found = [i for i in errors if rule_of.get(i.code, "graph_valid") == rule]
@@ -96,6 +108,8 @@ def judge(state: RunState) -> tuple[Critique, int, int]:
         if max(abs(off_x), abs(off_y)) > BALANCE:
             wall = ("B" if off_x > 0 else "D") if abs(off_x) >= abs(off_y) else ("C" if off_y > 0 else "A")
             soft_rules.append(("visual_balance", None, f"the furniture crowds wall {wall}", "spread it more evenly over the room"))
+    rules.append(RuleResult(rule="siblings_ordered", passed=not unordered, message="; ".join(i.message for i in unordered)))
+    soft += bool(unordered)
     for rule in ("desk_near_light", "bed_not_facing_door", "visual_balance"):
         failed = [r for r in soft_rules if r[0] == rule]
         rules.append(RuleResult(rule=rule, passed=not failed, message="; ".join(r[2] for r in failed)))
