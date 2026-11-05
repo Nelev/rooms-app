@@ -77,3 +77,9 @@ jobs:
       # No API keys: tests never call real models.
       - name: Test
         run: uv run pytest -q
+
+      # The eval runner from its command, offline (fake models, fixture replay), on 3 cases
+      - name: Eval smoke
+        run: |
+          PYTHONPATH=..:../eval uv run python -m eval run --variant baseline --repeats 1 --limit 3
+          PYTHONPATH=..:../eval uv run python -m eval run --variant full --repeats 1 --limit 3

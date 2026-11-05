@@ -33,3 +33,9 @@ lint:
 gen:
 	cd backend && uv run python -m app.schemas.export && uv run python -m app.api.export
 	cd frontend && pnpm gen
+
+# The eval of a pipeline variant (baseline, full, no_critic...): eval/results/<variant>-<time>/report.md; offline (fake models) without
+# OPENROUTER_API_KEY. `make eval VARIANT=full`
+.PHONY: eval
+eval:
+	cd backend && PYTHONPATH=..:../eval uv run $(ENV_FILE) python -m eval run --variant $(or $(VARIANT),baseline) --repeats 3
