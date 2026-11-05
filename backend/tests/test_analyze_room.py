@@ -139,6 +139,8 @@ def test_image_urls_reads_fixture_photos_only() -> None:
             image_urls([key])
     with pytest.raises(ValueError, match="not an image"):
         image_urls(["backend/pyproject.toml"])
+    with pytest.raises(ValueError, match="photo fixtures/nope.jpg could not be read"):
+        image_urls(["fixtures/nope.jpg"])
 
 
 @pytest.mark.skipif(not os.environ.get("OPENROUTER_API_KEY"), reason="needs OPENROUTER_API_KEY: calls the real vision model")

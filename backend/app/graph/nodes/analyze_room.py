@@ -17,6 +17,7 @@ from functools import reduce
 from pathlib import Path
 from typing import Any, Literal, get_args
 
+from botocore.exceptions import ClientError
 from langchain_core.runnables import RunnableConfig
 from langchain_core.runnables.config import get_executor_for_config
 from langgraph.config import get_stream_writer
@@ -186,23 +187,27 @@ def analyze(
         features=features,
         warnings=list(dict.fromkeys([*warnings, *(n for r in readings for n in r.notes)])),  # deduplicated, in order
     )
-    return room, reduce(llm._add, (usage for _, usage in replies))
+    return room, reduce(llm.add_usage, (usage for _, usage in replies))
 
 
 def image_urls(keys: Sequence[str]) -> list[str]:
-    """Photos as data: URLs, read from object storage when it is configured, else from fixtures/ (the fixtures' photo keys)."""
+    """Photos as data: URLs, read from object storage when it is configured, else from fixtures/ (the fixtures' photo keys).
+
+    A key that is not an image, outside fixtures/ without storage, or unreadable raises a ValueError naming it; the run's error event
+    carries it.
+    """
     storage = Storage.from_env() if os.environ.get("STORAGE_ENDPOINT_URL") else None
     urls = []
     for key in keys:
         mimetype = mimetypes.guess_type(key)[0] or ""
         if not mimetype.startswith("image/"):
             raise ValueError(f"photo key is not an image: {key}")
-        if storage:
-            data = storage.get(key)
-        elif (path := (REPO / key).resolve()).is_relative_to(PHOTOS):
-            data = path.read_bytes()
-        else:
-            raise ValueError(f"photo key outside fixtures/: {key}")
+        if not storage and not (path := (REPO / key).resolve()).is_relative_to(PHOTOS):
+            raise ValueError(f"photo key outside fixtures/ and object storage is not configured (STORAGE_ENDPOINT_URL): {key}")
+        try:
+            data = storage.get(key) if storage else path.read_bytes()
+        except (OSError, ClientError) as e:
+            raise ValueError(f"photo {key} could not be read: {e}") from e
         urls.append(f"data:{mimetype};base64,{base64.b64encode(data).decode()}")
     return urls
 

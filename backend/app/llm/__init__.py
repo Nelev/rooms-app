@@ -68,7 +68,8 @@ def call_usage(message: AIMessage) -> Usage:
     return {"cost": cost, "input_tokens": tokens.get("input_tokens", 0), "output_tokens": tokens.get("output_tokens", 0)}
 
 
-def _add(a: Usage, b: Usage) -> Usage:
+def add_usage(a: Usage, b: Usage) -> Usage:
+    """The usage of two calls together."""
     return {
         "cost": a["cost"] + b["cost"],
         "input_tokens": a["input_tokens"] + b["input_tokens"],
@@ -96,7 +97,7 @@ def ask_structured[T: BaseModel](schema: type[T], prompt: str, *, role: Role, im
     for _ in range(2):
         out = cast(dict[str, Any], llm.invoke(messages))
         raw: AIMessage = out["raw"]
-        usage = _add(usage, call_usage(raw))
+        usage = add_usage(usage, call_usage(raw))
         if raw.response_metadata.get("finish_reason") == "length":
             raise TruncatedReply(f"the {role} model's reply hit max_tokens ({ROLES[role].max_tokens})")
         if out["parsed"] is not None:
