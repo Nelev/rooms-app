@@ -1,0 +1,448 @@
+[
+  {
+    "id": "black-bed-140",
+    "name": "Black steel double bed",
+    "category": "bed",
+    "size": {
+      "width": 1.46,
+      "depth": 2.06,
+      "height": 0.95
+    },
+    "price": 309.0,
+    "style_tags": [
+      "industrial",
+      "modern"
+    ],
+    "color": "black",
+    "front": "+z",
+    "description": "Slatted base for a 140 x 200 cm mattress"
+  },
+  {
+    "id": "black-bed-160",
+    "name": "Black steel queen bed",
+    "category": "bed",
+    "size": {
+      "width": 1.66,
+      "depth": 2.08,
+      "height": 1.0
+    },
+    "price": 379.0,
+    "style_tags": [
+      "industrial",
+      "modern"
+    ],
+    "color": "black",
+    "front": "+z",
+    "description": "Slatted base for a 160 x 200 cm mattress"
+  },
+  {
+    "id": "black-bed-180",
+    "name": "Black steel king bed",
+    "category": "bed",
+    "size": {
+      "width": 1.86,
+      "depth": 2.08,
+      "height": 1.0
+    },
+    "price": 459.0,
+    "style_tags": [
+      "industrial",
+      "modern"
+    ],
+    "color": "black",
+    "front": "+z",
+    "description": "Slatted base for a 180 x 200 cm mattress"
+  },
+  {
+    "id": "black-bed-90",
+    "name": "Black steel single bed",
+    "category": "bed",
+    "size": {
+      "width": 0.97,
+      "depth": 2.06,
+      "height": 0.9
+    },
+    "price": 189.0,
+    "style_tags": [
+      "industrial",
+      "modern"
+    ],
+    "color": "black",
+    "front": "+z",
+    "description": "Slatted base for a 90 x 200 cm mattress"
+  },
+  {
+    "id": "grey-bed-140",
+    "name": "Grey fabric double bed",
+    "category": "bed",
+    "size": {
+      "width": 1.46,
+      "depth": 2.06,
+      "height": 0.95
+    },
+    "price": 329.0,
+    "style_tags": [
+      "modern",
+      "scandinavian"
+    ],
+    "color": "grey",
+    "front": "+z",
+    "description": "Slatted base for a 140 x 200 cm mattress"
+  },
+  {
+    "id": "grey-bed-160",
+    "name": "Grey fabric queen bed",
+    "category": "bed",
+    "size": {
+      "width": 1.66,
+      "depth": 2.08,
+      "height": 1.0
+    },
+    "price": 399.0,
+    "style_tags": [
+      "modern",
+      "scandinavian"
+    ],
+    "color": "grey",
+    "front": "+z",
+    "description": "Slatted base for a 160 x 200 cm mattress"
+  },
+  {
+    "id": "grey-bed-180",
+    "name": "Grey fabric king bed",
+    "category": "bed",
+    "size": {
+      "width": 1.86,
+      "depth": 2.08,
+      "height": 1.0
+    },
+    "price": 479.0,
+    "style_tags": [
+      "modern",
+      "scandinavian"
+    ],
+    "color": "grey",
+    "front": "+z",
+    "description": "Slatted base for a 180 x 200 cm mattress"
+  },
+  {
+    "id": "grey-bed-90",
+    "name": "Grey fabric single bed",
+    "category": "bed",
+    "size": {
+      "width": 0.97,
+      "depth": 2.06,
+      "height": 0.9
+    },
+    "price": 199.0,
+    "style_tags": [
+      "modern",
+      "scandinavian"
+    ],
+    "color": "grey",
+    "front": "+z",
+    "description": "Slatted base for a 90 x 200 cm mattress"
+  },
+  {
+    "id": "oak-bed-140",
+    "name": "Oak double bed",
+    "category": "bed",
+    "size": {
+      "width": 1.46,
+      "depth": 2.06,
+      "height": 0.95
+    },
+    "price": 329.0,
+    "style_tags": [
+      "scandinavian",
+      "japandi"
+    ],
+    "color": "oak",
+    "front": "+z",
+    "description": "Slatted base for a 140 x 200 cm mattress"
+  },
+  {
+    "id": "oak-bed-160",
+    "name": "Oak queen bed",
+    "category": "bed",
+    "size": {
+      "width": 1.66,
+      "depth": 2.08,
+      "height": 1.0
+    },
+    "price": 399.0,
+    "style_tags": [
+      "scandinavian",
+      "japandi"
+    ],
+    "color": "oak",
+    "front": "+z",
+    "description": "Slatted base for a 160 x 200 cm mattress"
+  },
+  {
+    "id": "oak-bed-180",
+    "name": "Oak king bed",
+    "category": "bed",
+    "size": {
+      "width": 1.86,
+      "depth": 2.08,
+      "height": 1.0
+    },
+    "price": 479.0,
+    "style_tags": [
+      "scandinavian",
+      "japandi"
+    ],
+    "color": "oak",
+    "front": "+z",
+    "description": "Slatted base for a 180 x 200 cm mattress"
+  },
+  {
+    "id": "oak-bed-90",
+    "name": "Oak single bed",
+    "category": "bed",
+    "size": {
+      "width": 0.97,
+      "depth": 2.06,
+      "height": 0.9
+    },
+    "price": 199.0,
+    "style_tags": [
+      "scandinavian",
+      "japandi"
+    ],
+    "color": "oak",
+    "front": "+z",
+    "description": "Slatted base for a 90 x 200 cm mattress"
+  },
+  {
+    "id": "oak-double-bed-140",
+    "name": "Oak double bed 140",
+    "category": "bed",
+    "size": {
+      "width": 1.4,
+      "depth": 2.0,
+      "height": 0.9
+    },
+    "price": 449.0,
+    "style_tags": [
+      "scandinavian"
+    ],
+    "color": "oak",
+    "front": "+z",
+    "license": "CC0-1.0",
+    "description": "Solid oak frame"
+  },
+  {
+    "id": "rattan-bed-140",
+    "name": "Rattan double bed",
+    "category": "bed",
+    "size": {
+      "width": 1.46,
+      "depth": 2.06,
+      "height": 0.95
+    },
+    "price": 349.0,
+    "style_tags": [
+      "boho"
+    ],
+    "color": "natural",
+    "front": "+z",
+    "description": "Slatted base for a 140 x 200 cm mattress"
+  },
+  {
+    "id": "rattan-bed-160",
+    "name": "Rattan queen bed",
+    "category": "bed",
+    "size": {
+      "width": 1.66,
+      "depth": 2.08,
+      "height": 1.0
+    },
+    "price": 419.0,
+    "style_tags": [
+      "boho"
+    ],
+    "color": "natural",
+    "front": "+z",
+    "description": "Slatted base for a 160 x 200 cm mattress"
+  },
+  {
+    "id": "rattan-bed-180",
+    "name": "Rattan king bed",
+    "category": "bed",
+    "size": {
+      "width": 1.86,
+      "depth": 2.08,
+      "height": 1.0
+    },
+    "price": 499.0,
+    "style_tags": [
+      "boho"
+    ],
+    "color": "natural",
+    "front": "+z",
+    "description": "Slatted base for a 180 x 200 cm mattress"
+  },
+  {
+    "id": "rattan-bed-90",
+    "name": "Rattan single bed",
+    "category": "bed",
+    "size": {
+      "width": 0.97,
+      "depth": 2.06,
+      "height": 0.9
+    },
+    "price": 209.0,
+    "style_tags": [
+      "boho"
+    ],
+    "color": "natural",
+    "front": "+z",
+    "description": "Slatted base for a 90 x 200 cm mattress"
+  },
+  {
+    "id": "walnut-bed-140",
+    "name": "Walnut double bed",
+    "category": "bed",
+    "size": {
+      "width": 1.46,
+      "depth": 2.06,
+      "height": 0.95
+    },
+    "price": 439.0,
+    "style_tags": [
+      "mid-century"
+    ],
+    "color": "walnut",
+    "front": "+z",
+    "description": "Slatted base for a 140 x 200 cm mattress"
+  },
+  {
+    "id": "walnut-bed-160",
+    "name": "Walnut queen bed",
+    "category": "bed",
+    "size": {
+      "width": 1.66,
+      "depth": 2.08,
+      "height": 1.0
+    },
+    "price": 539.0,
+    "style_tags": [
+      "mid-century"
+    ],
+    "color": "walnut",
+    "front": "+z",
+    "description": "Slatted base for a 160 x 200 cm mattress"
+  },
+  {
+    "id": "walnut-bed-180",
+    "name": "Walnut king bed",
+    "category": "bed",
+    "size": {
+      "width": 1.86,
+      "depth": 2.08,
+      "height": 1.0
+    },
+    "price": 649.0,
+    "style_tags": [
+      "mid-century"
+    ],
+    "color": "walnut",
+    "front": "+z",
+    "description": "Slatted base for a 180 x 200 cm mattress"
+  },
+  {
+    "id": "walnut-bed-90",
+    "name": "Walnut single bed",
+    "category": "bed",
+    "size": {
+      "width": 0.97,
+      "depth": 2.06,
+      "height": 0.9
+    },
+    "price": 269.0,
+    "style_tags": [
+      "mid-century"
+    ],
+    "color": "walnut",
+    "front": "+z",
+    "description": "Slatted base for a 90 x 200 cm mattress"
+  },
+  {
+    "id": "white-bed-140",
+    "name": "White lacquered double bed",
+    "category": "bed",
+    "size": {
+      "width": 1.46,
+      "depth": 2.06,
+      "height": 0.95
+    },
+    "price": 279.0,
+    "style_tags": [
+      "modern",
+      "minimalist",
+      "scandinavian"
+    ],
+    "color": "white",
+    "front": "+z",
+    "description": "Slatted base for a 140 x 200 cm mattress"
+  },
+  {
+    "id": "white-bed-160",
+    "name": "White lacquered queen bed",
+    "category": "bed",
+    "size": {
+      "width": 1.66,
+      "depth": 2.08,
+      "height": 1.0
+    },
+    "price": 339.0,
+    "style_tags": [
+      "modern",
+      "minimalist",
+      "scandinavian"
+    ],
+    "color": "white",
+    "front": "+z",
+    "description": "Slatted base for a 160 x 200 cm mattress"
+  },
+  {
+    "id": "white-bed-180",
+    "name": "White lacquered king bed",
+    "category": "bed",
+    "size": {
+      "width": 1.86,
+      "depth": 2.08,
+      "height": 1.0
+    },
+    "price": 409.0,
+    "style_tags": [
+      "modern",
+      "minimalist",
+      "scandinavian"
+    ],
+    "color": "white",
+    "front": "+z",
+    "description": "Slatted base for a 180 x 200 cm mattress"
+  },
+  {
+    "id": "white-bed-90",
+    "name": "White lacquered single bed",
+    "category": "bed",
+    "size": {
+      "width": 0.97,
+      "depth": 2.06,
+      "height": 0.9
+    },
+    "price": 169.0,
+    "style_tags": [
+      "modern",
+      "minimalist",
+      "scandinavian"
+    ],
+    "color": "white",
+    "front": "+z",
+    "description": "Slatted base for a 90 x 200 cm mattress"
+  }
+]

@@ -1,0 +1,290 @@
+[
+  {
+    "id": "black-arc-lamp",
+    "name": "Black steel arc lamp",
+    "category": "lamp",
+    "size": {
+      "width": 1.2,
+      "depth": 0.35,
+      "height": 1.9
+    },
+    "price": 169.0,
+    "style_tags": [
+      "industrial",
+      "modern"
+    ],
+    "color": "black",
+    "front": "+z",
+    "description": "Arc floor lamp on a marble base"
+  },
+  {
+    "id": "black-floor-lamp",
+    "name": "Black steel floor lamp",
+    "category": "lamp",
+    "size": {
+      "width": 0.3,
+      "depth": 0.3,
+      "height": 1.55
+    },
+    "price": 69.0,
+    "style_tags": [
+      "industrial",
+      "modern"
+    ],
+    "color": "black",
+    "front": "+z",
+    "description": "Floor lamp with a fabric shade"
+  },
+  {
+    "id": "black-table-lamp",
+    "name": "Black steel table lamp",
+    "category": "lamp",
+    "size": {
+      "width": 0.25,
+      "depth": 0.25,
+      "height": 0.45
+    },
+    "price": 39.0,
+    "style_tags": [
+      "industrial",
+      "modern"
+    ],
+    "color": "black",
+    "front": "+z",
+    "description": "Table lamp, E27 socket"
+  },
+  {
+    "id": "brass-arc-lamp",
+    "name": "Brushed brass arc lamp",
+    "category": "lamp",
+    "size": {
+      "width": 1.2,
+      "depth": 0.35,
+      "height": 1.9
+    },
+    "price": 209.0,
+    "style_tags": [
+      "mid-century",
+      "traditional"
+    ],
+    "color": "brass",
+    "front": "+z",
+    "description": "Arc floor lamp on a marble base"
+  },
+  {
+    "id": "brass-floor-lamp",
+    "name": "Brass floor lamp",
+    "category": "lamp",
+    "size": {
+      "width": 0.35,
+      "depth": 0.35,
+      "height": 1.5
+    },
+    "price": 129.0,
+    "style_tags": [
+      "mid-century"
+    ],
+    "color": "brass",
+    "front": "+z",
+    "license": "CC0-1.0",
+    "description": "Arc lamp"
+  },
+  {
+    "id": "brass-table-lamp",
+    "name": "Brushed brass table lamp",
+    "category": "lamp",
+    "size": {
+      "width": 0.25,
+      "depth": 0.25,
+      "height": 0.45
+    },
+    "price": 49.0,
+    "style_tags": [
+      "mid-century",
+      "traditional"
+    ],
+    "color": "brass",
+    "front": "+z",
+    "description": "Table lamp, E27 socket"
+  },
+  {
+    "id": "oak-arc-lamp",
+    "name": "Oak arc lamp",
+    "category": "lamp",
+    "size": {
+      "width": 1.2,
+      "depth": 0.35,
+      "height": 1.9
+    },
+    "price": 179.0,
+    "style_tags": [
+      "scandinavian",
+      "japandi"
+    ],
+    "color": "oak",
+    "front": "+z",
+    "description": "Arc floor lamp on a marble base"
+  },
+  {
+    "id": "oak-floor-lamp",
+    "name": "Oak floor lamp",
+    "category": "lamp",
+    "size": {
+      "width": 0.3,
+      "depth": 0.3,
+      "height": 1.55
+    },
+    "price": 69.0,
+    "style_tags": [
+      "scandinavian",
+      "japandi"
+    ],
+    "color": "oak",
+    "front": "+z",
+    "description": "Floor lamp with a fabric shade"
+  },
+  {
+    "id": "oak-table-lamp",
+    "name": "Oak table lamp",
+    "category": "lamp",
+    "size": {
+      "width": 0.25,
+      "depth": 0.25,
+      "height": 0.45
+    },
+    "price": 39.0,
+    "style_tags": [
+      "scandinavian",
+      "japandi"
+    ],
+    "color": "oak",
+    "front": "+z",
+    "description": "Table lamp, E27 socket"
+  },
+  {
+    "id": "rattan-arc-lamp",
+    "name": "Rattan arc lamp",
+    "category": "lamp",
+    "size": {
+      "width": 1.2,
+      "depth": 0.35,
+      "height": 1.9
+    },
+    "price": 189.0,
+    "style_tags": [
+      "boho"
+    ],
+    "color": "natural",
+    "front": "+z",
+    "description": "Arc floor lamp on a marble base"
+  },
+  {
+    "id": "rattan-floor-lamp",
+    "name": "Rattan floor lamp",
+    "category": "lamp",
+    "size": {
+      "width": 0.3,
+      "depth": 0.3,
+      "height": 1.55
+    },
+    "price": 69.0,
+    "style_tags": [
+      "boho"
+    ],
+    "color": "natural",
+    "front": "+z",
+    "description": "Floor lamp with a fabric shade"
+  },
+  {
+    "id": "rattan-table-lamp",
+    "name": "Rattan table lamp",
+    "category": "lamp",
+    "size": {
+      "width": 0.25,
+      "depth": 0.25,
+      "height": 0.45
+    },
+    "price": 39.0,
+    "style_tags": [
+      "boho"
+    ],
+    "color": "natural",
+    "front": "+z",
+    "description": "Table lamp, E27 socket"
+  },
+  {
+    "id": "steel-floor-lamp",
+    "name": "Steel floor lamp",
+    "category": "lamp",
+    "size": {
+      "width": 0.3,
+      "depth": 0.3,
+      "height": 1.6
+    },
+    "price": 69.0,
+    "style_tags": [
+      "modern"
+    ],
+    "color": "black",
+    "front": "+z",
+    "license": "CC0-1.0",
+    "description": "Dimmable"
+  },
+  {
+    "id": "white-arc-lamp",
+    "name": "White lacquered arc lamp",
+    "category": "lamp",
+    "size": {
+      "width": 1.2,
+      "depth": 0.35,
+      "height": 1.9
+    },
+    "price": 149.0,
+    "style_tags": [
+      "modern",
+      "minimalist",
+      "scandinavian"
+    ],
+    "color": "white",
+    "front": "+z",
+    "description": "Arc floor lamp on a marble base"
+  },
+  {
+    "id": "white-floor-lamp",
+    "name": "White lacquered floor lamp",
+    "category": "lamp",
+    "size": {
+      "width": 0.3,
+      "depth": 0.3,
+      "height": 1.55
+    },
+    "price": 59.0,
+    "style_tags": [
+      "modern",
+      "minimalist",
+      "scandinavian"
+    ],
+    "color": "white",
+    "front": "+z",
+    "description": "Floor lamp with a fabric shade"
+  },
+  {
+    "id": "white-table-lamp",
+    "name": "White lacquered table lamp",
+    "category": "lamp",
+    "size": {
+      "width": 0.25,
+      "depth": 0.25,
+      "height": 0.45
+    },
+    "price": 29.0,
+    "style_tags": [
+      "modern",
+      "minimalist",
+      "scandinavian"
+    ],
+    "color": "white",
+    "front": "+z",
+    "description": "Table lamp, E27 socket"
+  }
+]

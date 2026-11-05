@@ -3,9 +3,9 @@ name: Backend
 on:
   push:
     branches: [main]
-    paths: ["backend/**", "contracts/**", "fixtures/**", ".github/workflows/backend.yml"]
+    paths: ["backend/**", "contracts/**", "fixtures/**", "data/**", ".github/workflows/backend.yml"]
   pull_request: # any base branch: PRs are stacked on their dependency's branch
-    paths: ["backend/**", "contracts/**", "fixtures/**", ".github/workflows/backend.yml"]
+    paths: ["backend/**", "contracts/**", "fixtures/**", "data/**", ".github/workflows/backend.yml"]
 
 permissions:
   contents: read

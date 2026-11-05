@@ -1,0 +1,275 @@
+[
+  {
+    "id": "beige-armchair",
+    "name": "Beige linen armchair",
+    "category": "armchair",
+    "size": {
+      "width": 0.78,
+      "depth": 0.8,
+      "height": 0.8
+    },
+    "price": 359.0,
+    "style_tags": [
+      "japandi",
+      "minimalist"
+    ],
+    "color": "beige",
+    "front": "+z",
+    "description": "Upholstered armchair"
+  },
+  {
+    "id": "beige-lounge-chair",
+    "name": "Beige linen lounge chair",
+    "category": "armchair",
+    "size": {
+      "width": 0.85,
+      "depth": 0.9,
+      "height": 0.75
+    },
+    "price": 489.0,
+    "style_tags": [
+      "japandi",
+      "minimalist"
+    ],
+    "color": "beige",
+    "front": "+z",
+    "description": "Low lounge chair"
+  },
+  {
+    "id": "cognac-armchair",
+    "name": "Cognac leather armchair",
+    "category": "armchair",
+    "size": {
+      "width": 0.78,
+      "depth": 0.8,
+      "height": 0.8
+    },
+    "price": 529.0,
+    "style_tags": [
+      "mid-century",
+      "industrial"
+    ],
+    "color": "cognac",
+    "front": "+z",
+    "description": "Upholstered armchair"
+  },
+  {
+    "id": "cognac-lounge-chair",
+    "name": "Cognac leather lounge chair",
+    "category": "armchair",
+    "size": {
+      "width": 0.85,
+      "depth": 0.9,
+      "height": 0.75
+    },
+    "price": 719.0,
+    "style_tags": [
+      "mid-century",
+      "industrial"
+    ],
+    "color": "cognac",
+    "front": "+z",
+    "description": "Low lounge chair"
+  },
+  {
+    "id": "cream-armchair",
+    "name": "Cream boucle armchair",
+    "category": "armchair",
+    "size": {
+      "width": 0.78,
+      "depth": 0.8,
+      "height": 0.8
+    },
+    "price": 409.0,
+    "style_tags": [
+      "japandi",
+      "modern"
+    ],
+    "color": "cream",
+    "front": "+z",
+    "description": "Upholstered armchair"
+  },
+  {
+    "id": "cream-lounge-chair",
+    "name": "Cream boucle lounge chair",
+    "category": "armchair",
+    "size": {
+      "width": 0.85,
+      "depth": 0.9,
+      "height": 0.75
+    },
+    "price": 559.0,
+    "style_tags": [
+      "japandi",
+      "modern"
+    ],
+    "color": "cream",
+    "front": "+z",
+    "description": "Low lounge chair"
+  },
+  {
+    "id": "damask-lounge-chair",
+    "name": "Damask lounge chair",
+    "category": "armchair",
+    "size": {
+      "width": 0.83,
+      "depth": 0.57,
+      "height": 0.69
+    },
+    "price": 329.0,
+    "style_tags": [
+      "traditional"
+    ],
+    "color": "purple",
+    "front": "+z",
+    "glb_url": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/8f492390ddc7a2ae221a1369ef560589cf8c70fb/Models/ChairDamaskPurplegold/glTF-Binary/ChairDamaskPurplegold.glb",
+    "license": "CC-BY-4.0",
+    "description": "Upholstered damask lounge chair. Model: ChairDamaskPurplegold by Eric Chadwick, (c) Wayfair, CC-BY-4.0"
+  },
+  {
+    "id": "green-armchair",
+    "name": "Green velvet armchair",
+    "category": "armchair",
+    "size": {
+      "width": 0.78,
+      "depth": 0.8,
+      "height": 0.8
+    },
+    "price": 389.0,
+    "style_tags": [
+      "mid-century",
+      "boho"
+    ],
+    "color": "green",
+    "front": "+z",
+    "description": "Upholstered armchair"
+  },
+  {
+    "id": "green-lounge-chair",
+    "name": "Green velvet lounge chair",
+    "category": "armchair",
+    "size": {
+      "width": 0.85,
+      "depth": 0.9,
+      "height": 0.75
+    },
+    "price": 539.0,
+    "style_tags": [
+      "mid-century",
+      "boho"
+    ],
+    "color": "green",
+    "front": "+z",
+    "description": "Low lounge chair"
+  },
+  {
+    "id": "grey-armchair",
+    "name": "Grey fabric armchair",
+    "category": "armchair",
+    "size": {
+      "width": 0.78,
+      "depth": 0.8,
+      "height": 0.8
+    },
+    "price": 329.0,
+    "style_tags": [
+      "modern",
+      "scandinavian"
+    ],
+    "color": "grey",
+    "front": "+z",
+    "description": "Upholstered armchair"
+  },
+  {
+    "id": "grey-lounge-chair",
+    "name": "Grey fabric lounge chair",
+    "category": "armchair",
+    "size": {
+      "width": 0.85,
+      "depth": 0.9,
+      "height": 0.75
+    },
+    "price": 449.0,
+    "style_tags": [
+      "modern",
+      "scandinavian"
+    ],
+    "color": "grey",
+    "front": "+z",
+    "description": "Low lounge chair"
+  },
+  {
+    "id": "leather-armchair",
+    "name": "Leather armchair",
+    "category": "armchair",
+    "size": {
+      "width": 0.8,
+      "depth": 0.8,
+      "height": 0.8
+    },
+    "price": 449.0,
+    "style_tags": [
+      "mid-century"
+    ],
+    "color": "cognac",
+    "front": "+z",
+    "license": "CC0-1.0",
+    "description": "Lounge chair"
+  },
+  {
+    "id": "navy-armchair",
+    "name": "Navy velvet armchair",
+    "category": "armchair",
+    "size": {
+      "width": 0.78,
+      "depth": 0.8,
+      "height": 0.8
+    },
+    "price": 379.0,
+    "style_tags": [
+      "traditional",
+      "modern"
+    ],
+    "color": "navy",
+    "front": "+z",
+    "description": "Upholstered armchair"
+  },
+  {
+    "id": "navy-lounge-chair",
+    "name": "Navy velvet lounge chair",
+    "category": "armchair",
+    "size": {
+      "width": 0.85,
+      "depth": 0.9,
+      "height": 0.75
+    },
+    "price": 519.0,
+    "style_tags": [
+      "traditional",
+      "modern"
+    ],
+    "color": "navy",
+    "front": "+z",
+    "description": "Low lounge chair"
+  },
+  {
+    "id": "sheen-lounge-chair",
+    "name": "Low velvet lounge chair",
+    "category": "armchair",
+    "size": {
+      "width": 0.83,
+      "depth": 0.57,
+      "height": 0.69
+    },
+    "price": 279.0,
+    "style_tags": [
+      "modern",
+      "mid-century"
+    ],
+    "color": "mint",
+    "front": "+z",
+    "glb_url": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/8f492390ddc7a2ae221a1369ef560589cf8c70fb/Models/SheenChair/glTF-Binary/SheenChair.glb",
+    "license": "CC0-1.0",
+    "description": "Low velvet lounge chair on a metal base. Model: SheenChair by Eric Chadwick / Wayfair, CC0-1.0"
+  }
+]
