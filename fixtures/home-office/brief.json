@@ -1,0 +1,19 @@
+{
+  "room_use": "home office",
+  "styles": [
+    "modern"
+  ],
+  "budget": 1500,
+  "must_haves": [
+    "desk",
+    "ergonomic chair",
+    "bookshelf"
+  ],
+  "keep": [
+    "filing cabinet"
+  ],
+  "remove": [
+    "old sofa"
+  ],
+  "notes": "Video calls every day, so good light on my face"
+}

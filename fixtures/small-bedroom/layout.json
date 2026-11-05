@@ -1,0 +1,52 @@
+{
+  "placements": [
+    {
+      "node_id": "bed",
+      "item_id": "oak-double-bed-140",
+      "x": 2.2,
+      "y": 2.25,
+      "rotation": 90,
+      "size": {
+        "width": 1.4,
+        "depth": 2.0,
+        "height": 0.9
+      }
+    },
+    {
+      "node_id": "nightstand",
+      "item_id": "oak-nightstand",
+      "x": 3.025,
+      "y": 3.2,
+      "rotation": 90,
+      "size": {
+        "width": 0.4,
+        "depth": 0.35,
+        "height": 0.5
+      }
+    },
+    {
+      "node_id": "desk",
+      "item_id": "birch-desk-100",
+      "x": 0.25,
+      "y": 2.7,
+      "rotation": 270,
+      "size": {
+        "width": 1.0,
+        "depth": 0.5,
+        "height": 0.75
+      }
+    },
+    {
+      "node_id": "desk_chair",
+      "item_id": "grey-desk-chair",
+      "x": 0.8,
+      "y": 2.7,
+      "rotation": 90,
+      "size": {
+        "width": 0.45,
+        "depth": 0.45,
+        "height": 0.85
+      }
+    }
+  ]
+}

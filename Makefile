@@ -14,8 +14,12 @@ dev: install
 	(cd frontend && pnpm dev) & \
 	wait
 
-dev-stub:
-	@echo "TODO(S-03): run 'make dev' with the stub graph and the fake model" && exit 1
+# The same, without Postgres: the API serves the stub graph (fixtures and the fake model, in memory), paced to look live.
+dev-stub: install
+	trap 'kill 0' EXIT; \
+	(cd backend && STUB_PACE=0.3 uv run uvicorn app.main:app --reload $(ENV_FILE)) & \
+	(cd frontend && pnpm dev) & \
+	wait
 
 test:
 	cd backend && uv run pytest -q
@@ -25,5 +29,7 @@ lint:
 	cd backend && uv run ruff format --check . && uv run ruff check . && uv run mypy
 	cd frontend && pnpm check && pnpm typecheck
 
+# JSON Schema of the domain models in contracts/schemas/, the API's contracts/openapi.json and its TypeScript types
 gen:
-	@echo "TODO(S-03): generate frontend/src/lib/api/generated/ from the backend's OpenAPI schema" && exit 1
+	cd backend && uv run python -m app.schemas.export && uv run python -m app.api.export
+	cd frontend && pnpm gen

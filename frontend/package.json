@@ -11,7 +11,8 @@
     "lint": "biome check --formatter-enabled=false .",
     "check": "biome ci .",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "gen": "openapi-typescript ../contracts/openapi.json -o src/lib/api/generated/schema.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
@@ -31,6 +32,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "babel-plugin-react-compiler": "1.0.0",
+    "openapi-typescript": "^7.13.0",
     "postcss": "^8.5.32",
     "tailwindcss": "^4",
     "typescript": "^5",

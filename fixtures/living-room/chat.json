@@ -1,0 +1,144 @@
+[
+  {
+    "input": {
+      "chat_message": "Turn the armchair towards the TV and remove the floor lamp"
+    },
+    "edits": [
+      {
+        "op": "rotate",
+        "node_id": "armchair",
+        "rotation": 180
+      },
+      {
+        "op": "remove",
+        "node_id": "floor_lamp"
+      }
+    ],
+    "events": [
+      {
+        "type": "step",
+        "node": "route_input",
+        "status": "started"
+      },
+      {
+        "type": "step",
+        "node": "route_input",
+        "status": "done",
+        "summary": "chat message",
+        "duration_s": 0.01
+      },
+      {
+        "type": "step",
+        "node": "chat_edit",
+        "status": "started"
+      },
+      {
+        "type": "tool",
+        "tool": "rotate_item",
+        "summary": "rotated armchair",
+        "ok": true
+      },
+      {
+        "type": "tool",
+        "tool": "remove_item",
+        "summary": "removed floor lamp",
+        "ok": true
+      },
+      {
+        "type": "step",
+        "node": "chat_edit",
+        "status": "done",
+        "summary": "edit applied",
+        "duration_s": 2.1,
+        "cost": 0.002
+      },
+      {
+        "type": "step",
+        "node": "solve",
+        "status": "started"
+      },
+      {
+        "type": "step",
+        "node": "solve",
+        "status": "done",
+        "summary": "re-validated",
+        "duration_s": 0.3
+      },
+      {
+        "type": "step",
+        "node": "present",
+        "status": "started"
+      },
+      {
+        "type": "step",
+        "node": "present",
+        "status": "done",
+        "summary": "updated design",
+        "duration_s": 0.8
+      }
+    ],
+    "output": {
+      "layout": {
+        "placements": [
+          {
+            "node_id": "sofa",
+            "item_id": "teal-sofa-3",
+            "x": 2.25,
+            "y": 4.55,
+            "rotation": 180,
+            "size": {
+              "width": 2.2,
+              "depth": 0.9,
+              "height": 0.85
+            }
+          },
+          {
+            "node_id": "coffee_table",
+            "item_id": "walnut-coffee-table",
+            "x": 2.25,
+            "y": 3.4,
+            "rotation": 0,
+            "size": {
+              "width": 1.1,
+              "depth": 0.6,
+              "height": 0.45
+            }
+          },
+          {
+            "node_id": "tv_stand",
+            "item_id": "walnut-tv-stand",
+            "x": 2.25,
+            "y": 0.2,
+            "rotation": 0,
+            "size": {
+              "width": 1.6,
+              "depth": 0.4,
+              "height": 0.5
+            }
+          },
+          {
+            "node_id": "armchair",
+            "item_id": "leather-armchair",
+            "x": 3.7,
+            "y": 3.4,
+            "rotation": 180,
+            "size": {
+              "width": 0.8,
+              "depth": 0.8,
+              "height": 0.8
+            }
+          }
+        ]
+      },
+      "layout_diff": {
+        "removed": [
+          "floor_lamp"
+        ],
+        "changed": [
+          "armchair"
+        ]
+      },
+      "rationale": "The armchair now faces the TV, and the floor lamp is gone."
+    }
+  }
+]

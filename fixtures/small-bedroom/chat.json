@@ -1,0 +1,181 @@
+[
+  {
+    "input": {
+      "chat_message": "Swap the desk chair for a cheaper one"
+    },
+    "edits": [
+      {
+        "op": "swap",
+        "node_id": "desk_chair",
+        "item_id": "white-desk-chair"
+      }
+    ],
+    "events": [
+      {
+        "type": "step",
+        "node": "route_input",
+        "status": "started"
+      },
+      {
+        "type": "step",
+        "node": "route_input",
+        "status": "done",
+        "summary": "chat message",
+        "duration_s": 0.01
+      },
+      {
+        "type": "step",
+        "node": "chat_edit",
+        "status": "started"
+      },
+      {
+        "type": "tool",
+        "tool": "swap_item",
+        "summary": "swapped desk chair",
+        "ok": true
+      },
+      {
+        "type": "step",
+        "node": "chat_edit",
+        "status": "done",
+        "summary": "edit applied",
+        "duration_s": 2.1,
+        "cost": 0.002
+      },
+      {
+        "type": "step",
+        "node": "solve",
+        "status": "started"
+      },
+      {
+        "type": "step",
+        "node": "solve",
+        "status": "done",
+        "summary": "re-validated",
+        "duration_s": 0.3
+      },
+      {
+        "type": "step",
+        "node": "present",
+        "status": "started"
+      },
+      {
+        "type": "step",
+        "node": "present",
+        "status": "done",
+        "summary": "updated design",
+        "duration_s": 0.8
+      }
+    ],
+    "output": {
+      "layout": {
+        "placements": [
+          {
+            "node_id": "bed",
+            "item_id": "oak-double-bed-140",
+            "x": 2.2,
+            "y": 2.25,
+            "rotation": 90,
+            "size": {
+              "width": 1.4,
+              "depth": 2.0,
+              "height": 0.9
+            }
+          },
+          {
+            "node_id": "nightstand",
+            "item_id": "oak-nightstand",
+            "x": 3.025,
+            "y": 3.2,
+            "rotation": 90,
+            "size": {
+              "width": 0.4,
+              "depth": 0.35,
+              "height": 0.5
+            }
+          },
+          {
+            "node_id": "desk",
+            "item_id": "birch-desk-100",
+            "x": 0.25,
+            "y": 2.7,
+            "rotation": 270,
+            "size": {
+              "width": 1.0,
+              "depth": 0.5,
+              "height": 0.75
+            }
+          },
+          {
+            "node_id": "desk_chair",
+            "item_id": "white-desk-chair",
+            "x": 0.8,
+            "y": 2.7,
+            "rotation": 90,
+            "size": {
+              "width": 0.45,
+              "depth": 0.45,
+              "height": 0.85
+            }
+          }
+        ]
+      },
+      "layout_diff": {
+        "changed": [
+          "desk_chair"
+        ]
+      },
+      "rationale": "I swapped the desk chair for a white one that costs 70 EUR less."
+    }
+  },
+  {
+    "input": {
+      "chat_message": "Put the bed in front of the door"
+    },
+    "edits": [
+      {
+        "op": "move",
+        "node_id": "bed",
+        "x": 2.4,
+        "y": 1.0
+      }
+    ],
+    "events": [
+      {
+        "type": "step",
+        "node": "route_input",
+        "status": "started"
+      },
+      {
+        "type": "step",
+        "node": "route_input",
+        "status": "done",
+        "summary": "chat message",
+        "duration_s": 0.01
+      },
+      {
+        "type": "step",
+        "node": "chat_edit",
+        "status": "started"
+      },
+      {
+        "type": "tool",
+        "tool": "move_item",
+        "summary": "refused: the bed would block the door",
+        "ok": false
+      },
+      {
+        "type": "step",
+        "node": "chat_edit",
+        "status": "done",
+        "summary": "edit refused",
+        "duration_s": 2.1,
+        "cost": 0.002
+      }
+    ],
+    "output": {
+      "layout_diff": {},
+      "rationale": "I can't move the bed there: it would block the door."
+    }
+  }
+]

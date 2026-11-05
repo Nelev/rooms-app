@@ -1,0 +1,130 @@
+{
+  "title": "Layout",
+  "$defs": {
+    "Placement": {
+      "additionalProperties": false,
+      "properties": {
+        "node_id": {
+          "title": "Node Id",
+          "type": "string"
+        },
+        "item_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Item Id"
+        },
+        "x": {
+          "title": "X",
+          "type": "number"
+        },
+        "y": {
+          "title": "Y",
+          "type": "number"
+        },
+        "z": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Z",
+          "type": "number"
+        },
+        "rotation": {
+          "default": 0,
+          "description": "Counterclockwise about z, 0 = front faces +y",
+          "exclusiveMaximum": 360,
+          "minimum": 0,
+          "title": "Rotation",
+          "type": "number"
+        },
+        "size": {
+          "$ref": "#/$defs/Size"
+        }
+      },
+      "required": [
+        "node_id",
+        "x",
+        "y",
+        "size"
+      ],
+      "title": "Placement",
+      "type": "object"
+    },
+    "Size": {
+      "additionalProperties": false,
+      "properties": {
+        "width": {
+          "minimum": 0,
+          "title": "Width",
+          "type": "number"
+        },
+        "depth": {
+          "minimum": 0,
+          "title": "Depth",
+          "type": "number"
+        },
+        "height": {
+          "minimum": 0,
+          "title": "Height",
+          "type": "number"
+        }
+      },
+      "required": [
+        "width",
+        "depth",
+        "height"
+      ],
+      "title": "Size",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Where each SceneGraph node ended up, in room coordinates.",
+  "examples": [
+    {
+      "placements": [
+        {
+          "node_id": "bed",
+          "rotation": 90,
+          "size": {
+            "depth": 2.1,
+            "height": 1.0,
+            "width": 1.6
+          },
+          "x": 2.15,
+          "y": 2.0
+        },
+        {
+          "item_id": "ikea-micke-desk",
+          "node_id": "desk",
+          "rotation": 180,
+          "size": {
+            "depth": 0.5,
+            "height": 0.75,
+            "width": 1.05
+          },
+          "x": 1.6,
+          "y": 3.7
+        }
+      ]
+    }
+  ],
+  "properties": {
+    "placements": {
+      "items": {
+        "$ref": "#/$defs/Placement"
+      },
+      "title": "Placements",
+      "type": "array"
+    }
+  },
+  "required": [
+    "placements"
+  ],
+  "type": "object"
+}

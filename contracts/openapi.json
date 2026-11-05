@@ -1,0 +1,3277 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "rooms-app",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/threads": {
+      "get": {
+        "tags": [
+          "threads"
+        ],
+        "summary": "List Threads",
+        "description": "The caller's projects, newest first.",
+        "operationId": "list_threads_threads_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Thread"
+                  },
+                  "type": "array",
+                  "title": "Response List Threads Threads Get"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "threads"
+        ],
+        "summary": "Create Thread",
+        "description": "Create a project.",
+        "operationId": "create_thread_threads_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ThreadCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Thread"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/threads/{thread_id}/state": {
+      "get": {
+        "tags": [
+          "threads"
+        ],
+        "summary": "Get State",
+        "operationId": "get_state_threads__thread_id__state_get",
+        "parameters": [
+          {
+            "name": "thread_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Thread Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ThreadState"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/threads/{thread_id}/history": {
+      "get": {
+        "tags": [
+          "threads"
+        ],
+        "summary": "Get History",
+        "description": "The thread's checkpoints, newest first.",
+        "operationId": "get_history_threads__thread_id__history_get",
+        "parameters": [
+          {
+            "name": "thread_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Thread Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ThreadState"
+                  },
+                  "title": "Response Get History Threads  Thread Id  History Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/threads/{thread_id}/revert": {
+      "post": {
+        "tags": [
+          "threads"
+        ],
+        "summary": "Revert",
+        "description": "Make an earlier checkpoint the thread's current state; 409 while a run is active.",
+        "operationId": "revert_threads__thread_id__revert_post",
+        "parameters": [
+          {
+            "name": "thread_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Thread Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Revert"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ThreadState"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/threads/{thread_id}/camera-pose": {
+      "post": {
+        "tags": [
+          "threads"
+        ],
+        "summary": "Set Camera Pose",
+        "description": "Set the scene's camera for a photo (pose.photo_key), e.g. after the user aligns it; 409 before the scene exists.",
+        "operationId": "set_camera_pose_threads__thread_id__camera_pose_post",
+        "parameters": [
+          {
+            "name": "thread_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Thread Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CameraPose"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Scene"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/threads/{thread_id}/runs/stream": {
+      "post": {
+        "tags": [
+          "runs"
+        ],
+        "summary": "Stream Run",
+        "description": "Start a run and stream it; 409 while another run is active on the thread.",
+        "operationId": "stream_run_threads__thread_id__runs_stream_post",
+        "parameters": [
+          {
+            "name": "thread_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Thread Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RunCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Server-Sent Events, one per StreamPart",
+            "content": {
+              "text/event-stream": {
+                "itemSchema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "string"
+                    },
+                    "event": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "string"
+                    },
+                    "retry": {
+                      "type": "integer",
+                      "minimum": 0
+                    }
+                  }
+                },
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/MetadataPart"
+                    },
+                    {
+                      "$ref": "#/components/schemas/UpdatesPart"
+                    },
+                    {
+                      "$ref": "#/components/schemas/CustomPart"
+                    },
+                    {
+                      "$ref": "#/components/schemas/MessagesPart"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ErrorPart"
+                    }
+                  ],
+                  "discriminator": {
+                    "propertyName": "event",
+                    "mapping": {
+                      "metadata": "#/components/schemas/MetadataPart",
+                      "updates": "#/components/schemas/UpdatesPart",
+                      "custom": "#/components/schemas/CustomPart",
+                      "messages": "#/components/schemas/MessagesPart",
+                      "error": "#/components/schemas/ErrorPart"
+                    }
+                  },
+                  "title": "Response 200 Stream Run Threads  Thread Id  Runs Stream Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/threads/{thread_id}/runs/current/stream": {
+      "get": {
+        "tags": [
+          "runs"
+        ],
+        "summary": "Join Run",
+        "description": "Stream the thread's latest run from its first part, after a reload, until it ends (at once if it is over); 404 before any run.",
+        "operationId": "join_run_threads__thread_id__runs_current_stream_get",
+        "parameters": [
+          {
+            "name": "thread_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Thread Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Server-Sent Events, one per StreamPart",
+            "content": {
+              "text/event-stream": {
+                "itemSchema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "string"
+                    },
+                    "event": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "string"
+                    },
+                    "retry": {
+                      "type": "integer",
+                      "minimum": 0
+                    }
+                  }
+                },
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/MetadataPart"
+                    },
+                    {
+                      "$ref": "#/components/schemas/UpdatesPart"
+                    },
+                    {
+                      "$ref": "#/components/schemas/CustomPart"
+                    },
+                    {
+                      "$ref": "#/components/schemas/MessagesPart"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ErrorPart"
+                    }
+                  ],
+                  "discriminator": {
+                    "propertyName": "event",
+                    "mapping": {
+                      "metadata": "#/components/schemas/MetadataPart",
+                      "updates": "#/components/schemas/UpdatesPart",
+                      "custom": "#/components/schemas/CustomPart",
+                      "messages": "#/components/schemas/MessagesPart",
+                      "error": "#/components/schemas/ErrorPart"
+                    }
+                  },
+                  "title": "Response 200 Join Run Threads  Thread Id  Runs Current Stream Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/uploads": {
+      "post": {
+        "tags": [
+          "uploads"
+        ],
+        "summary": "Upload",
+        "description": "Store a room photo. Stub: checks it, returns a key and drops the file.",
+        "operationId": "upload_uploads_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_uploads_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Upload"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "The file is over 20 MB"
+          },
+          "415": {
+            "description": "The file is not an image"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/catalog/items/{item_id}": {
+      "get": {
+        "tags": [
+          "catalog"
+        ],
+        "summary": "Get Item",
+        "description": "A catalog item. Stub: the items of the fixture scenes.",
+        "operationId": "get_item_catalog_items__item_id__get",
+        "parameters": [
+          {
+            "name": "item_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Item Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CatalogItem"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Health",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object",
+                  "title": "Response Health Health Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Body_upload_uploads_post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "File"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_upload_uploads_post"
+      },
+      "Brief": {
+        "properties": {
+          "room_use": {
+            "type": "string",
+            "title": "Room Use"
+          },
+          "styles": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Styles",
+            "default": []
+          },
+          "budget": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Budget",
+            "description": "EUR"
+          },
+          "must_haves": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Must Haves",
+            "default": []
+          },
+          "keep": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Keep",
+            "default": []
+          },
+          "remove": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Remove",
+            "default": []
+          },
+          "notes": {
+            "type": "string",
+            "title": "Notes",
+            "default": ""
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "room_use",
+          "budget"
+        ],
+        "title": "Brief",
+        "description": "What the user asks for in the new-project wizard.",
+        "examples": [
+          {
+            "budget": 1500,
+            "keep": [
+              "wardrobe"
+            ],
+            "must_haves": [
+              "double bed",
+              "desk"
+            ],
+            "notes": "I work from home two days a week",
+            "remove": [
+              "old armchair"
+            ],
+            "room_use": "bedroom",
+            "styles": [
+              "scandinavian"
+            ]
+          }
+        ]
+      },
+      "CameraPose": {
+        "properties": {
+          "photo_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Photo Key"
+          },
+          "position": {
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "type": "array",
+            "maxItems": 3,
+            "minItems": 3,
+            "title": "Position"
+          },
+          "quaternion": {
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "type": "array",
+            "maxItems": 4,
+            "minItems": 4,
+            "title": "Quaternion",
+            "description": "x, y, z, w"
+          },
+          "fov": {
+            "type": "number",
+            "exclusiveMaximum": 180.0,
+            "exclusiveMinimum": 0.0,
+            "title": "Fov",
+            "description": "Vertical field of view in degrees"
+          },
+          "image_width": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Image Width"
+          },
+          "image_height": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Image Height"
+          },
+          "reprojection_error": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reprojection Error",
+            "description": "Pixels"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "position",
+          "quaternion",
+          "fov",
+          "image_width",
+          "image_height"
+        ],
+        "title": "CameraPose",
+        "description": "A camera in the three.js convention (y-up: room (x, y, z) is three.js (x, z, -y)), e.g. the one that took a photo.",
+        "examples": [
+          {
+            "fov": 55.0,
+            "image_height": 3024,
+            "image_width": 4032,
+            "photo_key": "uploads/3f2a/photo-1.jpg",
+            "position": [
+              0.4,
+              1.5,
+              -0.3
+            ],
+            "quaternion": [
+              0.0,
+              0.9239,
+              0.0,
+              0.3827
+            ],
+            "reprojection_error": 3.2
+          }
+        ]
+      },
+      "CatalogItem": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category"
+          },
+          "size": {
+            "$ref": "#/components/schemas/Size"
+          },
+          "price": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Price",
+            "description": "EUR"
+          },
+          "style_tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Style Tags",
+            "default": []
+          },
+          "color": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Color"
+          },
+          "front": {
+            "type": "string",
+            "enum": [
+              "+x",
+              "-x",
+              "+z",
+              "-z"
+            ],
+            "title": "Front",
+            "description": "The GLB's local axis the item's front faces (glTF is y-up)",
+            "default": "+z"
+          },
+          "glb_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Glb Url"
+          },
+          "license": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "License"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url",
+            "description": "Product page"
+          },
+          "image_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Image Url"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description",
+            "default": ""
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "category",
+          "size",
+          "price"
+        ],
+        "title": "CatalogItem",
+        "examples": [
+          {
+            "category": "nightstand",
+            "color": "white",
+            "description": "Solid pine nightstand with one drawer",
+            "front": "+z",
+            "glb_url": "https://example.com/models/hemnes-nightstand.glb",
+            "id": "ikea-hemnes-nightstand",
+            "license": "CC-BY-4.0",
+            "name": "HEMNES nightstand",
+            "price": 89.0,
+            "size": {
+              "depth": 0.35,
+              "height": 0.7,
+              "width": 0.46
+            },
+            "style_tags": [
+              "scandinavian",
+              "traditional"
+            ]
+          }
+        ]
+      },
+      "ChatEntry": {
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "user",
+              "assistant"
+            ],
+            "title": "Role"
+          },
+          "content": {
+            "type": "string",
+            "title": "Content"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "title": "ChatEntry"
+      },
+      "ChatMessage": {
+        "properties": {
+          "chat_message": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Chat Message"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "chat_message"
+        ],
+        "title": "ChatMessage",
+        "description": "Run input for a chat edit on an existing design.",
+        "examples": [
+          {
+            "chat_message": "Move the desk closer to the window"
+          }
+        ]
+      },
+      "Command": {
+        "properties": {
+          "resume": {
+            "$ref": "#/components/schemas/RoomSpec"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "resume"
+        ],
+        "title": "Command"
+      },
+      "ConfirmRoom": {
+        "properties": {
+          "room": {
+            "$ref": "#/components/schemas/RoomSpec"
+          },
+          "overlay_keys": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Overlay Keys",
+            "description": "Detection overlay image per photo",
+            "default": []
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "room"
+        ],
+        "title": "ConfirmRoom",
+        "description": "The confirm_room interrupt payload; the run resumes with the corrected RoomSpec (ConfirmRoomResume).",
+        "examples": [
+          {
+            "overlay_keys": [
+              "overlays/3f2a/photo-1.png"
+            ],
+            "room": {
+              "dimensions": {
+                "height": 2.6,
+                "length": 4.0,
+                "width": 3.2
+              },
+              "features": [
+                {
+                  "confidence": 0.95,
+                  "height": 2.1,
+                  "id": "door_1",
+                  "offset": 0.15,
+                  "type": "door",
+                  "wall": "A",
+                  "width": 0.8
+                },
+                {
+                  "confidence": 0.9,
+                  "height": 1.4,
+                  "id": "window_1",
+                  "offset": 0.5,
+                  "sill_height": 0.9,
+                  "type": "window",
+                  "wall": "C",
+                  "width": 1.2
+                },
+                {
+                  "confidence": 0.7,
+                  "height": 0.6,
+                  "id": "radiator_1",
+                  "offset": 0.5,
+                  "sill_height": 0.1,
+                  "type": "radiator",
+                  "wall": "C",
+                  "width": 1.0
+                }
+              ],
+              "floor_material": "oak",
+              "kept_furniture": [
+                {
+                  "id": "kept_1",
+                  "name": "wardrobe",
+                  "rotation": 270,
+                  "size": {
+                    "depth": 0.6,
+                    "height": 2.0,
+                    "width": 1.2
+                  },
+                  "x": 0.3,
+                  "y": 2.0
+                }
+              ],
+              "walls": [
+                {
+                  "color": "#f2efe9",
+                  "wall": "A"
+                },
+                {
+                  "color": "#f2efe9",
+                  "wall": "B"
+                },
+                {
+                  "color": "#f2efe9",
+                  "wall": "C"
+                },
+                {
+                  "color": "#f2efe9",
+                  "wall": "D"
+                }
+              ],
+              "warnings": [
+                "Radiator width estimated from one photo"
+              ]
+            }
+          }
+        ]
+      },
+      "Critique": {
+        "properties": {
+          "round": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Round"
+          },
+          "rules": {
+            "items": {
+              "$ref": "#/components/schemas/RuleResult"
+            },
+            "type": "array",
+            "title": "Rules",
+            "default": []
+          },
+          "actions": {
+            "items": {
+              "$ref": "#/components/schemas/CritiqueAction"
+            },
+            "type": "array",
+            "title": "Actions",
+            "description": "Empty when the layout is accepted",
+            "default": []
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "round",
+          "summary"
+        ],
+        "title": "Critique",
+        "examples": [
+          {
+            "actions": [
+              {
+                "instruction": "Put the bed against wall D",
+                "node_id": "bed",
+                "target": "architect"
+              }
+            ],
+            "round": 1,
+            "rules": [
+              {
+                "passed": true,
+                "rule": "desk_near_light"
+              },
+              {
+                "message": "The bed faces the door",
+                "passed": false,
+                "rule": "bed_not_facing_door"
+              }
+            ],
+            "summary": "One rule fails: the bed faces the door"
+          }
+        ]
+      },
+      "CritiqueAction": {
+        "properties": {
+          "target": {
+            "type": "string",
+            "enum": [
+              "architect",
+              "sourcer"
+            ],
+            "title": "Target"
+          },
+          "node_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Node Id"
+          },
+          "instruction": {
+            "type": "string",
+            "title": "Instruction"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "target",
+          "instruction"
+        ],
+        "title": "CritiqueAction"
+      },
+      "CustomPart": {
+        "properties": {
+          "event": {
+            "type": "string",
+            "const": "custom",
+            "title": "Event"
+          },
+          "data": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/StepEvent"
+              },
+              {
+                "$ref": "#/components/schemas/ToolEvent"
+              }
+            ],
+            "title": "Data",
+            "discriminator": {
+              "propertyName": "type",
+              "mapping": {
+                "step": "#/components/schemas/StepEvent",
+                "tool": "#/components/schemas/ToolEvent"
+              }
+            }
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "event",
+          "data"
+        ],
+        "title": "CustomPart",
+        "description": "A node's progress."
+      },
+      "DesignBrief": {
+        "properties": {
+          "zones": {
+            "items": {
+              "$ref": "#/components/schemas/Zone"
+            },
+            "type": "array",
+            "title": "Zones",
+            "default": []
+          },
+          "palette": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Palette",
+            "description": "Hex colors",
+            "default": []
+          },
+          "objects": {
+            "items": {
+              "$ref": "#/components/schemas/DesignObject"
+            },
+            "type": "array",
+            "title": "Objects"
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary",
+            "default": ""
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "objects"
+        ],
+        "title": "DesignBrief",
+        "description": "The Designer's plan: zones, palette and the objects to place.",
+        "examples": [
+          {
+            "objects": [
+              {
+                "category": "bed",
+                "id": "bed",
+                "material": "oak",
+                "name": "double bed",
+                "priority": "must",
+                "size": {
+                  "depth": 2.1,
+                  "height": 1.0,
+                  "width": 1.6
+                },
+                "style": "scandinavian",
+                "zone": "sleep"
+              },
+              {
+                "category": "nightstand",
+                "id": "nightstand",
+                "material": "oak",
+                "name": "nightstand",
+                "priority": "nice",
+                "quantity": 2,
+                "size": {
+                  "depth": 0.4,
+                  "height": 0.5,
+                  "width": 0.45
+                },
+                "style": "scandinavian",
+                "zone": "sleep"
+              }
+            ],
+            "palette": [
+              "#f2efe9",
+              "#c8b49a",
+              "#3d4a3d"
+            ],
+            "summary": "Calm Scandinavian bedroom with a small work corner by the window",
+            "zones": [
+              {
+                "name": "sleep",
+                "purpose": "bed and nightstands"
+              },
+              {
+                "name": "work",
+                "purpose": "desk by the window"
+              }
+            ]
+          }
+        ]
+      },
+      "DesignObject": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category"
+          },
+          "style": {
+            "type": "string",
+            "title": "Style"
+          },
+          "material": {
+            "type": "string",
+            "title": "Material"
+          },
+          "size": {
+            "$ref": "#/components/schemas/Size"
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Quantity",
+            "default": 1
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "must",
+              "nice"
+            ],
+            "title": "Priority"
+          },
+          "zone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Zone"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "category",
+          "style",
+          "material",
+          "size",
+          "priority"
+        ],
+        "title": "DesignObject"
+      },
+      "Dimensions": {
+        "properties": {
+          "width": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Width",
+            "description": "Length of walls A and C (x)"
+          },
+          "length": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Length",
+            "description": "Length of walls B and D (y)"
+          },
+          "height": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Height",
+            "description": "Ceiling height"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "width",
+          "length",
+          "height"
+        ],
+        "title": "Dimensions"
+      },
+      "ErrorPart": {
+        "properties": {
+          "event": {
+            "type": "string",
+            "const": "error",
+            "title": "Event"
+          },
+          "data": {
+            "$ref": "#/components/schemas/RunError"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "event",
+          "data"
+        ],
+        "title": "ErrorPart",
+        "description": "The run failed; the stream ends."
+      },
+      "Feature": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "window",
+              "door",
+              "radiator",
+              "outlet",
+              "built_in",
+              "column",
+              "other"
+            ],
+            "title": "Type"
+          },
+          "wall": {
+            "type": "string",
+            "enum": [
+              "A",
+              "B",
+              "C",
+              "D"
+            ],
+            "title": "Wall"
+          },
+          "offset": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Offset",
+            "description": "Feature center as a fraction of the wall length from the wall's start corner"
+          },
+          "width": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Width"
+          },
+          "height": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Height"
+          },
+          "sill_height": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Sill Height",
+            "description": "Height of the feature's bottom edge above the floor; 0 for doors",
+            "default": 0
+          },
+          "confidence": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Confidence",
+            "default": 1
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "wall",
+          "offset",
+          "width",
+          "height"
+        ],
+        "title": "Feature"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "Interrupt": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "value": {
+            "$ref": "#/components/schemas/ConfirmRoom"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "value"
+        ],
+        "title": "Interrupt"
+      },
+      "JsonValue": {},
+      "KeptItem": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "x": {
+            "type": "number",
+            "title": "X"
+          },
+          "y": {
+            "type": "number",
+            "title": "Y"
+          },
+          "rotation": {
+            "type": "number",
+            "exclusiveMaximum": 360.0,
+            "minimum": 0.0,
+            "title": "Rotation",
+            "description": "Counterclockwise about z, 0 = front faces +y",
+            "default": 0
+          },
+          "size": {
+            "$ref": "#/components/schemas/Size"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "x",
+          "y",
+          "size"
+        ],
+        "title": "KeptItem"
+      },
+      "Layout": {
+        "properties": {
+          "placements": {
+            "items": {
+              "$ref": "#/components/schemas/Placement"
+            },
+            "type": "array",
+            "title": "Placements"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "placements"
+        ],
+        "title": "Layout",
+        "description": "Where each SceneGraph node ended up, in room coordinates.",
+        "examples": [
+          {
+            "placements": [
+              {
+                "node_id": "bed",
+                "rotation": 90,
+                "size": {
+                  "depth": 2.1,
+                  "height": 1.0,
+                  "width": 1.6
+                },
+                "x": 2.15,
+                "y": 2.0
+              },
+              {
+                "item_id": "ikea-micke-desk",
+                "node_id": "desk",
+                "rotation": 180,
+                "size": {
+                  "depth": 0.5,
+                  "height": 0.75,
+                  "width": 1.05
+                },
+                "x": 1.6,
+                "y": 3.7
+              }
+            ]
+          }
+        ]
+      },
+      "LayoutDiff": {
+        "properties": {
+          "added": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Added",
+            "default": []
+          },
+          "removed": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Removed",
+            "default": []
+          },
+          "changed": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Changed",
+            "description": "Moved, rotated or swapped",
+            "default": []
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "LayoutDiff",
+        "description": "What a chat edit changed, by node id, so the views can highlight it.",
+        "examples": [
+          {
+            "added": [],
+            "changed": [
+              "desk"
+            ],
+            "removed": [
+              "nightstand"
+            ]
+          }
+        ]
+      },
+      "Light": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "area",
+              "directional"
+            ],
+            "title": "Kind"
+          },
+          "window_id": {
+            "type": "string",
+            "title": "Window Id",
+            "description": "The RoomSpec window feature the light comes through"
+          },
+          "intensity": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Intensity"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "kind",
+          "window_id",
+          "intensity"
+        ],
+        "title": "Light"
+      },
+      "MessageChunk": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "content": {
+            "type": "string",
+            "title": "Content"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "content"
+        ],
+        "title": "MessageChunk"
+      },
+      "MessageMetadata": {
+        "properties": {
+          "langgraph_node": {
+            "type": "string",
+            "enum": [
+              "route_input",
+              "analyze_room",
+              "confirm_room",
+              "design",
+              "architect",
+              "refine",
+              "source",
+              "solve",
+              "critic",
+              "present",
+              "chat_edit"
+            ],
+            "title": "Langgraph Node"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "langgraph_node"
+        ],
+        "title": "MessageMetadata"
+      },
+      "MessagesPart": {
+        "properties": {
+          "event": {
+            "type": "string",
+            "const": "messages",
+            "title": "Event"
+          },
+          "data": {
+            "prefixItems": [
+              {
+                "$ref": "#/components/schemas/MessageChunk"
+              },
+              {
+                "$ref": "#/components/schemas/MessageMetadata"
+              }
+            ],
+            "type": "array",
+            "maxItems": 2,
+            "minItems": 2,
+            "title": "Data"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "event",
+          "data"
+        ],
+        "title": "MessagesPart",
+        "description": "A model's reply token, with the node that called the model."
+      },
+      "MetadataPart": {
+        "properties": {
+          "event": {
+            "type": "string",
+            "const": "metadata",
+            "title": "Event"
+          },
+          "data": {
+            "$ref": "#/components/schemas/RunMetadata"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "event",
+          "data"
+        ],
+        "title": "MetadataPart",
+        "description": "The first part of every stream."
+      },
+      "NewDesign": {
+        "properties": {
+          "photo_keys": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 3,
+            "minItems": 1,
+            "title": "Photo Keys",
+            "description": "Object-storage keys of the uploaded photos"
+          },
+          "dimensions": {
+            "$ref": "#/components/schemas/Dimensions"
+          },
+          "brief": {
+            "$ref": "#/components/schemas/Brief"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "photo_keys",
+          "dimensions",
+          "brief"
+        ],
+        "title": "NewDesign",
+        "description": "Run input for a new design.",
+        "examples": [
+          {
+            "brief": {
+              "budget": 1500,
+              "keep": [
+                "wardrobe"
+              ],
+              "must_haves": [
+                "double bed",
+                "desk"
+              ],
+              "notes": "I work from home two days a week",
+              "remove": [
+                "old armchair"
+              ],
+              "room_use": "bedroom",
+              "styles": [
+                "scandinavian"
+              ]
+            },
+            "dimensions": {
+              "height": 2.6,
+              "length": 4.0,
+              "width": 3.2
+            },
+            "photo_keys": [
+              "uploads/3f2a/photo-1.jpg"
+            ]
+          }
+        ]
+      },
+      "Placement": {
+        "properties": {
+          "node_id": {
+            "type": "string",
+            "title": "Node Id"
+          },
+          "item_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Item Id"
+          },
+          "x": {
+            "type": "number",
+            "title": "X"
+          },
+          "y": {
+            "type": "number",
+            "title": "Y"
+          },
+          "z": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Z",
+            "default": 0
+          },
+          "rotation": {
+            "type": "number",
+            "exclusiveMaximum": 360.0,
+            "minimum": 0.0,
+            "title": "Rotation",
+            "description": "Counterclockwise about z, 0 = front faces +y",
+            "default": 0
+          },
+          "size": {
+            "$ref": "#/components/schemas/Size"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "node_id",
+          "x",
+          "y",
+          "size"
+        ],
+        "title": "Placement"
+      },
+      "Revert": {
+        "properties": {
+          "checkpoint_id": {
+            "type": "string",
+            "title": "Checkpoint Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "checkpoint_id"
+        ],
+        "title": "Revert"
+      },
+      "RoomSpec": {
+        "properties": {
+          "dimensions": {
+            "$ref": "#/components/schemas/Dimensions"
+          },
+          "walls": {
+            "items": {
+              "$ref": "#/components/schemas/WallSpec"
+            },
+            "type": "array",
+            "title": "Walls",
+            "default": []
+          },
+          "floor_material": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Floor Material"
+          },
+          "features": {
+            "items": {
+              "$ref": "#/components/schemas/Feature"
+            },
+            "type": "array",
+            "title": "Features",
+            "default": []
+          },
+          "kept_furniture": {
+            "items": {
+              "$ref": "#/components/schemas/KeptItem"
+            },
+            "type": "array",
+            "title": "Kept Furniture",
+            "default": []
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Warnings",
+            "default": []
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "dimensions"
+        ],
+        "title": "RoomSpec",
+        "description": "The room as analyzed from the photos and confirmed by the user.",
+        "examples": [
+          {
+            "dimensions": {
+              "height": 2.6,
+              "length": 4.0,
+              "width": 3.2
+            },
+            "features": [
+              {
+                "confidence": 0.95,
+                "height": 2.1,
+                "id": "door_1",
+                "offset": 0.15,
+                "type": "door",
+                "wall": "A",
+                "width": 0.8
+              },
+              {
+                "confidence": 0.9,
+                "height": 1.4,
+                "id": "window_1",
+                "offset": 0.5,
+                "sill_height": 0.9,
+                "type": "window",
+                "wall": "C",
+                "width": 1.2
+              },
+              {
+                "confidence": 0.7,
+                "height": 0.6,
+                "id": "radiator_1",
+                "offset": 0.5,
+                "sill_height": 0.1,
+                "type": "radiator",
+                "wall": "C",
+                "width": 1.0
+              }
+            ],
+            "floor_material": "oak",
+            "kept_furniture": [
+              {
+                "id": "kept_1",
+                "name": "wardrobe",
+                "rotation": 270,
+                "size": {
+                  "depth": 0.6,
+                  "height": 2.0,
+                  "width": 1.2
+                },
+                "x": 0.3,
+                "y": 2.0
+              }
+            ],
+            "walls": [
+              {
+                "color": "#f2efe9",
+                "wall": "A"
+              },
+              {
+                "color": "#f2efe9",
+                "wall": "B"
+              },
+              {
+                "color": "#f2efe9",
+                "wall": "C"
+              },
+              {
+                "color": "#f2efe9",
+                "wall": "D"
+              }
+            ],
+            "warnings": [
+              "Radiator width estimated from one photo"
+            ]
+          }
+        ]
+      },
+      "RuleResult": {
+        "properties": {
+          "rule": {
+            "type": "string",
+            "title": "Rule"
+          },
+          "passed": {
+            "type": "boolean",
+            "title": "Passed"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message",
+            "default": ""
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "rule",
+          "passed"
+        ],
+        "title": "RuleResult"
+      },
+      "RunConfig": {
+        "properties": {
+          "configurable": {
+            "$ref": "#/components/schemas/RunConfigurable",
+            "default": {
+              "no_critic": false,
+              "single_agent": false,
+              "analyst_mode": false
+            }
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "RunConfig"
+      },
+      "RunConfigurable": {
+        "properties": {
+          "no_critic": {
+            "type": "boolean",
+            "title": "No Critic",
+            "default": false
+          },
+          "single_agent": {
+            "type": "boolean",
+            "title": "Single Agent",
+            "default": false
+          },
+          "analyst_mode": {
+            "type": "boolean",
+            "title": "Analyst Mode",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "RunConfigurable",
+        "description": "Ablation flags, read by the nodes from the run's `configurable`."
+      },
+      "RunCreate": {
+        "properties": {
+          "input": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/NewDesign"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ChatMessage"
+                  }
+                ],
+                "description": "The graph's input: a new design or a chat message on an existing design"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Input"
+          },
+          "command": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Command"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "config": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RunConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "RunCreate",
+        "description": "Start a run with a new `input`, or resume the open interrupt with `command`."
+      },
+      "RunError": {
+        "properties": {
+          "message": {
+            "type": "string",
+            "title": "Message"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "message"
+        ],
+        "title": "RunError"
+      },
+      "RunMetadata": {
+        "properties": {
+          "run_id": {
+            "type": "string",
+            "title": "Run Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "run_id"
+        ],
+        "title": "RunMetadata"
+      },
+      "RunState": {
+        "properties": {
+          "photo_keys": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Photo Keys"
+          },
+          "dimensions": {
+            "$ref": "#/components/schemas/Dimensions"
+          },
+          "brief": {
+            "$ref": "#/components/schemas/Brief"
+          },
+          "chat_message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Chat Message"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "design",
+              "chat"
+            ],
+            "title": "Mode"
+          },
+          "room_spec": {
+            "$ref": "#/components/schemas/RoomSpec"
+          },
+          "design_brief": {
+            "$ref": "#/components/schemas/DesignBrief"
+          },
+          "scene_graph": {
+            "$ref": "#/components/schemas/SceneGraph"
+          },
+          "candidates": {
+            "additionalProperties": {
+              "items": {
+                "$ref": "#/components/schemas/CatalogItem"
+              },
+              "type": "array"
+            },
+            "type": "object",
+            "title": "Candidates"
+          },
+          "layout": {
+            "$ref": "#/components/schemas/Layout"
+          },
+          "validation": {
+            "$ref": "#/components/schemas/ValidationReport"
+          },
+          "critique": {
+            "$ref": "#/components/schemas/Critique"
+          },
+          "round": {
+            "type": "integer",
+            "title": "Round"
+          },
+          "scene": {
+            "$ref": "#/components/schemas/Scene"
+          },
+          "layout_diff": {
+            "$ref": "#/components/schemas/LayoutDiff"
+          },
+          "rationale": {
+            "type": "string",
+            "title": "Rationale"
+          },
+          "messages": {
+            "items": {
+              "$ref": "#/components/schemas/ChatEntry"
+            },
+            "type": "array",
+            "title": "Messages"
+          },
+          "cost": {
+            "type": "number",
+            "title": "Cost"
+          },
+          "input_tokens": {
+            "type": "integer",
+            "title": "Input Tokens"
+          },
+          "output_tokens": {
+            "type": "integer",
+            "title": "Output Tokens"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "RunState",
+        "description": "The graph's state, kept per thread (project) across its runs; also the `values` the API returns."
+      },
+      "Scene": {
+        "properties": {
+          "room": {
+            "$ref": "#/components/schemas/RoomSpec"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/SceneItem"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "lights": {
+            "items": {
+              "$ref": "#/components/schemas/Light"
+            },
+            "type": "array",
+            "title": "Lights",
+            "default": []
+          },
+          "cameras": {
+            "items": {
+              "$ref": "#/components/schemas/CameraPose"
+            },
+            "type": "array",
+            "title": "Cameras",
+            "default": []
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "room",
+          "items"
+        ],
+        "title": "Scene",
+        "description": "Everything the 2D plan and the 3D viewer need to render the design.",
+        "examples": [
+          {
+            "cameras": [
+              {
+                "fov": 55.0,
+                "image_height": 3024,
+                "image_width": 4032,
+                "photo_key": "uploads/3f2a/photo-1.jpg",
+                "position": [
+                  0.4,
+                  1.5,
+                  -0.3
+                ],
+                "quaternion": [
+                  0.0,
+                  0.9239,
+                  0.0,
+                  0.3827
+                ],
+                "reprojection_error": 3.2
+              }
+            ],
+            "items": [
+              {
+                "node_id": "bed",
+                "rotation": 90,
+                "size": {
+                  "depth": 2.1,
+                  "height": 1.0,
+                  "width": 1.6
+                },
+                "x": 2.15,
+                "y": 2.0
+              },
+              {
+                "item": {
+                  "category": "nightstand",
+                  "color": "white",
+                  "description": "Solid pine nightstand with one drawer",
+                  "front": "+z",
+                  "glb_url": "https://example.com/models/hemnes-nightstand.glb",
+                  "id": "ikea-hemnes-nightstand",
+                  "license": "CC-BY-4.0",
+                  "name": "HEMNES nightstand",
+                  "price": 89.0,
+                  "size": {
+                    "depth": 0.35,
+                    "height": 0.7,
+                    "width": 0.46
+                  },
+                  "style_tags": [
+                    "scandinavian",
+                    "traditional"
+                  ]
+                },
+                "item_id": "ikea-hemnes-nightstand",
+                "node_id": "nightstand",
+                "rotation": 90,
+                "size": {
+                  "depth": 0.35,
+                  "height": 0.7,
+                  "width": 0.46
+                },
+                "x": 3.0,
+                "y": 3.3
+              }
+            ],
+            "lights": [
+              {
+                "intensity": 5.0,
+                "kind": "area",
+                "window_id": "window_1"
+              }
+            ],
+            "room": {
+              "dimensions": {
+                "height": 2.6,
+                "length": 4.0,
+                "width": 3.2
+              },
+              "features": [
+                {
+                  "confidence": 0.95,
+                  "height": 2.1,
+                  "id": "door_1",
+                  "offset": 0.15,
+                  "type": "door",
+                  "wall": "A",
+                  "width": 0.8
+                },
+                {
+                  "confidence": 0.9,
+                  "height": 1.4,
+                  "id": "window_1",
+                  "offset": 0.5,
+                  "sill_height": 0.9,
+                  "type": "window",
+                  "wall": "C",
+                  "width": 1.2
+                },
+                {
+                  "confidence": 0.7,
+                  "height": 0.6,
+                  "id": "radiator_1",
+                  "offset": 0.5,
+                  "sill_height": 0.1,
+                  "type": "radiator",
+                  "wall": "C",
+                  "width": 1.0
+                }
+              ],
+              "floor_material": "oak",
+              "kept_furniture": [
+                {
+                  "id": "kept_1",
+                  "name": "wardrobe",
+                  "rotation": 270,
+                  "size": {
+                    "depth": 0.6,
+                    "height": 2.0,
+                    "width": 1.2
+                  },
+                  "x": 0.3,
+                  "y": 2.0
+                }
+              ],
+              "walls": [
+                {
+                  "color": "#f2efe9",
+                  "wall": "A"
+                },
+                {
+                  "color": "#f2efe9",
+                  "wall": "B"
+                },
+                {
+                  "color": "#f2efe9",
+                  "wall": "C"
+                },
+                {
+                  "color": "#f2efe9",
+                  "wall": "D"
+                }
+              ],
+              "warnings": [
+                "Radiator width estimated from one photo"
+              ]
+            }
+          }
+        ]
+      },
+      "SceneEdge": {
+        "properties": {
+          "source": {
+            "type": "string",
+            "title": "Source",
+            "description": "The node placed relative to target"
+          },
+          "relation": {
+            "type": "string",
+            "enum": [
+              "left_of",
+              "right_of",
+              "in_front",
+              "behind",
+              "on",
+              "against_wall",
+              "in_corner",
+              "adjacent",
+              "facing"
+            ],
+            "title": "Relation"
+          },
+          "target": {
+            "type": "string",
+            "title": "Target"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "source",
+          "relation",
+          "target"
+        ],
+        "title": "SceneEdge"
+      },
+      "SceneGraph": {
+        "properties": {
+          "nodes": {
+            "items": {
+              "$ref": "#/components/schemas/SceneNode"
+            },
+            "type": "array",
+            "title": "Nodes"
+          },
+          "edges": {
+            "items": {
+              "$ref": "#/components/schemas/SceneEdge"
+            },
+            "type": "array",
+            "title": "Edges",
+            "default": []
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "nodes"
+        ],
+        "title": "SceneGraph",
+        "description": "Objects and the relations between them; the solver turns it into a Layout.",
+        "examples": [
+          {
+            "edges": [
+              {
+                "relation": "against_wall",
+                "source": "bed",
+                "target": "wall_B"
+              },
+              {
+                "relation": "adjacent",
+                "source": "nightstand",
+                "target": "bed"
+              },
+              {
+                "relation": "in_front",
+                "source": "desk",
+                "target": "window_1"
+              }
+            ],
+            "nodes": [
+              {
+                "id": "wall_B",
+                "kind": "wall",
+                "name": "wall B"
+              },
+              {
+                "id": "window_1",
+                "kind": "window",
+                "name": "window"
+              },
+              {
+                "id": "bed",
+                "material": "oak",
+                "name": "double bed",
+                "size": {
+                  "depth": 2.1,
+                  "height": 1.0,
+                  "width": 1.6
+                },
+                "style": "scandinavian"
+              },
+              {
+                "id": "nightstand",
+                "item_id": "ikea-hemnes-nightstand",
+                "name": "nightstand",
+                "priority": "nice",
+                "quantity": 2,
+                "size": {
+                  "depth": 0.4,
+                  "height": 0.5,
+                  "width": 0.45
+                }
+              },
+              {
+                "id": "desk",
+                "name": "desk",
+                "size": {
+                  "depth": 0.6,
+                  "height": 0.75,
+                  "width": 1.2
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "SceneItem": {
+        "properties": {
+          "node_id": {
+            "type": "string",
+            "title": "Node Id"
+          },
+          "item_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Item Id"
+          },
+          "x": {
+            "type": "number",
+            "title": "X"
+          },
+          "y": {
+            "type": "number",
+            "title": "Y"
+          },
+          "z": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Z",
+            "default": 0
+          },
+          "rotation": {
+            "type": "number",
+            "exclusiveMaximum": 360.0,
+            "minimum": 0.0,
+            "title": "Rotation",
+            "description": "Counterclockwise about z, 0 = front faces +y",
+            "default": 0
+          },
+          "size": {
+            "$ref": "#/components/schemas/Size"
+          },
+          "item": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CatalogItem"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "None renders a box"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "node_id",
+          "x",
+          "y",
+          "size"
+        ],
+        "title": "SceneItem"
+      },
+      "SceneNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "For fixed nodes: the RoomSpec feature id, or wall_A to wall_D"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "object",
+              "wall",
+              "door",
+              "window"
+            ],
+            "title": "Kind",
+            "default": "object"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "style": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Style"
+          },
+          "material": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Material"
+          },
+          "size": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Size"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Bounding box; None for fixed nodes"
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Quantity",
+            "default": 1
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "must",
+              "nice"
+            ],
+            "title": "Priority",
+            "default": "must"
+          },
+          "item_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Item Id",
+            "description": "The CatalogItem chosen by the Sourcer"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "SceneNode"
+      },
+      "Size": {
+        "properties": {
+          "width": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Width"
+          },
+          "depth": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Depth"
+          },
+          "height": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Height"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "width",
+          "depth",
+          "height"
+        ],
+        "title": "Size"
+      },
+      "StepEvent": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "step",
+            "title": "Type",
+            "default": "step"
+          },
+          "node": {
+            "type": "string",
+            "enum": [
+              "route_input",
+              "analyze_room",
+              "confirm_room",
+              "design",
+              "architect",
+              "refine",
+              "source",
+              "solve",
+              "critic",
+              "present",
+              "chat_edit"
+            ],
+            "title": "Node"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "started",
+              "done",
+              "error"
+            ],
+            "title": "Status"
+          },
+          "round": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Round",
+            "description": "Critic loop round, for nodes inside the loop"
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary",
+            "default": ""
+          },
+          "duration_s": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Duration S"
+          },
+          "cost": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cost",
+            "description": "USD"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "node",
+          "status"
+        ],
+        "title": "StepEvent",
+        "description": "Emitted by a node when it starts and ends, for the run timeline.",
+        "examples": [
+          {
+            "cost": 0.003,
+            "duration_s": 4.2,
+            "node": "critic",
+            "round": 1,
+            "status": "done",
+            "summary": "1 rule fails",
+            "type": "step"
+          }
+        ]
+      },
+      "Thread": {
+        "properties": {
+          "thread_id": {
+            "type": "string",
+            "title": "Thread Id"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "metadata": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/JsonValue"
+            },
+            "type": "object",
+            "title": "Metadata"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "new",
+              "running",
+              "needs_input",
+              "done",
+              "error"
+            ],
+            "title": "Status",
+            "description": "new: no run yet; running: a run is active; needs_input: an interrupt is open; done; error: the last run failed"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "thread_id",
+          "created_at",
+          "metadata",
+          "status"
+        ],
+        "title": "Thread",
+        "description": "A project: one room, designed by its first run and edited by chat runs."
+      },
+      "ThreadCreate": {
+        "properties": {
+          "metadata": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/JsonValue"
+            },
+            "type": "object",
+            "title": "Metadata",
+            "description": "Free-form, e.g. the project's title",
+            "default": {}
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "ThreadCreate"
+      },
+      "ThreadState": {
+        "properties": {
+          "values": {
+            "$ref": "#/components/schemas/RunState"
+          },
+          "next": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "route_input",
+                    "analyze_room",
+                    "confirm_room",
+                    "design",
+                    "architect",
+                    "refine",
+                    "source",
+                    "solve",
+                    "critic",
+                    "present",
+                    "chat_edit"
+                  ]
+                },
+                {
+                  "type": "string",
+                  "const": "__start__"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Next",
+            "description": "The nodes that run next; empty when the run is done"
+          },
+          "interrupts": {
+            "items": {
+              "$ref": "#/components/schemas/Interrupt"
+            },
+            "type": "array",
+            "title": "Interrupts",
+            "description": "The open interrupt, resumed with `command.resume`"
+          },
+          "checkpoint_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Checkpoint Id"
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "new",
+              "running",
+              "needs_input",
+              "done",
+              "error"
+            ],
+            "title": "Status",
+            "description": "new: no run yet; running: a run is active; needs_input: an interrupt is open; done; error: the last run failed"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "values",
+          "next",
+          "interrupts",
+          "checkpoint_id",
+          "created_at",
+          "status"
+        ],
+        "title": "ThreadState",
+        "description": "The thread at a checkpoint."
+      },
+      "ToolEvent": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "tool",
+            "title": "Type",
+            "default": "tool"
+          },
+          "tool": {
+            "type": "string",
+            "title": "Tool"
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary"
+          },
+          "ok": {
+            "type": "boolean",
+            "title": "Ok",
+            "description": "False when the edit was refused; summary then says why",
+            "default": true
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "tool",
+          "summary"
+        ],
+        "title": "ToolEvent",
+        "description": "Emitted by chat_edit for each tool it runs, shown as a step chip in the chat.",
+        "examples": [
+          {
+            "ok": true,
+            "summary": "moved desk",
+            "tool": "move_item",
+            "type": "tool"
+          }
+        ]
+      },
+      "UpdatesPart": {
+        "properties": {
+          "event": {
+            "type": "string",
+            "const": "updates",
+            "title": "Event"
+          },
+          "data": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/RunState"
+                },
+                {
+                  "items": {
+                    "$ref": "#/components/schemas/Interrupt"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "object",
+            "title": "Data"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "event",
+          "data"
+        ],
+        "title": "UpdatesPart",
+        "description": "What a node changed, by node name; `__interrupt__` holds an interrupt the run paused at."
+      },
+      "Upload": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key",
+            "description": "Object-storage key, for RunInput.photo_keys"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "key"
+        ],
+        "title": "Upload"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "ValidationIssue": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code",
+            "description": "Machine-readable, e.g. cycle, unknown_node, blocks_opening"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message",
+            "description": "One short sentence the Critic can pass on"
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "error",
+              "warning"
+            ],
+            "title": "Severity",
+            "default": "error"
+          },
+          "node_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Node Ids",
+            "default": []
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "ValidationIssue"
+      },
+      "ValidationReport": {
+        "properties": {
+          "issues": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationIssue"
+            },
+            "type": "array",
+            "title": "Issues",
+            "default": []
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "ValidationReport",
+        "description": "Problems found in a SceneGraph or Layout; no error issues means valid.",
+        "examples": [
+          {
+            "issues": [
+              {
+                "code": "blocks_opening",
+                "message": "The desk blocks the door swing",
+                "node_ids": [
+                  "desk",
+                  "door_1"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "WallSpec": {
+        "properties": {
+          "wall": {
+            "type": "string",
+            "enum": [
+              "A",
+              "B",
+              "C",
+              "D"
+            ],
+            "title": "Wall"
+          },
+          "color": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Color",
+            "description": "Hex color, e.g. #f2efe9"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "wall"
+        ],
+        "title": "WallSpec"
+      },
+      "Zone": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "purpose": {
+            "type": "string",
+            "title": "Purpose"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "purpose"
+        ],
+        "title": "Zone"
+      }
+    }
+  }
+}

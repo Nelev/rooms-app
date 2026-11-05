@@ -1,0 +1,121 @@
+{
+  "nodes": [
+    {
+      "id": "wall_A",
+      "kind": "wall",
+      "name": "wall A"
+    },
+    {
+      "id": "wall_C",
+      "kind": "wall",
+      "name": "wall C"
+    },
+    {
+      "id": "door_1",
+      "kind": "door",
+      "name": "door"
+    },
+    {
+      "id": "window_1",
+      "kind": "window",
+      "name": "window"
+    },
+    {
+      "id": "sofa",
+      "name": "three-seat sofa",
+      "style": "mid-century",
+      "material": "velvet",
+      "size": {
+        "width": 2.2,
+        "depth": 0.9,
+        "height": 0.85
+      },
+      "priority": "must",
+      "item_id": "teal-sofa-3"
+    },
+    {
+      "id": "coffee_table",
+      "name": "coffee table",
+      "style": "mid-century",
+      "material": "walnut",
+      "size": {
+        "width": 1.1,
+        "depth": 0.6,
+        "height": 0.45
+      },
+      "priority": "must",
+      "item_id": "walnut-coffee-table"
+    },
+    {
+      "id": "tv_stand",
+      "name": "tv stand",
+      "style": "mid-century",
+      "material": "walnut",
+      "size": {
+        "width": 1.6,
+        "depth": 0.4,
+        "height": 0.5
+      },
+      "priority": "must",
+      "item_id": "walnut-tv-stand"
+    },
+    {
+      "id": "armchair",
+      "name": "armchair",
+      "style": "mid-century",
+      "material": "leather",
+      "size": {
+        "width": 0.8,
+        "depth": 0.8,
+        "height": 0.8
+      },
+      "priority": "nice",
+      "item_id": "leather-armchair"
+    },
+    {
+      "id": "floor_lamp",
+      "name": "floor lamp",
+      "style": "mid-century",
+      "material": "brass",
+      "size": {
+        "width": 0.35,
+        "depth": 0.35,
+        "height": 1.5
+      },
+      "priority": "nice",
+      "item_id": "brass-floor-lamp"
+    }
+  ],
+  "edges": [
+    {
+      "source": "sofa",
+      "relation": "against_wall",
+      "target": "wall_C"
+    },
+    {
+      "source": "tv_stand",
+      "relation": "against_wall",
+      "target": "wall_A"
+    },
+    {
+      "source": "sofa",
+      "relation": "facing",
+      "target": "tv_stand"
+    },
+    {
+      "source": "coffee_table",
+      "relation": "in_front",
+      "target": "sofa"
+    },
+    {
+      "source": "armchair",
+      "relation": "right_of",
+      "target": "coffee_table"
+    },
+    {
+      "source": "floor_lamp",
+      "relation": "left_of",
+      "target": "sofa"
+    }
+  ]
+}
