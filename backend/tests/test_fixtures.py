@@ -63,10 +63,29 @@ def test_negative_fixtures_are_schema_valid(name: str) -> None:
     load(FIXTURES / "negative" / name, NEGATIVE_FILES[name])
 
 
-def test_wrong_dimensions_is_a_new_design_on_real_photos() -> None:
+def test_invalid_scene_graph_has_its_defects() -> None:
+    graph = load(FIXTURES / "negative" / "invalid_scene_graph.json", SceneGraph)
+    ids = [n.id for n in graph.nodes]
+    kinds = {n.id: n.kind for n in graph.nodes}
+    pairs = {(e.source, e.target) for e in graph.edges}
+    assert len(ids) > len(set(ids)), "duplicate node id"
+    assert any((t, s) in pairs for s, t in pairs), "cycle"
+    assert any(e.relation == "against_wall" and kinds.get(e.target) != "wall" for e in graph.edges), "against_wall to a non-wall"
+    assert any(e.source not in kinds for e in graph.edges), "edge from an unknown node"
+
+
+def test_impossible_brief_exceeds_the_small_bedroom() -> None:
+    brief = load(FIXTURES / "negative" / "impossible_brief.json", Brief)
+    feasible = load(FIXTURES / "small-bedroom" / "brief.json", Brief)
+    assert brief.budget < feasible.budget and len(brief.must_haves) > len(feasible.must_haves)
+
+
+def test_wrong_dimensions_mismatch_the_small_bedroom_photos() -> None:
     run = load(FIXTURES / "negative" / "wrong_dimensions.json", RunInput)
+    room = load(FIXTURES / "small-bedroom" / "room_spec.json", RoomSpec)
     assert isinstance(run, NewDesign)
-    assert all((FIXTURES.parent / key).is_file() for key in run.photo_keys)
+    assert run.photo_keys == sorted(str(p.relative_to(FIXTURES.parent)) for p in (FIXTURES / "small-bedroom").glob("photo-*.jpg"))
+    assert run.dimensions != room.dimensions
 
 
 def footprint(o: Placement | KeptItem) -> tuple[float, float, float, float]:

@@ -1,6 +1,6 @@
 # Fixtures
 
-Sample data for frontend mocks, backend unit tests, the stub graph and the eval smoke test. Every file validates against the domain schemas in `backend/app/schemas/` (JSON Schema in `contracts/schemas/`); `backend/tests/test_fixtures.py` checks that, plus that each case is consistent and that every layout keeps items inside the room without overlaps.
+Sample data for frontend mocks, backend unit tests, the stub graph and the eval smoke test. Every file validates against the domain schemas in `backend/app/schemas/` (JSON Schema in `contracts/schemas/`); `backend/tests/test_fixtures.py` checks that, plus that each case is consistent, that each negative fixture still carries its intended defect and that every layout keeps items inside the room without overlaps.
 
 ## Layout
 
@@ -27,4 +27,4 @@ Sample data for frontend mocks, backend unit tests, the stub graph and the eval 
 
 ## Photos are placeholders
 
-There are no real room photos yet. Each `photo-*.jpg` is a 640 x 480 synthetic image (an empty room drawn with Pillow and labeled PLACEHOLDER), so detection, depth and camera matching produce nothing meaningful on them. Replace them with real photos of matching rooms (same file names, max ~300 KB each), then update `room_spec.json` and `camera_pose.json` (`image_width`, `image_height`, the pose) to match.
+There are no real room photos yet. Each `photo-*.jpg` is a 640 x 480 synthetic image (an empty room drawn with Pillow and labeled PLACEHOLDER), so detection, depth and camera matching produce nothing meaningful on them. `placeholder_photos.py` regenerates them (`uv run --no-project --with pillow fixtures/placeholder_photos.py`); the JSON files are hand-maintained and are the source of truth. Replace the photos with real photos of matching rooms (same file names, max ~300 KB each), then update `room_spec.json` and `camera_pose.json` (`image_width`, `image_height`, the pose) to match.
