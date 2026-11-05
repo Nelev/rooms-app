@@ -134,3 +134,14 @@ def test_beside_a_window_stands_flush_against_its_wall(seed: int) -> None:
     g = graph([window, node("shelf", 0.6, 0.3, 0.8)], [edge("shelf", "left_of", "window_1")])
     shelf = solve(g, BEDROOM, seed=seed, budget=0.2).placements[0]
     assert shelf.y == pytest.approx(BEDROOM.dimensions.length - 0.15) and shelf.rotation == 180
+
+
+@pytest.mark.parametrize("seed", range(5))
+def test_left_of_is_the_left_of_a_viewer_facing_the_parent(seed: int) -> None:
+    # A sofa against wall B faces -x; a viewer facing it looks along +x, so their left is +y.
+    g = graph(
+        [node("sofa", 1.4, 0.8, 0.8), node("lamp", 0.3, 0.3, 1.5), node("table", 0.4, 0.4, 0.5)],
+        [edge("sofa", "against_wall", "wall_B"), edge("lamp", "left_of", "sofa"), edge("table", "right_of", "sofa")],
+    )
+    placed = {p.node_id: p for p in solve(g, BEDROOM, seed=seed).placements}
+    assert placed["lamp"].y > placed["sofa"].y > placed["table"].y

@@ -6,9 +6,9 @@ placing edges are not enforced; a node without one is free anywhere in the room.
 placed depth group by depth group, each at a position sampled inside the box its relation allows (in the parent's frame), and
 rejected if it collides, blocks a door, window or radiator, or leaves no room inside the room for its cluster (it and its
 children). On a dead end the current group is cleared and the group above re-sampled, going one group further up after
-every few dead ends in the same group. `facing` is not used. Sides are the
-parent's own: left_of is its left as seen from it, facing its front; children of an item face the same way, except that a child
-in_front of an item turns to face it. A node with quantity n is placed n times, copies after the first as `<id>_2`, `<id>_3`...
+every few dead ends in the same group. `facing` is not used. Sides are as seen by a viewer facing the
+parent's front (the architect's rule): left_of is the parent's own right; children of an item face the same way, except that a
+child in_front of an item turns to face it. A node with quantity n is placed n times, copies after the first as `<id>_2`, `<id>_3`...
 """
 
 from collections.abc import Iterator
@@ -75,10 +75,10 @@ def _box(relation: str, parent: Frame, size: Size) -> tuple[float, float, float,
     if relation == "behind":
         return -across, across, -front - gap, -front, 0
     y0, y1 = (front, front) if parent.fixed else (-along, along)  # beside a door or window: flush against its wall
-    if relation == "left_of":
-        return -side - gap, -side, y0, y1, 0
-    if relation == "right_of":
+    if relation == "left_of":  # left as seen facing the parent's front, i.e. the parent's own right (+x)
         return side, side + gap, y0, y1, 0
+    if relation == "right_of":
+        return -side - gap, -side, y0, y1, 0
     return -across, across, -along, along, 0  # on
 
 
@@ -91,7 +91,7 @@ def _cluster(node: str, size: Size, children: dict[str, list[tuple[str, str]]], 
             continue
         x0, x1, y0, y1, turn = _box(relation, parent, sizes[child])
         sideways = relation in ("left_of", "right_of")
-        x = {"left_of": x1, "right_of": x0}.get(relation, (x0 + x1) / 2)
+        x = {"left_of": x0, "right_of": x1}.get(relation, (x0 + x1) / 2)
         y = (y0 + y1) / 2 if sideways else y1 if relation == "behind" else y0
         shape = shape.union(translate(rotate(_cluster(child, sizes[child], children, sizes), turn, origin=(0, 0)), x, y)).envelope
     return shape
