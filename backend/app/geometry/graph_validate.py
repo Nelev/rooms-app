@@ -10,7 +10,7 @@ from math import inf
 from typing import cast, get_args
 
 from app.geometry.checks import EPS, blocked_openings, blocked_windows
-from app.geometry.room import Room, _wall_frame, room_model
+from app.geometry.room import Room, room_model, wall_frame
 from app.schemas.coords import Size, Wall
 from app.schemas.design import SceneGraph
 from app.schemas.layout import Layout, Placement, ValidationIssue, ValidationReport
@@ -27,7 +27,7 @@ def _issue(code: str, message: str, *node_ids: str) -> ValidationIssue:
 
 def _blocks(room: Room, spec: RoomSpec, node_id: str, size: Size, wall: Wall, t: float) -> list[ValidationIssue]:
     """The doors and windows an item blocks standing flush against `wall`, centered `t` m from the wall's start corner."""
-    (x0, y0), (dx, dy), _ = _wall_frame(spec, wall)
+    (x0, y0), (dx, dy), _ = wall_frame(spec, wall)
     n = size.depth / 2  # along the inward normal (-dy, dx)
     rotation = 90 * get_args(Wall).index(wall)  # front facing into the room
     layout = Layout(placements=[Placement(node_id=node_id, x=x0 + dx * t - dy * n, y=y0 + dy * t + dx * n, rotation=rotation, size=size)])
@@ -69,7 +69,7 @@ def validate_graph(graph: SceneGraph, spec: RoomSpec) -> ValidationReport:
             parents[loop[1]].discard(loop[0])
 
     sizes = {i: n.size for i, n in nodes.items() if n.size}
-    along = {w: _wall_frame(spec, w)[2] for w in get_args(Wall)}
+    along = {w: wall_frame(spec, w)[2] for w in get_args(Wall)}
     across = {w: spec.dimensions.length if w in "AC" else spec.dimensions.width for w in get_args(Wall)}
     on_wall: dict[str, Wall] = {}
     for e in edges:

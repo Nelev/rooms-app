@@ -9,8 +9,10 @@ from pathlib import Path
 import httpx
 import pillow_heif
 import pytest
+from fastapi.testclient import TestClient
 from PIL import Image
 
+from app.main import app
 from app.storage import Storage
 
 PHOTO = Path(__file__).parents[2] / "fixtures" / "small-bedroom" / "photo-1.jpg"
@@ -58,3 +60,15 @@ def test_heic_upload_is_stored_as_jpeg(storage: Storage) -> None:
     jpeg = Image.open(io.BytesIO(response.content))
     assert (jpeg.format, jpeg.size) == ("JPEG", photo.size)
     assert jpeg.getexif()[0x010F] == "Apple"
+
+
+def test_upload_endpoint_stores_the_photo(storage: Storage, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("DATABASE_URL", raising=False)  # the app starts in memory, never on the developer's database
+    monkeypatch.setenv("OPENROUTER_API_KEY", "")
+    env = {"ENDPOINT_URL": os.environ["TEST_STORAGE_ENDPOINT_URL"], "BUCKET": storage.bucket, "ACCESS_KEY_ID": "minioadmin"}
+    for name, value in {**env, "SECRET_ACCESS_KEY": "minioadmin"}.items():
+        monkeypatch.setenv(f"STORAGE_{name}", value)
+    with TestClient(app) as client:
+        key = client.post("/uploads", files={"file": ("room.JPG", PHOTO.read_bytes(), "image/jpeg")}).json()["key"]
+    assert key.startswith("uploads/") and key.endswith(".jpg")
+    assert storage.get(key) == PHOTO.read_bytes()

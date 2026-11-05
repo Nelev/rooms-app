@@ -49,7 +49,7 @@ def solid(p: Placement) -> Solid:
     return Solid(p.node_id, footprint(p, p.x, p.y, p.rotation), p.z, p.z + p.size.height)
 
 
-def _wall_frame(spec: RoomSpec, wall: Wall) -> tuple[tuple[float, float], tuple[float, float], float]:
+def wall_frame(spec: RoomSpec, wall: Wall) -> tuple[tuple[float, float], tuple[float, float], float]:
     """(start corner, unit direction, length) of a wall; the inward normal is the direction turned 90 degrees counterclockwise."""
     w, ln = spec.dimensions.width, spec.dimensions.length
     return {"A": ((0, 0), (1, 0), w), "B": ((w, 0), (0, 1), ln), "C": ((w, ln), (-1, 0), w), "D": ((0, ln), (0, -1), ln)}[wall]
@@ -57,7 +57,7 @@ def _wall_frame(spec: RoomSpec, wall: Wall) -> tuple[tuple[float, float], tuple[
 
 def _along(spec: RoomSpec, wall: Wall, offset: float, width: float, start: float, depth: float) -> Polygon:
     """The rectangle `width` wide centered at `offset` along the wall, from `start` to `start + depth` into the room."""
-    (x0, y0), (dx, dy), length = _wall_frame(spec, wall)
+    (x0, y0), (dx, dy), length = wall_frame(spec, wall)
     nx, ny = -dy, dx
     cx, cy = x0 + dx * offset * length, y0 + dy * offset * length
     return Polygon(
@@ -71,7 +71,7 @@ def _along(spec: RoomSpec, wall: Wall, offset: float, width: float, start: float
 def _door(spec: RoomSpec, f: Feature) -> Solid:
     zone: BaseGeometry = _along(spec, f.wall, f.offset, f.width, 0, f.width)
     if f.swing != "out":  # a quarter disc about the hinge; seen from inside, left is along the wall's direction
-        (x0, y0), (dx, dy), length = _wall_frame(spec, f.wall)
+        (x0, y0), (dx, dy), length = wall_frame(spec, f.wall)
         t = f.offset * length + (f.width / 2 if f.hinge != "right" else -f.width / 2)
         hinge = Point(x0 + dx * t, y0 + dy * t)
         zone = zone.intersection(hinge.buffer(f.width))
@@ -85,7 +85,7 @@ def room_model(spec: RoomSpec) -> Room:
     radiators: list[Solid] = []
     obstacles: list[Solid] = []
     out = dims.width + dims.length
-    walls = [Solid(f"wall_{w}", _along(spec, w, 0.5, _wall_frame(spec, w)[2] + 2 * out, -out, out), 0, dims.height) for w in get_args(Wall)]
+    walls = [Solid(f"wall_{w}", _along(spec, w, 0.5, wall_frame(spec, w)[2] + 2 * out, -out, out), 0, dims.height) for w in get_args(Wall)]
     for f in spec.features:
         top = f.sill_height + f.height
         if f.type == "door":
