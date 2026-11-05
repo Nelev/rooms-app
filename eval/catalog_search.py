@@ -2,8 +2,8 @@
 
 Run from backend/ (eval/ shares its environment): `PYTHONPATH=. uv run python ../eval/catalog_search.py`. It needs OPENROUTER_API_KEY: the
 catalog and the queries are embedded with the real model, in an in-memory store. A query's `relevant` items are those a person judged
-good answers that pass its hard filters; its precision@5 is the share of the top 5 that is relevant, out of at most as many as are
-relevant (so a query with 2 relevant items scores 1 when both are in the top 5).
+good answers that pass its hard filters; its precision@5 is the standard hits / 5. Since some queries have fewer than 5 relevant
+items (their ceiling is below 1), the script also prints the capped variant hits / min(5, |relevant|) for reference.
 """
 
 import asyncio
@@ -37,13 +37,13 @@ QUERIES = TypeAdapter(list[Query]).validate_json((Path(__file__).parent / "catal
 
 
 async def precision_at_k(embed: Embeddings | None = None) -> dict[str, float]:
-    """Each query's precision@5, with `embed` (default: the OpenRouter model)."""
+    """Each query's precision@5 (hits / 5), with `embed` (default: the OpenRouter model)."""
     store = InMemoryStore(index=index_config(embed))
     await seed(store)
     scores = {}
     for q in QUERIES:
         found = [i.id for i in await search(store, q.query, q.filters, limit=K)]
-        scores[q.query] = len(set(found) & set(q.relevant)) / min(K, len(q.relevant))
+        scores[q.query] = len(set(found) & set(q.relevant)) / K
     return scores
 
 
@@ -51,4 +51,6 @@ if __name__ == "__main__":
     scores = asyncio.run(precision_at_k())
     for query, score in scores.items():
         print(f"{score:.2f}  {query}")
-    print(f"precision@{K} (denominator capped at the relevant items): {sum(scores.values()) / len(scores):.3f} on {len(scores)} queries")
+    capped = [scores[q.query] * K / min(K, len(q.relevant)) for q in QUERIES]
+    print(f"precision@{K}: {sum(scores.values()) / len(scores):.3f} on {len(scores)} queries")
+    print(f"precision@{K}, denominator capped at the relevant items: {sum(capped) / len(capped):.3f}")
