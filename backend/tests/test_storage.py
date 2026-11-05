@@ -1,0 +1,60 @@
+"""Object storage, on a real MinIO: TEST_STORAGE_ENDPOINT_URL (CI starts one), else skipped. Each test gets a bucket of its own."""
+
+import io
+import os
+import uuid
+from collections.abc import Iterator
+from pathlib import Path
+
+import httpx
+import pillow_heif
+import pytest
+from PIL import Image
+
+from app.storage import Storage
+
+PHOTO = Path(__file__).parents[2] / "fixtures" / "small-bedroom" / "photo-1.jpg"
+
+
+@pytest.fixture
+def storage() -> Iterator[Storage]:
+    endpoint = os.getenv("TEST_STORAGE_ENDPOINT_URL") or pytest.skip("TEST_STORAGE_ENDPOINT_URL is not set")
+    storage = Storage(endpoint, f"test-{uuid.uuid4().hex[:12]}", "minioadmin", "minioadmin")  # MinIO's default credentials
+    storage.client.create_bucket(Bucket=storage.bucket)
+    yield storage
+    for page in storage.client.get_paginator("list_objects_v2").paginate(Bucket=storage.bucket):
+        for item in page.get("Contents", []):
+            storage.delete(item["Key"])
+    storage.client.delete_bucket(Bucket=storage.bucket)
+
+
+def test_upload_signed_read_and_delete(storage: Storage) -> None:
+    data = PHOTO.read_bytes()
+    key = storage.put("uploads/t1/photo-1.jpg", data, "image/jpeg")
+    assert key == "uploads/t1/photo-1.jpg"
+    assert storage.get(key) == data
+
+    response = httpx.get(storage.url(key))
+    assert response.status_code == 200
+    assert (response.content, response.headers["content-type"]) == (data, "image/jpeg")
+    assert httpx.get(storage.url(key).replace("Signature=", "Signature=0")).status_code == 403  # the signature is checked
+
+    storage.delete(key)
+    assert httpx.get(storage.url(key)).status_code == 404
+    storage.delete(key)  # already gone: no error
+
+
+def test_heic_upload_is_stored_as_jpeg(storage: Storage) -> None:
+    heic = io.BytesIO()
+    photo = Image.open(PHOTO)
+    exif = photo.getexif()
+    exif[0x010F] = "Apple"  # Make: the EXIF survives the conversion
+    pillow_heif.from_pillow(photo).save(heic, quality=80, exif=exif.tobytes())
+
+    key = storage.put("uploads/t1/IMG_0001.HEIC", heic.getvalue(), "image/heic")
+    assert key == "uploads/t1/IMG_0001.jpg"
+    response = httpx.get(storage.url(key))
+    assert response.headers["content-type"] == "image/jpeg"
+    jpeg = Image.open(io.BytesIO(response.content))
+    assert (jpeg.format, jpeg.size) == ("JPEG", photo.size)
+    assert jpeg.getexif()[0x010F] == "Apple"
