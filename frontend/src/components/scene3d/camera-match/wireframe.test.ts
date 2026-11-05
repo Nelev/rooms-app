@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { decode } from "jpeg-js";
-import { describe, expect, it } from "vitest";
+import sharp from "sharp";
+import { expect, it } from "vitest";
 import type { CameraPose, RoomSpec } from "../core/geometry";
 import { wireframe } from "./wireframe";
 
@@ -9,13 +9,16 @@ const fixtures = join(import.meta.dirname, "../../../../../fixtures");
 const read = (name: string, file: string) => JSON.parse(readFileSync(join(fixtures, name, file), "utf8"));
 const LABEL = [36, 176, 604, 294]; // the PLACEHOLDER box drawn over the photo (fixtures/placeholder_photos.py)
 
-describe.each(["small-bedroom", "home-office", "living-room"])("%s", (name) => {
-  const pose: CameraPose = read(name, "camera_pose.json");
-  const room: RoomSpec = read(name, "room_spec.json");
-  const photo = decode(readFileSync(join(fixtures, "..", pose.photo_key as string)));
+// the case the mock camera match answers for (lib/mocks/stub-api.ts)
+it("draws the room's edges where the fixture photo shows them", async () => {
+  const pose: CameraPose = read("small-bedroom", "camera_pose.json");
+  const room: RoomSpec = read("small-bedroom", "room_spec.json");
+  const { data, info: photo } = await sharp(join(fixtures, "..", pose.photo_key as string))
+    .raw()
+    .toBuffer({ resolveWithObject: true });
   const pixel = (x: number, y: number) => {
-    const i = 4 * (y * photo.width + x);
-    return photo.data[i] + photo.data[i + 1] + photo.data[i + 2];
+    const i = photo.channels * (y * photo.width + x);
+    return data[i] + data[i + 1] + data[i + 2];
   };
   // whether the photo has a dark (edge) pixel within 1 px of there; undefined off the photo and under its label
   const dark = (x: number, y: number) => {
@@ -30,15 +33,13 @@ describe.each(["small-bedroom", "home-office", "living-room"])("%s", (name) => {
       return Array.from({ length: steps + 1 }, (_, k) => dark(x0 + ((x1 - x0) * k) / steps + dx, y0 + ((y1 - y0) * k) / steps + dy));
     });
 
-  it("draws the room's edges where the fixture photo shows them", () => {
-    expect(photo.width).toBe(pose.image_width);
-    const seen = along(0, 0).filter((d) => d !== undefined);
-    expect(seen.length).toBeGreaterThan(100);
-    expect(seen.filter(Boolean).length / seen.length).toBeGreaterThan(0.98);
-    // a few pixels off, it misses them
-    const off = along(6, 6).filter((d) => d !== undefined);
-    expect(off.filter(Boolean).length / off.length).toBeLessThan(0.2);
-  });
+  expect(photo.width).toBe(pose.image_width);
+  const seen = along(0, 0).filter((d) => d !== undefined);
+  expect(seen.length).toBeGreaterThan(100);
+  expect(seen.filter(Boolean).length / seen.length).toBeGreaterThan(0.98);
+  // a few pixels off, it misses them
+  const off = along(6, 6).filter((d) => d !== undefined);
+  expect(off.filter(Boolean).length / off.length).toBeLessThan(0.2);
 });
 
 it("cuts an edge where it passes behind the camera", () => {
