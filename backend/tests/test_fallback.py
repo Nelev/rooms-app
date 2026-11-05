@@ -59,7 +59,7 @@ def test_the_impossible_brief_gets_a_partial_layout_and_why(seed: int) -> None:
 def test_never_takes_much_longer_than_the_budget() -> None:
     start = monotonic()
     layout, report = solve_with_fallback(impossible_graph(), case("small-bedroom")["room_spec"], budget=1.0, attempt=0.4)
-    assert monotonic() - start < 1.5
+    assert monotonic() - start < 1.2  # solve() is handed only what is left of the budget
     assert report.changes[-1].code == "out_of_time"
     assert problems(layout, case("small-bedroom")["room_spec"]) == []
 
