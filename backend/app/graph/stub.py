@@ -80,7 +80,10 @@ def _step(events: list[Event], node: str, round_: int | None) -> tuple[int, int]
 
 
 def stub_node(fn: Callable[[RunState], dict[str, Any]]) -> Callable[..., dict[str, Any]]:
-    """Wrap a stub node: it streams its fixture step events around the node's work and adds the step's cost to the usage."""
+    """Wrap a stub node: it streams its fixture step events around the node's work and adds the step's cost to the usage.
+
+    The fixture's cost is only the replay's: a live node (`live(name)`, a key is set) adds its own usage, none when it calls no model
+    (the Sourcer), and its done event carries that cost, so a production run's cost is the models' usage only."""
 
     @wraps(fn)
     def node(state: RunState) -> dict[str, Any]:
@@ -92,9 +95,12 @@ def stub_node(fn: Callable[[RunState], dict[str, Any]]) -> Callable[..., dict[st
         write(events[start])
         update = fn(state)  # may interrupt: the node starts over on resume
         time.sleep(PACE * events[end].get("duration_s", 0))
+        cost = update.get("cost", 0.0) if live(fn.__name__) else events[end].get("cost", 0.0)
+        if "cost" in events[end]:
+            events[end] = {**events[end], "cost": cost}
         for event in events[start + 1 : end + 1]:
             write(event)
-        return {"cost": events[end].get("cost", 0.0), **update}  # a real node's own usage wins over the fixture's
+        return {**update, "cost": cost}
 
     return node
 

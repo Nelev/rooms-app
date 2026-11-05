@@ -33,10 +33,11 @@ from app.schemas.room import RoomSpec
 GAP = 0.2  # m: the most free space a child leaves between itself and an item parent (none for a wall, door or window)
 TRIES = 50  # positions sampled per item before its group is a dead end
 RETRIES = 3  # dead ends in a group before backtracking goes one group further up
+STEPS = 5_000  # positions sampled before solve() gives up: 0.1-0.4 s on an idle machine; a fixture graph needs < 400
 
 
 class Unsolvable(Exception):
-    """No layout found within the time budget."""
+    """No layout found within the step limit (or the time budget)."""
 
 
 @dataclass(frozen=True)
@@ -98,8 +99,11 @@ def _cluster(node: str, size: Size, children: dict[str, list[tuple[str, str]]], 
     return shape
 
 
-def solve(graph: SceneGraph, spec: RoomSpec, seed: int = 0, budget: float = 2.0) -> Layout:
-    """Place every object node; the same seed gives the same layout. Raises Unsolvable after `budget` seconds.
+def solve(graph: SceneGraph, spec: RoomSpec, seed: int = 0, budget: float = 10.0, steps: int = STEPS) -> Layout:
+    """Place every object node; the same seed gives the same layout. Raises Unsolvable after `steps` sampled positions.
+
+    The step limit decides the outcome, so it is the same on any machine; `budget` (seconds) is only a safety net, which should
+    never be reached before it on a normal one: both are checked before each group of items is placed.
 
     Only each node's parent edge and `in_front`'s turn are honoured: other edges of a node with several, and `facing`, are not
     checked, so a caller (B-18's solve node) should run the layout checks it needs on the result."""
@@ -136,6 +140,7 @@ def solve(graph: SceneGraph, spec: RoomSpec, seed: int = 0, budget: float = 2.0)
     blockers = room.walls + room.obstacles + room.doors + room.windows + room.radiators
     floor = room.floor.buffer(EPS)
     placed: dict[str, tuple[Placement, Solid]] = {}
+    sampled = 0
 
     def sample(node: str) -> Placement:
         size = sizes[node]
@@ -168,8 +173,10 @@ def solve(graph: SceneGraph, spec: RoomSpec, seed: int = 0, budget: float = 2.0)
         )
 
     def place(level: list[tuple[str, str]]) -> bool:
+        nonlocal sampled
         for pid, node in level:
             for _ in range(TRIES):
+                sampled += 1
                 p = sample(node)
                 s = solid(p)
                 if fits(p, s):
@@ -181,6 +188,8 @@ def solve(graph: SceneGraph, spec: RoomSpec, seed: int = 0, budget: float = 2.0)
 
     i, dead_ends = 0, [0] * len(levels)
     while i < len(levels):
+        if sampled >= steps:
+            raise Unsolvable(f"No layout found in {steps} sampled positions")
         if monotonic() > deadline:
             raise Unsolvable(f"No layout found in {budget} s")
         if place(levels[i]):

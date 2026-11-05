@@ -1,12 +1,11 @@
-"""The solver fallback: the impossible brief gets a partial layout and a correct explanation, within a hard time budget."""
+"""The solver fallback: the impossible brief gets a partial layout and a correct explanation, the same on any machine (the solver's
+step limit decides), within a hard time budget."""
 
-from itertools import count
 from time import monotonic
 
 import pytest
 
 from app.catalog.loader import load_catalog
-from app.geometry import fallback, solver
 from app.geometry.fallback import smaller_variants, solve_with_fallback
 from app.schemas import Brief, SceneGraph
 from tests.test_fixtures import FIXTURES, case
@@ -36,19 +35,11 @@ def impossible_graph() -> SceneGraph:
     return graph(nodes, edges)
 
 
-@pytest.fixture
-def steady_clock(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Every clock read takes 3 ms, about one solver step on an idle machine: the budgets buy the same search on a busy one."""
-    ticks = count(0.0, 0.003)
-    for module in (solver, fallback):
-        monkeypatch.setattr(module, "monotonic", ticks.__next__)
-
-
-@pytest.mark.usefixtures("steady_clock")
 @pytest.mark.parametrize("seed", range(2))
 def test_the_impossible_brief_gets_a_partial_layout_and_why(seed: int) -> None:
     g, spec = impossible_graph(), case("small-bedroom")["room_spec"]
-    layout, report = solve_with_fallback(g, spec, seed=seed)  # the default budgets
+    layout, report = solve_with_fallback(g, spec, seed=seed)  # the step limit decides, the time caps are far off
+    assert solve_with_fallback(g, spec, seed=seed, budget=1e6, attempt=1e6) == (layout, report)  # the same without them
     changes = {c.node_id: c for c in report.changes}
     # the sofa fits no wall beside the door or the kept wardrobe, so it becomes a two-seat; the piano fits nowhere and has no variant
     assert (changes["sofa"].action, changes["sofa"].code) == ("resized", "too_big")
@@ -89,7 +80,7 @@ def test_children_of_a_dropped_item_are_dropped_and_nice_to_haves_go_first() -> 
         [nice_rug, node("lamp", 0.3, 0.3, 1.5), node("stage", 4.0, 1.0, 0.5), node("carpet", 2.4, 2.4, 0.01)],
         [edge("stage", "against_wall", "wall_A"), edge("lamp", "on", "stage")],
     )
-    layout, report = solve_with_fallback(g, BEDROOM, attempt=0.2)
+    layout, report = solve_with_fallback(g, BEDROOM)
     assert [(c.node_id, c.code) for c in report.changes] == [("stage", "too_big"), ("lamp", "depends_on_dropped"), ("rug", "no_space")]
     assert [p.node_id for p in layout.placements] == ["carpet"]
     assert report.summary == "Placed 1 of 4 items; dropped: stage, lamp, rug"
