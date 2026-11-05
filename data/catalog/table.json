@@ -1,0 +1,363 @@
+[
+  {
+    "id": "black-coffee-table",
+    "name": "Black steel coffee table",
+    "category": "table",
+    "size": {
+      "width": 1.1,
+      "depth": 0.6,
+      "height": 0.45
+    },
+    "price": 149.0,
+    "style_tags": [
+      "industrial",
+      "modern"
+    ],
+    "color": "black",
+    "front": "+z",
+    "description": "Rectangular coffee table"
+  },
+  {
+    "id": "black-dining-table-4",
+    "name": "Black steel four-seat dining table",
+    "category": "table",
+    "size": {
+      "width": 1.4,
+      "depth": 0.8,
+      "height": 0.75
+    },
+    "price": 279.0,
+    "style_tags": [
+      "industrial",
+      "modern"
+    ],
+    "color": "black",
+    "front": "+z",
+    "description": "Seats four"
+  },
+  {
+    "id": "black-dining-table-6",
+    "name": "Black steel six-seat dining table",
+    "category": "table",
+    "size": {
+      "width": 1.9,
+      "depth": 0.9,
+      "height": 0.75
+    },
+    "price": 429.0,
+    "style_tags": [
+      "industrial",
+      "modern"
+    ],
+    "color": "black",
+    "front": "+z",
+    "description": "Seats six"
+  },
+  {
+    "id": "black-side-table",
+    "name": "Black steel side table",
+    "category": "table",
+    "size": {
+      "width": 0.45,
+      "depth": 0.45,
+      "height": 0.55
+    },
+    "price": 69.0,
+    "style_tags": [
+      "industrial",
+      "modern"
+    ],
+    "color": "black",
+    "front": "+z",
+    "description": "Round side table"
+  },
+  {
+    "id": "mango-coffee-table",
+    "name": "Mango wood coffee table",
+    "category": "table",
+    "size": {
+      "width": 1.1,
+      "depth": 0.6,
+      "height": 0.45
+    },
+    "price": 169.0,
+    "style_tags": [
+      "boho",
+      "industrial"
+    ],
+    "color": "brown",
+    "front": "+z",
+    "description": "Rectangular coffee table"
+  },
+  {
+    "id": "mango-dining-table-4",
+    "name": "Mango wood four-seat dining table",
+    "category": "table",
+    "size": {
+      "width": 1.4,
+      "depth": 0.8,
+      "height": 0.75
+    },
+    "price": 329.0,
+    "style_tags": [
+      "boho",
+      "industrial"
+    ],
+    "color": "brown",
+    "front": "+z",
+    "description": "Seats four"
+  },
+  {
+    "id": "mango-dining-table-6",
+    "name": "Mango wood six-seat dining table",
+    "category": "table",
+    "size": {
+      "width": 1.9,
+      "depth": 0.9,
+      "height": 0.75
+    },
+    "price": 489.0,
+    "style_tags": [
+      "boho",
+      "industrial"
+    ],
+    "color": "brown",
+    "front": "+z",
+    "description": "Seats six"
+  },
+  {
+    "id": "mango-side-table",
+    "name": "Mango wood side table",
+    "category": "table",
+    "size": {
+      "width": 0.45,
+      "depth": 0.45,
+      "height": 0.55
+    },
+    "price": 79.0,
+    "style_tags": [
+      "boho",
+      "industrial"
+    ],
+    "color": "brown",
+    "front": "+z",
+    "description": "Round side table"
+  },
+  {
+    "id": "oak-coffee-table",
+    "name": "Oak coffee table",
+    "category": "table",
+    "size": {
+      "width": 1.1,
+      "depth": 0.6,
+      "height": 0.45
+    },
+    "price": 159.0,
+    "style_tags": [
+      "scandinavian",
+      "japandi"
+    ],
+    "color": "oak",
+    "front": "+z",
+    "description": "Rectangular coffee table"
+  },
+  {
+    "id": "oak-dining-table-4",
+    "name": "Oak four-seat dining table",
+    "category": "table",
+    "size": {
+      "width": 1.4,
+      "depth": 0.8,
+      "height": 0.75
+    },
+    "price": 299.0,
+    "style_tags": [
+      "scandinavian",
+      "japandi"
+    ],
+    "color": "oak",
+    "front": "+z",
+    "description": "Seats four"
+  },
+  {
+    "id": "oak-dining-table-6",
+    "name": "Oak six-seat dining table",
+    "category": "table",
+    "size": {
+      "width": 1.9,
+      "depth": 0.9,
+      "height": 0.75
+    },
+    "price": 449.0,
+    "style_tags": [
+      "scandinavian",
+      "japandi"
+    ],
+    "color": "oak",
+    "front": "+z",
+    "description": "Seats six"
+  },
+  {
+    "id": "oak-side-table",
+    "name": "Oak side table",
+    "category": "table",
+    "size": {
+      "width": 0.45,
+      "depth": 0.45,
+      "height": 0.55
+    },
+    "price": 69.0,
+    "style_tags": [
+      "scandinavian",
+      "japandi"
+    ],
+    "color": "oak",
+    "front": "+z",
+    "description": "Round side table"
+  },
+  {
+    "id": "walnut-coffee-table",
+    "name": "Walnut coffee table",
+    "category": "table",
+    "size": {
+      "width": 1.1,
+      "depth": 0.6,
+      "height": 0.45
+    },
+    "price": 229.0,
+    "style_tags": [
+      "mid-century"
+    ],
+    "color": "walnut",
+    "front": "+z",
+    "license": "CC0-1.0",
+    "description": "Oval top"
+  },
+  {
+    "id": "walnut-dining-table-4",
+    "name": "Walnut four-seat dining table",
+    "category": "table",
+    "size": {
+      "width": 1.4,
+      "depth": 0.8,
+      "height": 0.75
+    },
+    "price": 399.0,
+    "style_tags": [
+      "mid-century"
+    ],
+    "color": "walnut",
+    "front": "+z",
+    "description": "Seats four"
+  },
+  {
+    "id": "walnut-dining-table-6",
+    "name": "Walnut six-seat dining table",
+    "category": "table",
+    "size": {
+      "width": 1.9,
+      "depth": 0.9,
+      "height": 0.75
+    },
+    "price": 609.0,
+    "style_tags": [
+      "mid-century"
+    ],
+    "color": "walnut",
+    "front": "+z",
+    "description": "Seats six"
+  },
+  {
+    "id": "walnut-side-table",
+    "name": "Walnut side table",
+    "category": "table",
+    "size": {
+      "width": 0.45,
+      "depth": 0.45,
+      "height": 0.55
+    },
+    "price": 89.0,
+    "style_tags": [
+      "mid-century"
+    ],
+    "color": "walnut",
+    "front": "+z",
+    "description": "Round side table"
+  },
+  {
+    "id": "white-coffee-table",
+    "name": "White lacquered coffee table",
+    "category": "table",
+    "size": {
+      "width": 1.1,
+      "depth": 0.6,
+      "height": 0.45
+    },
+    "price": 139.0,
+    "style_tags": [
+      "modern",
+      "minimalist",
+      "scandinavian"
+    ],
+    "color": "white",
+    "front": "+z",
+    "description": "Rectangular coffee table"
+  },
+  {
+    "id": "white-dining-table-4",
+    "name": "White lacquered four-seat dining table",
+    "category": "table",
+    "size": {
+      "width": 1.4,
+      "depth": 0.8,
+      "height": 0.75
+    },
+    "price": 249.0,
+    "style_tags": [
+      "modern",
+      "minimalist",
+      "scandinavian"
+    ],
+    "color": "white",
+    "front": "+z",
+    "description": "Seats four"
+  },
+  {
+    "id": "white-dining-table-6",
+    "name": "White lacquered six-seat dining table",
+    "category": "table",
+    "size": {
+      "width": 1.9,
+      "depth": 0.9,
+      "height": 0.75
+    },
+    "price": 379.0,
+    "style_tags": [
+      "modern",
+      "minimalist",
+      "scandinavian"
+    ],
+    "color": "white",
+    "front": "+z",
+    "description": "Seats six"
+  },
+  {
+    "id": "white-side-table",
+    "name": "White lacquered side table",
+    "category": "table",
+    "size": {
+      "width": 0.45,
+      "depth": 0.45,
+      "height": 0.55
+    },
+    "price": 59.0,
+    "style_tags": [
+      "modern",
+      "minimalist",
+      "scandinavian"
+    ],
+    "color": "white",
+    "front": "+z",
+    "description": "Round side table"
+  }
+]
