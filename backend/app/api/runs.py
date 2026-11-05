@@ -13,6 +13,7 @@ from langgraph.types import Interrupt as LgInterrupt
 
 from app.api.deps import Graph, ThreadConfig
 from app.api.models import Interrupt, MessageChunk, MessageMetadata, RunCreate, RunError, RunMetadata, StreamPart
+from app.observability.tracing import traced
 
 router = APIRouter(tags=["runs"])
 
@@ -92,8 +93,9 @@ async def _start_run(body: RunCreate, graph: Graph, config: ThreadConfig) -> Run
     graph_input: Any = Command(resume=body.command.resume.model_dump(mode="json")) if body.command else dict(body.input or {})
     if body.config:
         config = {**config, "configurable": {**config["configurable"], **body.config.configurable.model_dump()}}
-    run = RUNS[thread_id] = Run(parts=[ServerSentEvent(event="metadata", data=RunMetadata(run_id=uuid4().hex))])
-    run.task = asyncio.create_task(_execute(run, graph, graph_input, config))
+    run_id = uuid4()
+    run = RUNS[thread_id] = Run(parts=[ServerSentEvent(event="metadata", data=RunMetadata(run_id=run_id.hex))])
+    run.task = asyncio.create_task(_execute(run, graph, graph_input, traced(config, run_id)))
     return run
 
 
