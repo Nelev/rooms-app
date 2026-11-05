@@ -12,10 +12,9 @@ the pipeline works end to end with live models, and what a full run would cost.
 
 ## Read this before the numbers
 
-- **2 of the 4 variants ran.** `baseline` and `no_critic` each finished all 3 rooms, and every run was judged. `full` crashed
-  before its first run, while seeding its catalog store. `analyst_mode` therefore never ran. Because the owner approved one run
-  only, the pilot was not re-run. A fix is applied but unverified live: `full` and `analyst_mode` have not run with real
-  models yet (see "The crash" below), and finishing the 3 x 4 matrix needs the owner to approve the command at the end.
+- **All 4 variants ran, in two sittings.** `baseline` and `no_critic` ran first; `full` then crashed (see "The crash"). After the
+  fix, the owner approved a second small run of `full` and `analyst_mode` on the same 3 rooms, on main with the cost-leak fix and
+  the solver step limit (#53). The two sittings are combined in `runs.csv`; the crashed `full` row was dropped.
 - **1 repeat on 3 rooms.** There is one case per fixture room: `bedroom-calm` (small-bedroom), `office-focused` (home-office)
   and `living-airy` (living-room). The differences between variants are anecdotes, not results.
 - **The photos are synthetic placeholders** (`fixtures/README.md`). The Room Analyst found no doors, windows or other features in
@@ -37,26 +36,32 @@ the pipeline works end to end with live models, and what a full run would cost.
 | --- | --- | --- | --- |
 | baseline, 3 runs | $0.0749 | $0.0490 | $0.1239 |
 | no_critic, 3 runs | $0.0994 | $0.0499 | $0.1493 |
+| full, 3 runs | $0.1274 | $0.0513 | $0.1787 |
+| analyst_mode, 3 runs | $0.0817 | $0.0479 | $0.1296 |
+| **pilot total** | | | **about $0.58** |
 
 - Not included: the catalog embeddings used to seed each graph variant's store (text-embedding-3-small, 223 short texts per seed). Their usage is not recorded. They should cost well under $0.001.
 - `no_critic`'s pipeline cost is slightly too high. The `source` node's stub wrapper adds the fixture's $0.004 per round even in
-  live runs, which is the leak FIX-cost-determinism fixes. With one round per run, that is about $0.012 of the $0.0994.
+  live runs, which is the leak FIX-cost-determinism (#53) fixes. With one round per run, that is about $0.012 of the $0.0994. The
+  second sitting (`full`, `analyst_mode`) ran with the fix.
 - From these numbers, a full study would cost roughly $0.02 to $0.05 per run, plus about $0.017 per judged run: 4 variants x 25
   cases x 3 repeats (300 runs, all judged) is about $12 to $20.
 
-## What the 6 runs show
+## What the 12 runs show
 
-All 6 designs stayed within budget, covered every must-have and had no item out of the room or blocking an opening.
+All 12 designs stayed within budget, covered every must-have and had no item out of the room or blocking an opening.
 
-| | baseline | no_critic |
-| --- | --- | --- |
-| Model cost per run | $0.025 | $0.033 |
-| Wall time per run | 17 s | 56 s |
-| Items a person can reach | 0.97 | 0.92 |
-| Judge (0-10): functionality, layout, color, atmosphere, realism | 3.9, 4.1, 5.7, 3.7, 1.9 | 3.7, 4.4, 5.3, 3.3, 2.0 |
+| | baseline | no_critic | full | analyst_mode |
+| --- | --- | --- | --- | --- |
+| Model cost per run | $0.025 | $0.033 | $0.042 | $0.027 |
+| Wall time per run | 17 s | 56 s | 57 s | 47 s |
+| Items a person can reach | 0.97 | 0.92 | 0.92 | 1.00 |
+| Judge (0-10): functionality, layout, color, atmosphere, realism | 3.9, 4.1, 5.7, 3.7, 1.9 | 3.7, 4.4, 5.3, 3.3, 2.0 | 4.0, 4.7, 5.9, 3.6, 2.0 | 3.7, 4.4, 5.8, 3.4, 2.0 |
 
-On 3 rooms, 1 repeat and box renders, the judge cannot tell the two variants apart: the gaps are within one grade point. The
-agent graph without its Critic costs about a third more and takes about three times longer than the single-call baseline.
+On 3 rooms, 1 repeat and box renders, the judge cannot tell the variants apart: every gap is within one grade point, and
+realism is about 2 everywhere because the renders are boxes. The full system (with the Critic) costs about 70% more than the
+single-call baseline and takes about three times longer; the single-pass analyst saves about a third of the full system's cost.
+`analyst_mode` measures nothing real about the Room Analyst here: on placeholder photos every variant's analyst finds no features.
 
 ## The crash
 
@@ -72,24 +77,16 @@ OpenRouter embeddings client.
 - **Hardening.** `ablate` now records a variant that cannot run as a failed row and goes on with the next variant, instead of
   losing the variants that already ran.
 
-The pilot ran before that hardening, so `full`'s failed row in `runs.csv` was added by hand, as `ablate` records it now (its error
-alone). `report.md` and `charts/` are rebuilt from `runs.csv` by the ablation command, with no model call:
+The fix was then verified live: the second sitting ran `full` and `analyst_mode` (two graph variants in one process) without error. `report.md` and `charts/` are rebuilt from `runs.csv` by the ablation command, with no model call:
 `PYTHONPATH=..:../eval uv run python -m eval ablate --rebuild ../eval/results/pilot/runs.csv --out ../eval/results/pilot` (from
-backend/). `full` charts as n/a.
+backend/).
 
 ## How to run the rest
 
-**E-06 stays open on `full` and `analyst_mode`** until the owner approves a second small run. From backend/, with
-OPENROUTER_API_KEY set; the cap skips the runs not started yet once the spend passes `--max-cost`.
+The pilot is complete. From backend/, with OPENROUTER_API_KEY set (the cap skips the runs not started yet once the spend passes
+`--max-cost`):
 
 ```sh
-# the variants the pilot missed, same 3 rooms
-PYTHONPATH=..:../eval uv run python -m eval ablate --variants full analyst_mode \
-  --cases bedroom-calm office-focused living-airy --repeats 1 --judge --max-cost 1 --out ../eval/results/pilot-2
-# then one report and chart set for the 4 variants, and the ratings template for every judged run (no model call)
-PYTHONPATH=..:../eval uv run python -m eval ablate --rebuild ../eval/results/pilot/runs.csv ../eval/results/pilot-2/runs.csv \
-  --out ../eval/results/pilot
-PYTHONPATH=.:..:../eval uv run python ../eval/agreement.py template ../eval/results/pilot/runs.csv --force
 # the full study: 4 variants x every case x 3 repeats (about $12 to $20)
 PYTHONPATH=..:../eval uv run python -m eval ablate --judge --max-cost 20
 ```
