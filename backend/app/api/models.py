@@ -12,7 +12,10 @@ from app.schemas.run import NodeName
 
 ThreadStatus = Annotated[
     Literal["new", "running", "needs_input", "done", "error"],
-    Field(description="new: no run yet; running: a run is active; needs_input: an interrupt is open; done; error: the last run failed"),
+    Field(
+        description="new: no run yet; running: a run is active; needs_input: an interrupt is open; done: no node left to run; "
+        "error: the last run failed, or a restart cut it off (a run with input null continues it)"
+    ),
 ]
 
 
@@ -62,7 +65,7 @@ class RunConfig(Model):
 
 
 class RunCreate(Model):
-    """Start a run with a new `input`, or resume the open interrupt with `command`."""
+    """Start a run with a new `input`, resume the open interrupt with `command`, or continue from the last checkpoint with input null."""
 
     input: RunInput | None = None
     command: Command | None = None
@@ -70,8 +73,8 @@ class RunCreate(Model):
 
     @model_validator(mode="after")
     def _input_or_command(self) -> Self:
-        if (self.input is None) == (self.command is None):
-            raise ValueError("pass either input or command")
+        if ("input" in self.model_fields_set) == (self.command is not None):
+            raise ValueError("pass either input (null to continue) or command")
         return self
 
 

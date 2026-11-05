@@ -11,7 +11,7 @@
           "threads"
         ],
         "summary": "List Threads",
-        "description": "The caller's projects, newest first.",
+        "description": "The caller's projects, most recently updated first.",
         "operationId": "list_threads_threads_get",
         "responses": {
           "200": {
@@ -35,7 +35,7 @@
           "threads"
         ],
         "summary": "Create Thread",
-        "description": "Create a project.",
+        "description": "Create a project; only `metadata.title` is kept.",
         "operationId": "create_thread_threads_post",
         "requestBody": {
           "content": {
@@ -272,7 +272,7 @@
           "runs"
         ],
         "summary": "Stream Run",
-        "description": "Start a run and stream it; 409 while another run is active on the thread.",
+        "description": "Start a run and stream it; 409 while another run is active on the thread, or when there is nothing to resume or continue.",
         "operationId": "stream_run_threads__thread_id__runs_stream_post",
         "parameters": [
           {
@@ -458,7 +458,7 @@
           "uploads"
         ],
         "summary": "Upload",
-        "description": "Store a room photo. Stub: checks it, returns a key and drops the file.",
+        "description": "Store a room photo (a HEIC one as a JPEG) and return its key. Without object storage (STORAGE_* unset), check it and drop it.",
         "operationId": "upload_uploads_post",
         "requestBody": {
           "content": {
@@ -2276,7 +2276,7 @@
         "additionalProperties": false,
         "type": "object",
         "title": "RunCreate",
-        "description": "Start a run with a new `input`, or resume the open interrupt with `command`."
+        "description": "Start a run with a new `input`, resume the open interrupt with `command`, or continue from the last checkpoint with input null."
       },
       "RunError": {
         "properties": {
@@ -3032,7 +3032,7 @@
               "error"
             ],
             "title": "Status",
-            "description": "new: no run yet; running: a run is active; needs_input: an interrupt is open; done; error: the last run failed"
+            "description": "new: no run yet; running: a run is active; needs_input: an interrupt is open; done: no node left to run; error: the last run failed, or a restart cut it off (a run with input null continues it)"
           }
         },
         "additionalProperties": false,
@@ -3137,7 +3137,7 @@
               "error"
             ],
             "title": "Status",
-            "description": "new: no run yet; running: a run is active; needs_input: an interrupt is open; done; error: the last run failed"
+            "description": "new: no run yet; running: a run is active; needs_input: an interrupt is open; done: no node left to run; error: the last run failed, or a restart cut it off (a run with input null continues it)"
           }
         },
         "additionalProperties": false,

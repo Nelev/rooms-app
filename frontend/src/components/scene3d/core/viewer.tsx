@@ -17,7 +17,7 @@ const ITEM_COLOR = "#a8a29e";
 
 const shape = (points: [number, number][]) => points.map(([u, v]) => new Vector2(u, v));
 
-function Room({ room }: { room: Scene["room"] }) {
+function Room({ room, floor }: { room: Scene["room"]; floor?: ReactNode }) {
   const { width, length, height } = room.dimensions;
   const center = toThree(width / 2, length / 2);
   return (
@@ -26,18 +26,18 @@ function Room({ room }: { room: Scene["room"] }) {
         const outline = new Shape(shape(wall.outline));
         outline.holes = wall.holes.map((hole) => new Shape(shape(hole)));
         return (
-          <mesh key={wall.wall} position={wall.position} rotation={wall.rotation}>
+          <mesh key={wall.wall} position={wall.position} rotation={wall.rotation} castShadow receiveShadow>
             <extrudeGeometry args={[outline, { depth: WALL_THICKNESS, bevelEnabled: false }]} />
             <meshStandardMaterial color={room.walls.find((w) => w.wall === wall.wall)?.color ?? WALL_COLOR} />
           </mesh>
         );
       })}
-      <mesh position={center} rotation={[-Math.PI / 2, 0, 0]}>
+      <mesh position={center} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <planeGeometry args={[width, length]} />
-        <meshStandardMaterial color={FLOOR_COLOR} />
+        {floor ?? <meshStandardMaterial color={FLOOR_COLOR} />}
       </mesh>
       {/* faces down, so it hides nothing from the orbit camera above */}
-      <mesh position={[center[0], height, center[2]]} rotation={[Math.PI / 2, 0, 0]}>
+      <mesh position={[center[0], height, center[2]]} rotation={[Math.PI / 2, 0, 0]} castShadow>
         <planeGeometry args={[width, length]} />
         <meshStandardMaterial color={WALL_COLOR} />
       </mesh>
@@ -47,7 +47,7 @@ function Room({ room }: { room: Scene["room"] }) {
 
 function Box({ size }: { size: Size }) {
   return (
-    <mesh position={[0, size.height / 2, 0]}>
+    <mesh position={[0, size.height / 2, 0]} castShadow receiveShadow>
       <boxGeometry args={[size.width, size.height, size.depth]} />
       <meshStandardMaterial color={ITEM_COLOR} />
     </mesh>
@@ -61,7 +61,7 @@ function Model({ url, front, size }: { url: string; front: Front; size: Size }) 
   return (
     <group rotation={fit.rotation} scale={fit.scale}>
       <group position={fit.offset}>
-        <Clone object={scene} />
+        <Clone object={scene} castShadow receiveShadow />
       </group>
     </group>
   );
@@ -124,8 +124,9 @@ function Camera({ view, scene }: { view: View; scene: Scene }) {
 
 // The design in 3D: the room with its openings and every item, a GLB where the catalog has one and a box otherwise.
 // Renders on demand only. Load it through `SceneViewer` (index.tsx), which skips server rendering.
+// `lights` replace the default lights and `floor` the floor's plain material: see scene3d/look.
 // With `corner`, it shows only that fixed view, without buttons or credits (the headless render, F-14).
-export function Viewer({ scene, corner }: { scene: Scene; corner?: Corner }) {
+export function Viewer({ scene, corner, floor, lights }: { scene: Scene; corner?: Corner; floor?: ReactNode; lights?: ReactNode }) {
   const [picked, setView] = useState<View>("orbit");
   const view = corner ?? picked;
   const credits = scene.items.flatMap(({ item }) => (item?.glb_url ? [`${item.name}: ${item.description}`] : []));
@@ -136,11 +137,15 @@ export function Viewer({ scene, corner }: { scene: Scene; corner?: Corner }) {
   return (
     <div className="relative size-full min-h-80 bg-muted" style={{ containerType: "size" }}>
       <div className="absolute inset-0 m-auto" style={frame}>
-        <Canvas frameloop="demand" aria-label="3D view of the design">
+        <Canvas frameloop="demand" shadows="percentage" aria-label="3D view of the design">
           <Camera view={view} scene={scene} />
-          <hemisphereLight args={["#ffffff", "#b5a48c", 1.5]} />
-          <directionalLight position={toThree(scene.room.dimensions.width, -scene.room.dimensions.length, 6)} intensity={1.5} />
-          <Room room={scene.room} />
+          {lights ?? (
+            <>
+              <hemisphereLight args={["#ffffff", "#b5a48c", 1.5]} />
+              <directionalLight position={toThree(scene.room.dimensions.width, -scene.room.dimensions.length, 6)} intensity={1.5} />
+            </>
+          )}
+          <Room room={scene.room} floor={floor} />
           {scene.items.map((item) => (
             <Item key={item.node_id} item={item} />
           ))}

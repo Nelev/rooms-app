@@ -35,7 +35,7 @@ def test_invalid_reply_is_retried_with_a_repair_prompt(fake_llm: Callable[..., F
     fake = fake_llm('{"walls": "none"}', ROOM.model_dump_json())
     room, usage = llm.ask_structured(RoomSpec, "Read the room", role="analyze_room")
     assert room == ROOM
-    assert usage == llm._add(CALL_USAGE, CALL_USAGE)  # both calls are paid for
+    assert usage == llm.add_usage(CALL_USAGE, CALL_USAGE)  # both calls are paid for
     first, retry = fake.prompts
     assert retry[:1] == first and "Your previous reply was not valid" in str(retry[1].content)
 

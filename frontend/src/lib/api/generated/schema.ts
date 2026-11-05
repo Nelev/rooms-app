@@ -13,13 +13,13 @@ export interface paths {
         };
         /**
          * List Threads
-         * @description The caller's projects, newest first.
+         * @description The caller's projects, most recently updated first.
          */
         get: operations["list_threads_threads_get"];
         put?: never;
         /**
          * Create Thread
-         * @description Create a project.
+         * @description Create a project; only `metadata.title` is kept.
          */
         post: operations["create_thread_threads_post"];
         delete?: never;
@@ -116,7 +116,7 @@ export interface paths {
         put?: never;
         /**
          * Stream Run
-         * @description Start a run and stream it; 409 while another run is active on the thread.
+         * @description Start a run and stream it; 409 while another run is active on the thread, or when there is nothing to resume or continue.
          */
         post: operations["stream_run_threads__thread_id__runs_stream_post"];
         delete?: never;
@@ -156,7 +156,7 @@ export interface paths {
         put?: never;
         /**
          * Upload
-         * @description Store a room photo. Stub: checks it, returns a key and drops the file.
+         * @description Store a room photo (a HEIC one as a JPEG) and return its key. Without object storage (STORAGE_* unset), check it and drop it.
          */
         post: operations["upload_uploads_post"];
         delete?: never;
@@ -1168,7 +1168,7 @@ export interface components {
         };
         /**
          * RunCreate
-         * @description Start a run with a new `input`, or resume the open interrupt with `command`.
+         * @description Start a run with a new `input`, resume the open interrupt with `command`, or continue from the last checkpoint with input null.
          */
         RunCreate: {
             /** Input */
@@ -1624,7 +1624,7 @@ export interface components {
             };
             /**
              * Status
-             * @description new: no run yet; running: a run is active; needs_input: an interrupt is open; done; error: the last run failed
+             * @description new: no run yet; running: a run is active; needs_input: an interrupt is open; done: no node left to run; error: the last run failed, or a restart cut it off (a run with input null continues it)
              * @enum {string}
              */
             status: "new" | "running" | "needs_input" | "done" | "error";
@@ -1662,7 +1662,7 @@ export interface components {
             created_at: string | null;
             /**
              * Status
-             * @description new: no run yet; running: a run is active; needs_input: an interrupt is open; done; error: the last run failed
+             * @description new: no run yet; running: a run is active; needs_input: an interrupt is open; done: no node left to run; error: the last run failed, or a restart cut it off (a run with input null continues it)
              * @enum {string}
              */
             status: "new" | "running" | "needs_input" | "done" | "error";

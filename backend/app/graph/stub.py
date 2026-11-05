@@ -25,6 +25,13 @@ PACE = float(os.environ.get("STUB_PACE", "0"))  # seconds slept per second of a 
 Event = dict[str, Any]
 
 
+def live(node: str) -> bool:
+    """Whether a node calls the model: with OPENROUTER_API_KEY every real node does, without it they all replay the fixture.
+
+    Nodes call it as `stub.live(name)`, so a test can make a single node real (monkeypatch `stub.live`)."""
+    return bool(os.environ.get("OPENROUTER_API_KEY"))
+
+
 @cache
 def fixture(name: str) -> Any:
     """The fixture file `name`.json, parsed."""
@@ -88,7 +95,7 @@ def stub_node(fn: Callable[[RunState], dict[str, Any]]) -> Callable[..., dict[st
         time.sleep(PACE * events[end].get("duration_s", 0))
         for event in events[start + 1 : end + 1]:
             write(event)
-        return {**update, "cost": events[end].get("cost", 0.0)}
+        return {"cost": events[end].get("cost", 0.0), **update}  # a real node's own usage wins over the fixture's
 
     return node
 

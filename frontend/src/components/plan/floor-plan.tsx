@@ -2,7 +2,7 @@ import type { KeyboardEvent } from "react";
 import { cn } from "@/lib/utils";
 import { type Feature, featureRect, type Layout, onWall, type Point, type RoomSpec, type ValidationReport, type Wall, wallFrame } from "./coords";
 
-const SCALE = 100; // viewBox units per meter
+export const SCALE = 100; // viewBox units per meter
 const PAD = 0.4; // meters around the room for the wall letters, more if a door opens out
 // as backend/app/geometry/room.py: assumed depths and the strip in front of a window or radiator that must stay clear
 const RADIATOR_DEPTH = 0.1;
