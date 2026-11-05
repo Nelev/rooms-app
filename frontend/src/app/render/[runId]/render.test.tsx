@@ -9,8 +9,8 @@ import RenderPage from "./page";
 import { RenderScene } from "./render-scene";
 
 // three.js needs WebGL: the viewer shows what it was given
-vi.mock("@/components/scene3d/core", () => ({
-  SceneViewer: ({ scene, corner }: { scene: { items: unknown[] }; corner: string }) => (
+vi.mock("@/components/scene3d/look", () => ({
+  LitSceneViewer: ({ scene, corner }: { scene: { items: unknown[] }; corner: string }) => (
     <p>
       {corner}: {scene.items.length} items
     </p>

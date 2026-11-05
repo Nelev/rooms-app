@@ -13,7 +13,7 @@ from app.graph.nodes.architect import Edges, check, scene_graph, scene_nodes
 from app.graph.state import RunState
 from app.graph.stub import fixture
 from app.llm.fake import CALL_USAGE, FakeLLM
-from app.schemas import Critique, SceneGraph
+from app.schemas import Brief, Critique, SceneGraph
 from app.schemas.design import SceneEdge
 from app.schemas.layout import CritiqueAction
 from app.schemas.run import StepEvent
@@ -158,19 +158,18 @@ def test_the_fixture_brief_nodes_match_the_fixture_graph_objects() -> None:
 
 def test_in_the_graph_the_architect_streams_its_steps_and_applies_the_critic_fix(monkeypatch: pytest.MonkeyPatch) -> None:
     fix = edges(("desk", "in_front", "window_1"), ("desk", "facing", "window_1"))
-    facing = edges(*(e for e in EDGES if e.source != "desk"))
-    # round 1 draws the graph; the fixture critic sends round 2 back, on the stub refine's fixture graph, which has no facing edges
-    fake = install(monkeypatch, edges(*EDGES), fix, facing)
+    # round 1 draws the graph; the fixture critic sends round 2 back, and the fix applies to the (refined) round-1 graph
+    fake = install(monkeypatch, edges(*EDGES), fix)
     monkeypatch.setattr(stub, "live", lambda node: node == "architect")  # only the architect is real
     graph = build_graph(InMemorySaver(serde=serde()))
     config: Any = {"configurable": {"thread_id": "t1"}}
-    graph.invoke(design_input(), config)
+    graph.invoke({**design_input(), "brief": Brief.model_validate(fixture("brief"))}, config)  # as the API passes it, for the Sourcer
     chunks = list(graph.stream(Command(resume=fixture("room_spec")), config, stream_mode=["custom", "updates"]))
     steps = [StepEvent.model_validate(c).model_dump() for mode, c in chunks if mode == "custom" and c.get("node") == "architect"]
     assert [(s["status"], s["round"]) for s in steps] == [("started", 1), ("done", 1), ("started", 2), ("done", 2)]
     assert steps[1]["summary"] == "scene graph with 4 objects" and steps[1]["cost"] == CALL_USAGE["cost"]
     first, fixed = [c["architect"]["scene_graph"] for mode, c in chunks if mode == "updates" and "architect" in c]
-    assert first.edges == EDGES and not check(fixed, BEDROOM["room_spec"]) and fake.calls == 3
+    assert first.edges == EDGES and not check(fixed, BEDROOM["room_spec"]) and fake.calls == 2
     assert [e for e in fixed.edges if e.source == "desk"] == Edges.model_validate_json(fix).edges
 
 

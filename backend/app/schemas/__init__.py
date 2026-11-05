@@ -3,7 +3,7 @@
 from typing import Any
 
 from app.schemas.design import Brief, CatalogItem, DesignBrief, SceneGraph
-from app.schemas.layout import ChatEdit, Critique, Layout, LayoutDiff, ValidationReport
+from app.schemas.layout import ChatEdit, Critique, FallbackReport, Layout, LayoutDiff, ValidationReport
 from app.schemas.room import RoomSpec
 from app.schemas.run import ConfirmRoom, ConfirmRoomResume, RunInput, RunOutput, StreamEvent
 from app.schemas.scene import CameraPose, Scene
@@ -17,6 +17,7 @@ CONTRACTS: dict[str, Any] = {
     "CatalogItem": CatalogItem,
     "Layout": Layout,
     "ValidationReport": ValidationReport,
+    "FallbackReport": FallbackReport,
     "Critique": Critique,
     "Scene": Scene,
     "ChatEdit": ChatEdit,
@@ -37,6 +38,7 @@ __all__ = [
     "ConfirmRoomResume",
     "Critique",
     "DesignBrief",
+    "FallbackReport",
     "Layout",
     "LayoutDiff",
     "RoomSpec",
