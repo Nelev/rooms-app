@@ -1,10 +1,12 @@
 """The solver fallback: the impossible brief gets a partial layout and a correct explanation, within a hard time budget."""
 
+from itertools import count
 from time import monotonic
 
 import pytest
 
 from app.catalog.loader import load_catalog
+from app.geometry import fallback, solver
 from app.geometry.fallback import smaller_variants, solve_with_fallback
 from app.schemas import Brief, SceneGraph
 from tests.test_fixtures import FIXTURES, case
@@ -34,6 +36,15 @@ def impossible_graph() -> SceneGraph:
     return graph(nodes, edges)
 
 
+@pytest.fixture
+def steady_clock(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Every clock read takes 3 ms, about one solver step on an idle machine: the budgets buy the same search on a busy one."""
+    ticks = count(0.0, 0.003)
+    for module in (solver, fallback):
+        monkeypatch.setattr(module, "monotonic", ticks.__next__)
+
+
+@pytest.mark.usefixtures("steady_clock")
 @pytest.mark.parametrize("seed", range(2))
 def test_the_impossible_brief_gets_a_partial_layout_and_why(seed: int) -> None:
     g, spec = impossible_graph(), case("small-bedroom")["room_spec"]
