@@ -1,10 +1,11 @@
 "use client";
 
 import { Check, ExternalLink, ImageOff, X } from "lucide-react";
-import { useState } from "react";
+import { type ReactNode, useState } from "react";
 import { FloorPlan } from "@/components/plan/floor-plan";
 import { Empty, EmptyHeader, EmptyTitle } from "@/components/ui/empty";
 import { Skeleton } from "@/components/ui/skeleton";
+import type { ApiError } from "@/lib/api";
 import type { components } from "@/lib/api/generated/schema";
 import { useThread } from "@/lib/hooks/use-threads";
 import { cn } from "@/lib/utils";
@@ -46,7 +47,8 @@ function Link({ item }: { item: CatalogItem }) {
 
 // A project's finished design: the plan and the shopping list, where selecting an item in one highlights it in both, with the
 // Sourcer's other candidates for the selected item, the total against the budget, the rationale and the Critic's rules.
-export function Results({ values }: { values: RunState }) {
+// F-13: `highlighted` items (a chat edit just changed them) stand out, and clicking an item in the plan also calls `onPick` with its id.
+export function Results({ values, highlighted = [], onPick }: { values: RunState; highlighted?: string[]; onPick?: (id: string) => void }) {
   const [selectedId, setSelectedId] = useState<string>();
   const room = values.scene?.room ?? values.room_spec;
   const items = (values.scene?.items ?? []).filter((i): i is typeof i & { item: CatalogItem } => !!i.item);
@@ -74,7 +76,11 @@ export function Results({ values }: { values: RunState }) {
             layout={values.layout}
             report={values.validation}
             selectedId={selectedId}
-            onSelect={select}
+            onSelect={(id) => {
+              select(id);
+              onPick?.(id);
+            }}
+            highlighted={highlighted}
             className="rounded-lg border"
           />
         )}
@@ -112,9 +118,15 @@ export function Results({ values }: { values: RunState }) {
         <ul className="flex flex-col gap-2">
           {items.map(({ node_id, item }) => {
             const selected = node_id === selectedId;
+            const changed = highlighted.includes(node_id);
             const alternatives = (values.candidates?.[node_id] ?? []).filter((c) => c.id !== item.id);
             return (
-              <li key={node_id} data-id={node_id} className={cn("rounded-lg border p-2", selected && "border-primary ring-2 ring-primary/30")}>
+              <li
+                key={node_id}
+                data-id={node_id}
+                data-highlighted={changed || undefined}
+                className={cn("rounded-lg border p-2", changed && "bg-primary/10", selected && "border-primary ring-2 ring-primary/30")}
+              >
                 <div className="flex items-center gap-3">
                   <button
                     type="button"
@@ -173,17 +185,26 @@ export function Results({ values }: { values: RunState }) {
   );
 }
 
-// The results of the project's thread, once its state is loaded.
-export function ResultsView({ threadId }: { threadId: string }) {
-  const thread = useThread(threadId);
-  if (thread.error && !thread.data)
+// The thread's design once its state is loaded, or else its error, a placeholder while it loads, or that there is none yet.
+export function WithDesign({
+  values,
+  error,
+  what = "design",
+  children,
+}: {
+  values?: RunState;
+  error?: ApiError;
+  what?: string;
+  children: ReactNode;
+}) {
+  if (error && !values)
     return (
       <p role="alert" className="text-destructive text-sm">
-        {thread.error.message}
+        {error.message}
       </p>
     );
-  if (!thread.data) return <Skeleton role="status" aria-label="Loading the design" className="h-96 w-full" />;
-  if (!thread.data.values.scene)
+  if (!values) return <Skeleton role="status" aria-label={`Loading the ${what}`} className="h-96 w-full" />;
+  if (!values.scene)
     return (
       <Empty>
         <EmptyHeader>
@@ -191,5 +212,15 @@ export function ResultsView({ threadId }: { threadId: string }) {
         </EmptyHeader>
       </Empty>
     );
-  return <Results values={thread.data.values} />;
+  return children;
+}
+
+// The results of the project's thread, once its state is loaded.
+export function ResultsView({ threadId }: { threadId: string }) {
+  const { data, error } = useThread(threadId);
+  return (
+    <WithDesign values={data?.values} error={error}>
+      {data && <Results values={data.values} />}
+    </WithDesign>
+  );
 }

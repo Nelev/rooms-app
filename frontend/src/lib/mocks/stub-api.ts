@@ -4,7 +4,8 @@ import type { Thread, ThreadState } from "@/lib/api";
 
 // The stub API (`make dev-stub`) as a fetch, for tests: it replays what the stub answered for one project (stub/, recorded by
 // record.sh). Its design run streams up to the confirm_room interrupt, the resumed run to the end, then each chat run streams the
-// fixture's next chat turn (chat.json: an applied edit, then a refused one). Like the stub, a run goes on without the client and
+// fixture's next chat turn (chat.json: an applied edit, then a refused one). Not recorded: a revert goes back to the recorded state
+// of the checkpoint, so the next chat run replays the turn after it. Like the stub, a run goes on without the client and
 // can be rejoined from its first part. Streams arrive in small chunks, and stop after their first one while the test holds them
 // (`hold()`, until `release()`), so a test can leave in the middle of a run.
 
@@ -67,6 +68,13 @@ export function stubApi() {
       // not recorded: the fixture's pose, whatever the points (the stub API solves them, and the placeholder photo shows too few corners)
       case "POST /threads/{thread_id}/camera-pose":
         return answer(JSON.parse(readFileSync(join(import.meta.dirname, "../../../../fixtures/small-bedroom/camera_pose.json"), "utf8")));
+      // not recorded: the state of the checkpoint itself, where the real API forks a new checkpoint from it
+      case "POST /threads/{thread_id}/revert": {
+        const at = states.findIndex((s) => s.checkpoint_id === JSON.parse(String(init?.body)).checkpoint_id);
+        if (at < 0) return answer({ detail: "Checkpoint not found" }, 404);
+        step = at;
+        return answer(states[step]);
+      }
       case "GET /threads/{thread_id}/runs/current/stream":
         return latest ? sse(latest, init?.signal, () => held) : answer({ detail: "No run on this thread" }, 404);
     }

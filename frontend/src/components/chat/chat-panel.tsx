@@ -15,6 +15,8 @@ const SUGGESTIONS = ["Make it cheaper", "Move the desk closer to the window", "A
 // An item is referenced in a message as `@<node id>` (e.g. `@desk_chair`), and shown as a chip.
 const REFERENCE = /@([a-z0-9_]+)/g;
 const label = (nodeId: string) => nodeId.replaceAll("_", " ");
+// the draft with a reference to the item appended
+export const mention = (draft: string, nodeId: string) => `${draft}${draft && !draft.endsWith(" ") ? " " : ""}@${nodeId} `;
 
 // The stub's FakeLLM (and a model asked for structured output) streams its reply as a JSON string: shown unquoted as it streams.
 function unquote(text: string): string {
@@ -73,15 +75,33 @@ function Bubble({ from, children }: { from: ChatEntry["role"]; children: React.R
 
 // The project's chat: its history, the turn in progress as it streams, and a composer with suggested replies and the design's items
 // to reference. Earlier turns come from the thread's state; the step chips and a refusal are those of the latest run.
-export function ChatPanel({ threadId, suggestions = SUGGESTIONS }: { threadId: string; suggestions?: string[] }) {
+// F-13: the workspace keeps the composer's text (`draft`, `onDraftChange`: it inserts the references of items clicked in its views)
+// and is told when a message is sent (`onSend`).
+export function ChatPanel({
+  threadId,
+  suggestions = SUGGESTIONS,
+  draft: shared,
+  onDraftChange,
+  onSend,
+}: {
+  threadId: string;
+  suggestions?: string[];
+  draft?: string;
+  onDraftChange?: (draft: string) => void;
+  onSend?: () => void;
+}) {
   const thread = useThread(threadId);
   const run = useRunStream(threadId);
   const [sent, setSent] = useState("");
   const [base, setBase] = useState<number>(); // the history's length when the turn was sent
-  const [draft, setDraft] = useState("");
+  const [own, setOwn] = useState("");
+  const draft = shared ?? own;
+  const setDraft = onDraftChange ?? setOwn;
 
-  const turn = chatTurn(run, run.running ? sent : undefined);
+  let turn = chatTurn(run, run.running ? sent : undefined);
   let history = thread.data?.values.messages ?? [];
+  // a run rejoined on a reload, already over, whose turn is no longer the history's last (it was undone): not shown
+  if (turn && base === undefined && !run.running && thread.data && history.at(-turn.added)?.content !== turn.user) turn = undefined;
   // the history without the turn shown below it, whether or not the thread's state has been fetched again since: a turn sent here
   // follows the history it was sent after; a run rejoined on a reload, already over, added its entries at the end
   if (turn) history = history.slice(0, base ?? Math.max(0, history.length - turn.added));
@@ -92,6 +112,7 @@ export function ChatPanel({ threadId, suggestions = SUGGESTIONS }: { threadId: s
     setSent(text);
     setBase(history.length + (turn?.added ?? 0)); // the entries shown: the latest run's may not be in the thread's state yet
     setDraft("");
+    onSend?.();
     run.submit({ input: { chat_message: text } });
   }
 
@@ -167,12 +188,7 @@ export function ChatPanel({ threadId, suggestions = SUGGESTIONS }: { threadId: s
         <fieldset className="flex flex-wrap items-center gap-1.5 text-muted-foreground text-xs" aria-label="Items">
           Mention
           {items.map(({ node_id }) => (
-            <Button
-              key={node_id}
-              variant="secondary"
-              size="xs"
-              onClick={() => setDraft((d) => `${d}${d && !d.endsWith(" ") ? " " : ""}@${node_id} `)}
-            >
+            <Button key={node_id} variant="secondary" size="xs" onClick={() => setDraft(mention(draft, node_id))}>
               {label(node_id)}
             </Button>
           ))}
