@@ -5,6 +5,7 @@ import { type PointerEvent, type ReactNode, useId, useRef, useState } from "reac
 import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { photoUrl } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import type { Feature, Point, RoomSpec } from "../coords";
 import { wallFrame } from "../coords";
@@ -164,12 +165,18 @@ export function RoomEditor({ initial, photos, sending, onConfirm }: Props) {
     <div className="flex flex-col gap-5">
       <div className="grid gap-4 lg:grid-cols-2">
         <figure className="flex flex-col gap-2">
-          {/* B-06 (detection overlays) and a way to fetch photos from storage are not built yet: the photos' keys stand in for them */}
-          <div className="flex aspect-[4/3] flex-col items-center justify-center gap-2 rounded-lg border bg-muted p-4 text-center text-muted-foreground text-sm">
-            <ImageOff aria-hidden />
-            Photo preview not available yet
-          </div>
-          <figcaption className="break-all text-muted-foreground text-xs">{photos.join(", ") || "No photos"}</figcaption>
+          {photos.length ? (
+            photos.map((key, i) => (
+              // biome-ignore lint/performance/noImgElement: a user's photo from the API or a signed URL, nothing for next/image to optimize
+              <img key={key} src={photoUrl(key)} alt={`Your room, view ${i + 1}`} className="w-full rounded-lg border bg-muted" />
+            ))
+          ) : (
+            <div className="flex aspect-[4/3] flex-col items-center justify-center gap-2 rounded-lg border bg-muted p-4 text-center text-muted-foreground text-sm">
+              <ImageOff aria-hidden />
+              No photos
+            </div>
+          )}
+          {photos.length ? <figcaption className="break-all text-muted-foreground text-xs">{photos.join(", ")}</figcaption> : null}
         </figure>
         <div
           className="touch-none"
