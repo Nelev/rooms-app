@@ -1,25 +1,35 @@
 """The Sourcer, offline: the catalog in an in-memory store with fake embeddings, on each fixture case."""
 
 import asyncio
+import json
 from typing import Any
 
 import pytest
+from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.store.base import BaseStore
 from langgraph.store.memory import InMemoryStore
+from langgraph.types import Command
 from pydantic import TypeAdapter
 
+from app import llm
 from app.catalog.embed import index_config, seed
 from app.catalog.loader import load_catalog
 from app.graph import stub
+from app.graph.graph import build_graph, serde
+from app.graph.nodes.analyze_room import RUNS
 from app.graph.nodes.critic import judge
 from app.graph.nodes.solve import solve_scene
 from app.graph.nodes.source import footprint, source_scene, swap_rule, within
 from app.graph.routing import keep_best
 from app.graph.state import RunState
 from app.graph.stub import CASE
+from app.llm.fake import CALL_USAGE, FakeLLM
 from app.schemas import Brief, Critique, DesignBrief, RoomSpec, SceneGraph
 from app.schemas.coords import Size
 from app.schemas.layout import CritiqueAction
+from tests.test_analyze_room import LABEL, reading
+from tests.test_api import design_input
+from tests.test_architect import EDGES, edges
 from tests.test_catalog_search import FakeEmbeddings
 
 CASES = ["small-bedroom", "home-office", "living-room"]
@@ -174,3 +184,20 @@ def test_an_item_of_another_shape_must_fit_in_the_box(store: BaseStore) -> None:
 
     state = with_box(case_state("small-bedroom"), "bed", 0.3)  # smaller than any bed: it stays a box
     assert next(n for n in check(state, source_scene(store, state)).nodes if n.id == "bed").item_id is None
+
+
+def test_a_live_run_costs_the_models_usage_only(store: BaseStore, monkeypatch: pytest.MonkeyPatch) -> None:
+    """With a key every node is live: the Sourcer (no model) adds nothing, its done event says so, and the run's cost is the
+    fake model's calls only (the analyst's readings, the designer, the architect), none of the fixture's step costs."""
+    monkeypatch.setenv("OPENROUTER_API_KEY", "test-key")
+    replies = [*[reading(LABEL)] * RUNS, json.dumps(stub.fixture("design_brief")), edges(*EDGES)]
+    fake = FakeLLM(*replies)
+    monkeypatch.setattr(llm, "get_llm", lambda role: fake)
+    graph, config = build_graph(InMemorySaver(serde=serde()), store), {"configurable": {"thread_id": "t1"}}
+    graph.invoke({**design_input(), "brief": Brief.model_validate(stub.fixture("brief"))}, config)
+    chunks = list(graph.stream(Command(resume=stub.fixture("room_spec")), config, stream_mode="custom"))
+    values = graph.get_state(config).values
+    assert fake.calls == RUNS + 2 and values["critique"].summary == "all rules pass"
+    assert values["cost"] == pytest.approx(fake.calls * CALL_USAGE["cost"])
+    assert values["input_tokens"] == fake.calls * CALL_USAGE["input_tokens"]
+    assert [c["cost"] for c in chunks if c.get("node") == "source" and c["status"] == "done"] == [0]

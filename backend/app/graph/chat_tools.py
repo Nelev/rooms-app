@@ -36,7 +36,6 @@ CallId = Annotated[str, InjectedToolCallId]
 PlacingRelation = Literal["left_of", "right_of", "in_front", "behind", "on", "against_wall", "in_corner", "adjacent"]
 
 SEEDS = 3  # solver seeds tried for an item re-solved locally
-ATTEMPT = 0.5  # s per solve (as the solve node's)
 OPTIONS = 5  # catalog items tried, the best first, for a swap or an addition
 
 
@@ -117,7 +116,7 @@ def place(spec: RoomSpec, layout: Layout, graph: SceneGraph, ids: set[str]) -> L
     graph = graph.model_copy(update={"nodes": [n for n in graph.nodes if n.kind != "object" or n.id in placed]})  # not what B-12 dropped
     for seed in range(SEEDS):
         try:
-            new = solve(graph, spec, seed, ATTEMPT, pinned)
+            new = solve(graph, spec, seed, pinned=pinned)  # the step limit decides, as in the solve node
         except Unsolvable:
             return None
         if not problems(spec, layout, new, ids):
