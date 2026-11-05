@@ -8,8 +8,9 @@ The validation combines the B-07 graph check, the B-04 layout checks and a check
 relation of the graph against the layout: the solver only places each node by its first placing edge (B-11), so the others
 (the Refiner's ordering edges, a second relation, `facing`) may be broken.
 
-Deterministic, no model: the node always runs for real and streams its own step events. A chat edit is not re-solved: its
-layout is still the fixture's (stub), until the chat edit node is real.
+Deterministic, no model: the node always runs for real and streams its own step events. A chat edit is only validated: the
+chat_edit tools (B-21) already placed what it changed with the other items pinned. With chat_edit a stub (no model key), a chat
+edit's layout is the fixture chat turn's.
 """
 
 import time
@@ -24,6 +25,7 @@ from app.geometry.fallback import solve_with_fallback
 from app.geometry.graph_validate import validate_graph
 from app.geometry.room import room_model
 from app.geometry.solver import Frame, child_box, fixed_frames
+from app.graph import stub
 from app.graph.state import RunState
 from app.graph.stub import chat_turn, stub_node
 from app.schemas import Layout, RoomSpec, RunOutput, SceneGraph, ValidationReport
@@ -84,11 +86,13 @@ def unmet_relations(graph: SceneGraph, spec: RoomSpec, layout: Layout) -> list[V
     return issues
 
 
+LAYOUT_CHECKS = (checks.collisions, checks.blocked_openings, checks.blocked_windows, checks.blocked_radiators, checks.above_ceiling)
+
+
 def validate(graph: SceneGraph, spec: RoomSpec, layout: Layout) -> ValidationReport:
     """The graph's B-07 issues, the layout's B-04 issues (collisions, clearance, blocked openings, ceiling) and its unmet relations."""
     room = room_model(spec)
-    layout_checks = (checks.collisions, checks.blocked_openings, checks.blocked_windows, checks.blocked_radiators, checks.above_ceiling)
-    issues = validate_graph(graph, spec).issues + [i for check in layout_checks for i in check(room, layout)]
+    issues = validate_graph(graph, spec).issues + [i for check in LAYOUT_CHECKS for i in check(room, layout)]
     issues += checks.clearance_violations(room, layout, WALKWAY) + unmet_relations(graph, spec, layout)
     return ValidationReport(issues=issues)
 
@@ -125,15 +129,20 @@ chat = stub_node(_chat)  # a chat edit's layout: the fixture's, with its stream 
 
 
 def solve(state: RunState) -> dict[str, Any]:
-    if state["mode"] == "chat":
+    edit = state["mode"] == "chat"
+    if edit and not stub.live("chat_edit"):
         return chat(state)
     write, start = get_stream_writer(), time.monotonic()
-    step = {"type": "step", "node": "solve", "round": state.get("round")}  # a StepEvent
+    step = {"type": "step", "node": "solve", "round": None if edit else state.get("round")}  # a StepEvent
     write({**step, "status": "started"})
-    update = solve_scene(state)
+    if edit:  # the chat edit placed what it changed with the other items pinned
+        update: dict[str, Any] = {"validation": validate(state["scene_graph"], state["room_spec"], state["layout"])}
+        summary = "edited layout checked"
+    else:
+        update = solve_scene(state)
+        report = update["fallback"]
+        summary = report.summary if report.changes else f"placed {len(update['layout'].placements)} objects"
     errors = sum(i.severity == "error" for i in update["validation"].issues)
-    report = update["fallback"]
-    summary = report.summary if report.changes else f"placed {len(update['layout'].placements)} objects"
     summary += f", {errors} issue{'s' * (errors != 1)}" if errors else ""
     write({**step, "status": "done", "summary": summary, "duration_s": round(time.monotonic() - start, 1)})
     return update
