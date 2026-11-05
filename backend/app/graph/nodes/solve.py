@@ -2,8 +2,9 @@
 
 The fallback drops or shrinks what does not fit; a resized item's catalog item and size are applied to the scene graph (and put
 first among its candidates, the Sourcer's convention for the chosen item), so the next rounds and the results see the real item.
-The seed is the critic round: the same run always gives the same layouts (up to the time budgets), and a graph the Critic sends
-back unchanged is still sampled anew. The validation combines the B-07 graph check, the B-04 layout checks and a check of every
+The seed is the critic round (1, 2, 3), not the thread id: the same input always gives the same layouts (up to the time
+budgets, which B-12 owns), so runs and evals are reproducible, and a graph the Critic sends back unchanged is still sampled anew.
+The validation combines the B-07 graph check, the B-04 layout checks and a check of every
 relation of the graph against the layout: the solver only places each node by its first placing edge (B-11), so the others
 (the Refiner's ordering edges, a second relation, `facing`) may be broken.
 
@@ -22,7 +23,7 @@ from app.geometry import checks
 from app.geometry.fallback import solve_with_fallback
 from app.geometry.graph_validate import validate_graph
 from app.geometry.room import room_model
-from app.geometry.solver import Frame, _box, _fixed_frames
+from app.geometry.solver import Frame, child_box, fixed_frames
 from app.graph.state import RunState
 from app.graph.stub import chat_turn, stub_node
 from app.schemas import Layout, RoomSpec, RunOutput, SceneGraph, ValidationReport
@@ -56,7 +57,7 @@ def kept(relation: str, frame: Frame, p: Placement) -> bool:
     if relation == "facing":
         return local(p, frame.x, frame.y)[1] > TOL
     for r in ("left_of", "right_of") if relation == "adjacent" else (relation,):
-        x0, x1, y0, y1, _ = _box(r, frame, p.size)
+        x0, x1, y0, y1, _ = child_box(r, frame, p.size)
         along = min(abs(x - x0), abs(x - x1)) <= TOL if r == "in_corner" else x0 - TOL <= x <= x1 + TOL
         on_top = r != "on" or frame.fixed or abs(p.z - frame.top) <= TOL
         if along and y0 - TOL <= y <= y1 + TOL and on_top:
@@ -68,7 +69,7 @@ def unmet_relations(graph: SceneGraph, spec: RoomSpec, layout: Layout) -> list[V
     """Every edge of an object whose placements (each copy) do not keep it; edges to or from an item not placed are skipped."""
     nodes = {n.id: n for n in graph.nodes}
     placed = {p.node_id: p for p in layout.placements}
-    frames = _fixed_frames(spec)
+    frames = fixed_frames(spec)
     for n, p in placed.items():
         frames[n] = Frame(p.x, p.y, p.rotation, p.size.width, p.size.depth, p.z + p.size.height, False)
     issues = []
