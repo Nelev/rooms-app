@@ -63,7 +63,7 @@ export function RunTimeline({ run }: { run: RunStream }) {
             <div className="mt-1.5 flex items-center gap-2">
               <span className="text-muted-foreground">Check the room before the design starts.</span>
               <Button size="sm" disabled={run.running} onClick={() => run.submit({ command: { resume: interrupt.value.room } })}>
-                Confirm room
+                Accept as analyzed
               </Button>
             </div>
           )}

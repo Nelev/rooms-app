@@ -51,8 +51,8 @@ describe("RunTimeline", () => {
     expect(rows()).toEqual(["Route inputdone0.01s", "Analyze roomdone9.8s$0.012", "Confirm roomwaiting for you"]);
     expect(screen.getByText("found 1 door, 1 window, 1 radiator")).toBeTruthy();
 
-    fireEvent.click(screen.getByRole("button", { name: "Confirm room" }));
-    await waitFor(() => expect(screen.queryByRole("button", { name: "Confirm room" })).toBeNull());
+    fireEvent.click(screen.getByRole("button", { name: "Accept as analyzed" }));
+    await waitFor(() => expect(screen.queryByRole("button", { name: "Accept as analyzed" })).toBeNull());
     await ended();
     await waitFor(() => expect(rows().at(-1)).toBe("Presentdone5.5s$0.006"));
     const rounds = screen.getAllByText(/^Critic round/).map((p) => p.parentElement as HTMLElement);
@@ -69,7 +69,7 @@ describe("RunTimeline", () => {
     run.submit(design);
     await ended();
     api.hold();
-    fireEvent.click(screen.getByRole("button", { name: "Confirm room" }));
+    fireEvent.click(screen.getByRole("button", { name: "Accept as analyzed" }));
     await waitFor(() => expect(rows().at(-1)).toBe("Confirm roomrunning"));
     first.unmount(); // the page reloads
     api.release();
@@ -94,7 +94,7 @@ describe("RunTimeline", () => {
       String(input).endsWith("/runs/current/stream") ? Promise.resolve(new Response(null, { status: 404 })) : api.fetch(String(input), init),
     ); // the server restarted
     render(<Page />);
-    await screen.findByRole("button", { name: "Confirm room" });
+    await screen.findByRole("button", { name: "Accept as analyzed" });
     expect(rows().map((r) => r?.split("done")[0])).toEqual(["Route input", "Analyze room", "Confirm roomwaiting for you"]);
   });
 
@@ -108,7 +108,7 @@ describe("RunTimeline", () => {
     fireEvent.click(screen.getByRole("button", { name: "Retry" }));
     await ended();
     expect(screen.queryByRole("alert")).toBeNull();
-    expect(screen.getByRole("button", { name: "Confirm room" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Accept as analyzed" })).toBeTruthy();
   });
 
   it("rejoins the run when its stream broke while it ran", async () => {
@@ -130,7 +130,7 @@ describe("RunTimeline", () => {
     expect(run.runId).toBeTruthy();
 
     fireEvent.click(screen.getByRole("button", { name: "Retry" }));
-    await screen.findByRole("button", { name: "Confirm room" });
+    await screen.findByRole("button", { name: "Accept as analyzed" });
     expect(screen.queryByRole("alert")).toBeNull();
     const posts = vi.mocked(fetch).mock.calls.filter(([, init]) => init?.method === "POST");
     expect(posts).toHaveLength(1); // the run was rejoined, not started again
@@ -145,7 +145,7 @@ describe("RunTimeline", () => {
     expect((await screen.findByRole("alert")).textContent).toContain("ValueError: no photo");
 
     fireEvent.click(screen.getByRole("button", { name: "Retry" }));
-    await screen.findByRole("button", { name: "Confirm room" });
+    await screen.findByRole("button", { name: "Accept as analyzed" });
     expect(screen.queryByRole("alert")).toBeNull();
   });
 
@@ -156,7 +156,7 @@ describe("RunTimeline", () => {
     await ended();
     const refused = Response.json({ detail: "A run is already active on this thread" }, { status: 409 });
     vi.mocked(fetch).mockResolvedValueOnce(refused); // another tab resumed the interrupt
-    fireEvent.click(screen.getByRole("button", { name: "Confirm room" }));
+    fireEvent.click(screen.getByRole("button", { name: "Accept as analyzed" }));
     await screen.findByRole("alert");
 
     fireEvent.click(screen.getByRole("button", { name: "Retry" }));
@@ -171,7 +171,7 @@ describe("RunTimeline", () => {
     await ended();
     const failed = 'event: metadata\ndata: {"run_id": "failed"}\n\nevent: error\ndata: {"message": "ValueError: no design"}\n\n';
     vi.mocked(fetch).mockResolvedValueOnce(new Response(failed, { headers: { "Content-Type": "text/event-stream" } }));
-    fireEvent.click(screen.getByRole("button", { name: "Confirm room" }));
+    fireEvent.click(screen.getByRole("button", { name: "Accept as analyzed" }));
     expect((await screen.findByRole("alert")).textContent).toContain("ValueError: no design");
     expect(screen.queryByRole("button", { name: "Retry" })).toBeNull();
   });
