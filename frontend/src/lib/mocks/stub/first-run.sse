@@ -1,0 +1,60 @@
+event: metadata
+data: {"run_id":"cccc6531807140e8afed41c4048ba66c"}
+
+event: custom
+data: {"type": "step", "node": "route_input", "status": "started"}
+
+event: custom
+data: {"type": "step", "node": "route_input", "status": "done", "summary": "new design", "duration_s": 0.01}
+
+event: updates
+data: {"route_input": {"mode": "design", "cost": 0.0}}
+
+event: custom
+data: {"type": "step", "node": "analyze_room", "status": "started"}
+
+event: messages
+data: [{"id": "lc_run--01a1abe3-8e6f-778c-ae30-466c338abfb7", "content": "{\"dimensions\":{\"width\":3.2,\"length\":3.4,\"height\":2.6},\"walls\":[{\"wall\":\"A\",\"color\":\"#f2efe9\"},{\"wall\":\"B\",\"color\":\"#f2efe9\"},{\"wall\":\"C\",\"color\":\"#f2efe9\"},{\"wall\":\"D\",\"color\":\"#f2efe9\"}],\"floor_material\":\"oak\",\"features\":[{\"id\":\"door_1\",\"type\":\"door\",\"wall\":\"A\",\"offset\":0.75,\"width\":0.8,\"height\":2.1,\"sill_height\":0.0,\"confidence\":0.95},{\"id\":\"window_1\",\"type\":\"window\",\"wall\":\"C\",\"offset\":0.5,\"width\":1.0,\"height\":1.3,\"sill_height\":0.9,\"confidence\":0.9},{\"id\":\"radiator_1\",\"type\":\"radiator\",\"wall\":\"C\",\"offset\":0.5,\"width\":0.8,\"height\":0.6,\"sill_height\":0.1,\"confidence\":0.7}],\"kept_furniture\":[{\"id\":\"kept_1\",\"name\":\"wardrobe\",\"x\":0.3,\"y\":0.9,\"rotation\":270.0,\"size\":{\"width\":1.0,\"depth\":0.6,\"height\":2.0}}],\"warnings\":[\"Radiator"}, {"langgraph_node": "analyze_room"}]
+
+event: messages
+data: [{"id": "lc_run--01a1abe3-8e6f-778c-ae30-466c338abfb7", "content": " "}, {"langgraph_node": "analyze_room"}]
+
+event: messages
+data: [{"id": "lc_run--01a1abe3-8e6f-778c-ae30-466c338abfb7", "content": "width"}, {"langgraph_node": "analyze_room"}]
+
+event: messages
+data: [{"id": "lc_run--01a1abe3-8e6f-778c-ae30-466c338abfb7", "content": " "}, {"langgraph_node": "analyze_room"}]
+
+event: messages
+data: [{"id": "lc_run--01a1abe3-8e6f-778c-ae30-466c338abfb7", "content": "estimated"}, {"langgraph_node": "analyze_room"}]
+
+event: messages
+data: [{"id": "lc_run--01a1abe3-8e6f-778c-ae30-466c338abfb7", "content": " "}, {"langgraph_node": "analyze_room"}]
+
+event: messages
+data: [{"id": "lc_run--01a1abe3-8e6f-778c-ae30-466c338abfb7", "content": "from"}, {"langgraph_node": "analyze_room"}]
+
+event: messages
+data: [{"id": "lc_run--01a1abe3-8e6f-778c-ae30-466c338abfb7", "content": " "}, {"langgraph_node": "analyze_room"}]
+
+event: messages
+data: [{"id": "lc_run--01a1abe3-8e6f-778c-ae30-466c338abfb7", "content": "one"}, {"langgraph_node": "analyze_room"}]
+
+event: messages
+data: [{"id": "lc_run--01a1abe3-8e6f-778c-ae30-466c338abfb7", "content": " "}, {"langgraph_node": "analyze_room"}]
+
+event: messages
+data: [{"id": "lc_run--01a1abe3-8e6f-778c-ae30-466c338abfb7", "content": "photo\"]}"}, {"langgraph_node": "analyze_room"}]
+
+event: custom
+data: {"type": "step", "node": "analyze_room", "status": "done", "summary": "found 1 door, 1 window, 1 radiator", "duration_s": 9.8, "cost": 0.012}
+
+event: updates
+data: {"analyze_room": {"room_spec": {"dimensions": {"width": 3.2, "length": 3.4, "height": 2.6}, "walls": [{"wall": "A", "color": "#f2efe9"}, {"wall": "B", "color": "#f2efe9"}, {"wall": "C", "color": "#f2efe9"}, {"wall": "D", "color": "#f2efe9"}], "floor_material": "oak", "features": [{"id": "door_1", "type": "door", "wall": "A", "offset": 0.75, "width": 0.8, "height": 2.1, "sill_height": 0.0, "confidence": 0.95}, {"id": "window_1", "type": "window", "wall": "C", "offset": 0.5, "width": 1.0, "height": 1.3, "sill_height": 0.9, "confidence": 0.9}, {"id": "radiator_1", "type": "radiator", "wall": "C", "offset": 0.5, "width": 0.8, "height": 0.6, "sill_height": 0.1, "confidence": 0.7}], "kept_furniture": [{"id": "kept_1", "name": "wardrobe", "x": 0.3, "y": 0.9, "rotation": 270.0, "size": {"width": 1.0, "depth": 0.6, "height": 2.0}}], "warnings": ["Radiator width estimated from one photo"]}, "cost": 0.012}}
+
+event: custom
+data: {"type": "step", "node": "confirm_room", "status": "started"}
+
+event: updates
+data: {"__interrupt__": [{"id": "b82d624b40065655068b4c68905d253b", "value": {"room": {"dimensions": {"width": 3.2, "length": 3.4, "height": 2.6}, "walls": [{"wall": "A", "color": "#f2efe9"}, {"wall": "B", "color": "#f2efe9"}, {"wall": "C", "color": "#f2efe9"}, {"wall": "D", "color": "#f2efe9"}], "floor_material": "oak", "features": [{"id": "door_1", "type": "door", "wall": "A", "offset": 0.75, "width": 0.8, "height": 2.1, "sill_height": 0.0, "confidence": 0.95}, {"id": "window_1", "type": "window", "wall": "C", "offset": 0.5, "width": 1.0, "height": 1.3, "sill_height": 0.9, "confidence": 0.9}, {"id": "radiator_1", "type": "radiator", "wall": "C", "offset": 0.5, "width": 0.8, "height": 0.6, "sill_height": 0.1, "confidence": 0.7}], "kept_furniture": [{"id": "kept_1", "name": "wardrobe", "x": 0.3, "y": 0.9, "rotation": 270.0, "size": {"width": 1.0, "depth": 0.6, "height": 2.0}}], "warnings": ["Radiator width estimated from one photo"]}, "overlay_keys": []}}]}
+
