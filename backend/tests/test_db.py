@@ -47,22 +47,22 @@ def test_migrate_is_idempotent(dsn: str) -> None:
 
 async def test_registry(db: psycopg.AsyncConnection[Any]) -> None:
     first = await projects.create(db, "t1", "Bedroom", owner="ann")
-    assert (first.thread_id, first.owner, first.title) == ("t1", "ann", "Bedroom")
-    assert first.created_at == first.updated_at
+    assert (first["thread_id"], first["owner"], first["title"]) == ("t1", "ann", "Bedroom")
+    assert first["created_at"] == first["updated_at"]
     await projects.create(db, "t2", "Office", owner="ann")
     await projects.create(db, "t3", "Bob's", owner="bob")
     await projects.create(db, "t4", "Anonymous")
 
     assert await projects.get(db, "t1") == first
     assert await projects.get(db, "missing") is None
-    assert [p.thread_id for p in await projects.list_owned(db, "ann")] == ["t2", "t1"]  # newest first
-    assert [p.thread_id for p in await projects.list_owned(db)] == ["t4"]
+    assert [p["thread_id"] for p in await projects.list_owned(db, "ann")] == ["t2", "t1"]  # newest first
+    assert [p["thread_id"] for p in await projects.list_owned(db)] == ["t4"]
 
     touched = await projects.update(db, "t1")
-    assert touched and touched.title == "Bedroom" and touched.updated_at > first.updated_at
-    assert [p.thread_id for p in await projects.list_owned(db, "ann")] == ["t1", "t2"]  # updated moves it up
+    assert touched and touched["title"] == "Bedroom" and touched["updated_at"] > first["updated_at"]
+    assert [p["thread_id"] for p in await projects.list_owned(db, "ann")] == ["t1", "t2"]  # updated moves it up
     renamed = await projects.update(db, "t1", title="Main bedroom")
-    assert renamed and renamed.title == "Main bedroom" and renamed.created_at == first.created_at
+    assert renamed and renamed["title"] == "Main bedroom" and renamed["created_at"] == first["created_at"]
     assert await projects.update(db, "missing", title="x") is None
 
     assert await projects.delete(db, "t1") is True

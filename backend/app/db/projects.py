@@ -4,26 +4,18 @@ The thread's state and history stay in the checkpointer; nothing about a run's p
 the caller's connection (e.g. from a pool), which commits it.
 """
 
-from datetime import datetime
 from typing import Any
 
 from psycopg import AsyncConnection
-from psycopg.rows import class_row
-from pydantic import BaseModel
+from psycopg.rows import dict_row
 
+# A project is a dict row of these columns; owner is the sign-in id, none before there is sign-in.
 COLUMNS = "thread_id, owner, title, created_at, updated_at"
-
-
-class Project(BaseModel):
-    thread_id: str
-    owner: str | None  # the sign-in id; none before there is sign-in
-    title: str
-    created_at: datetime
-    updated_at: datetime
+Project = dict[str, Any]
 
 
 async def _rows(db: AsyncConnection[Any], query: str, args: tuple[object, ...]) -> list[Project]:
-    async with db.cursor(row_factory=class_row(Project)) as cursor:
+    async with db.cursor(row_factory=dict_row) as cursor:
         await cursor.execute(query, args)
         return await cursor.fetchall()
 
