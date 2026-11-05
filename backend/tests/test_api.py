@@ -61,6 +61,24 @@ def custom(parts: list[tuple[str, Any]]) -> list[Any]:
     return [data for event, data in parts if event == "custom"]
 
 
+REAL = ("solve", "critic")  # deterministic nodes that run for real in the stub graph and stream their own step events
+
+
+def one_round(events: list[Any]) -> list[Any]:
+    """The fixture events a stub design run replays: the real critic accepts the fixture design in one round, not the fixture's 2."""
+    return [e for e in events if e.get("round", 1) == 1]
+
+
+def replayed(events: list[Any]) -> list[Any]:
+    """The events of the stub nodes, and only the steps of the real ones (their summaries and durations are their own)."""
+    return [{k: e[k] for k in ("node", "status", "round") if k in e} if e["node"] in REAL else e for e in events]
+
+
+def stub_cost(events: list[Any]) -> float:
+    """The usage of a stub run streaming `events`: the fixture costs of its stub steps (the real nodes call no model)."""
+    return sum(e.get("cost", 0) for e in events if e["node"] not in REAL)
+
+
 def test_design_run_interrupt_resume_and_chat(client: TestClient) -> None:
     thread = client.post("/threads", json={"metadata": {"title": "Bedroom"}}).json()
     url = f"/threads/{thread['thread_id']}"
@@ -77,12 +95,15 @@ def test_design_run_interrupt_resume_and_chat(client: TestClient) -> None:
     assert (state["status"], state["next"], state["interrupts"]) == ("needs_input", ["confirm_room"], [interrupt])
 
     parts = stream(client, f"{url}/runs/stream", {"command": {"resume": room}})
-    assert custom(parts) == events["resumed_run"]
+    resumed = one_round(events["resumed_run"])
+    assert replayed(custom(parts)) == replayed(resumed)
     state = client.get(f"{url}/state").json()
     assert (state["status"], state["next"], state["interrupts"]) == ("done", [], [])
-    assert state["values"]["layout"] == as_sent(Layout, fixture("layout"))
-    assert state["values"]["scene"] == as_sent(Scene, fixture("scene"))
-    assert state["values"]["cost"] == pytest.approx(sum(e.get("cost", 0) for e in events["first_run"] + events["resumed_run"]))
+    values = state["values"]
+    assert (values["critique"]["round"], values["critique"]["actions"], values["fallback"]["changes"]) == (1, [], [])
+    assert [i["node_id"] for i in values["scene"]["items"]] == [p["node_id"] for p in values["layout"]["placements"]] != []
+    assert values["scene"]["room"] == as_sent(Scene, fixture("scene"))["room"]
+    assert values["cost"] == pytest.approx(stub_cost(events["first_run"] + resumed))
 
     for turn in chat:  # an applied edit, then a refused one
         parts = stream(client, f"{url}/runs/stream", {"input": turn["input"]})

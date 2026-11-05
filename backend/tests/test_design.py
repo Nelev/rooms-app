@@ -17,7 +17,7 @@ from app.graph.stub import CASE, fixture
 from app.llm.fake import CALL_USAGE, FakeLLM
 from app.schemas import Brief, DesignBrief, RoomSpec, coords
 from app.schemas.design import DESIGN_BRIEF_EXAMPLE
-from tests.test_api import design_input
+from tests.test_api import design_input, one_round, stub_cost
 
 FIXTURES = CASE.parent
 CASES = sorted(p.name for p in FIXTURES.iterdir() if (p / "brief.json").is_file())
@@ -142,7 +142,7 @@ def test_the_node_designs_with_the_model_once_a_key_is_set(fake_llm: Callable[..
     text = str(fake.prompts[0][0].content)
     assert brief.model_dump_json() in text and room.model_dump_json() in text and coords.__doc__ and coords.__doc__ in text
     design_cost = next(e["cost"] for e in fixture("stream_events")["resumed_run"] if e.get("node") == "design" and "cost" in e)
-    fixture_cost = sum(e.get("cost", 0) for e in [*fixture("stream_events")["first_run"], *fixture("stream_events")["resumed_run"]])
+    fixture_cost = stub_cost(fixture("stream_events")["first_run"] + one_round(fixture("stream_events")["resumed_run"]))
     assert values["cost"] == pytest.approx(fixture_cost - design_cost + CALL_USAGE["cost"])  # the model call's cost, not the fixture's
 
 

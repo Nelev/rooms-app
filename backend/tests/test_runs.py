@@ -19,8 +19,8 @@ from app import runs
 from app.graph import stub
 from app.graph.stub import fixture
 from app.main import app
-from app.schemas import Layout, Scene
-from tests.test_api import as_sent, custom, design_input, stream
+from app.schemas import Layout
+from tests.test_api import as_sent, custom, design_input, one_round, replayed, stream, stub_cost
 
 Part = tuple[str, Any]
 
@@ -99,14 +99,14 @@ def test_stream_resume_rejoin_conflict_restart_and_revert(database: str | None) 
 
         # input null continues it from the last checkpoint: the cut-off node again, then the rest
         continued = custom(stream(client, f"{url}/runs/stream", {"input": None}))
-        resumed = events["resumed_run"]
-        assert continued == resumed[resumed.index(continued[0]) :] and started("architect")(("custom", continued[0]))
+        resumed = one_round(events["resumed_run"])
+        assert replayed(continued) == replayed(resumed[resumed.index(continued[0]) :]) and started("architect")(("custom", continued[0]))
         state = client.get(f"{url}/state").json()
         assert (state["status"], state["next"]) == ("done", [])
         assert client.post(f"{url}/runs/stream", json={"input": None}).status_code == 409  # nothing left to continue
-        assert state["values"]["layout"] == as_sent(Layout, fixture("layout"))
-        assert state["values"]["scene"] == as_sent(Scene, fixture("scene"))
-        assert state["values"]["cost"] == pytest.approx(sum(e.get("cost", 0) for e in events["first_run"] + resumed))
+        designed = state["values"]["layout"]
+        assert [i["node_id"] for i in state["values"]["scene"]["items"]] == [p["node_id"] for p in designed["placements"]]
+        assert state["values"]["cost"] == pytest.approx(stub_cost(events["first_run"] + resumed))
         assert client.get("/threads").json()[0] | {"thread_id": thread_id, "status": "done"} == client.get("/threads").json()[0]
 
         # a chat edit, then revert to the design before it
@@ -114,9 +114,9 @@ def test_stream_resume_rejoin_conflict_restart_and_revert(database: str | None) 
         stream(client, f"{url}/runs/stream", {"input": chat["input"]})
         assert client.get(f"{url}/state").json()["values"]["layout"] == as_sent(Layout, chat["output"]["layout"])
         history = client.get(f"{url}/history").json()
-        designed = next(h for h in history if not h["next"] and h["values"].get("layout") == as_sent(Layout, fixture("layout")))
-        state = client.post(f"{url}/revert", json={"checkpoint_id": designed["checkpoint_id"]}).json()
-        assert (state["status"], state["values"]["layout"]) == ("done", as_sent(Layout, fixture("layout")))
+        before = next(h for h in history if not h["next"] and h["values"].get("layout") == designed)
+        state = client.post(f"{url}/revert", json={"checkpoint_id": before["checkpoint_id"]}).json()
+        assert (state["status"], state["values"]["layout"]) == ("done", designed)
         assert client.get(f"{url}/history").json()[0]["checkpoint_id"] == state["checkpoint_id"]  # a new checkpoint, the history kept
 
 

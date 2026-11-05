@@ -98,4 +98,4 @@ def test_in_the_graph_the_live_refiner_streams_its_own_steps(monkeypatch: pytest
     graph.invoke(design_input(), config)
     chunks = list(graph.stream(Command(resume=fixture("room_spec")), config, stream_mode="custom"))
     steps = [(c["status"], c["round"], c.get("summary")) for c in chunks if c.get("node") == "refine"]
-    assert steps == [("started", 1, None), ("done", 1, "no ambiguous siblings"), ("started", 2, None), ("done", 2, "no ambiguous siblings")]
+    assert steps == [("started", 1, None), ("done", 1, "no ambiguous siblings")]  # the critic accepts the fixture design in round 1

@@ -10,11 +10,14 @@ from pydantic import TypeAdapter
 
 from app.catalog.embed import index_config, seed
 from app.catalog.loader import load_catalog
-from app.graph.nodes.critic import critic
-from app.graph.nodes.source import footprint, source_scene, within
+from app.graph import stub
+from app.graph.nodes.critic import judge
+from app.graph.nodes.solve import solve_scene
+from app.graph.nodes.source import footprint, source_scene, swap_rule, within
+from app.graph.routing import keep_best
 from app.graph.state import RunState
 from app.graph.stub import CASE
-from app.schemas import Brief, Critique, DesignBrief, SceneGraph
+from app.schemas import Brief, Critique, DesignBrief, RoomSpec, SceneGraph
 from app.schemas.coords import Size
 from app.schemas.layout import CritiqueAction
 from tests.test_catalog_search import FakeEmbeddings
@@ -125,6 +128,13 @@ def test_swaps_follow_the_instruction(store: BaseStore, node_id: str, instructio
     assert unchanged == [n for n in second["scene_graph"].nodes if n.id != node_id]
 
 
+def test_a_shorter_swap_compares_heights() -> None:  # the Critic's ask for an item above the ceiling
+    catalog = load_catalog()
+    shorter = swap_rule("shorter desk_chair: desk_chair is taller than the 2.5 m ceiling", catalog["mesh-office-chair"])
+    assert shorter(catalog["white-desk-chair"]) and not shorter(catalog["mesh-office-chair"])
+    assert not swap_rule("shorter", catalog["white-desk-chair"])(catalog["black-desk-chair"])  # a larger footprint but taller
+
+
 def test_a_stale_or_impossible_swap_keeps_the_item(store: BaseStore) -> None:
     state = case_state("small-bedroom")
     first = source_scene(store, state)
@@ -136,9 +146,11 @@ def test_the_critics_swap_is_current_for_the_sourcer_after_it(store: BaseStore) 
     """The staleness check against the critic's own round numbering: its critique, as it leaves it, is the round that just ended."""
     state = case_state("small-bedroom")
     first = source_scene(store, state)
-    update = critic.__wrapped__({**state, **first, "mode": "design"})  # type: ignore[attr-defined]
+    solved: Any = {**state, **first, "room_spec": stub.load("room_spec", RoomSpec)}
+    solved |= solve_scene(solved)
+    critique, hard, soft = judge(solved)
     actions = [CritiqueAction(target="sourcer", node_id="desk", instruction="cheaper desk")]
-    after: Any = {**state, **first, **update, "critique": update["critique"].model_copy(update={"actions": actions})}
+    after: Any = {**solved, **keep_best(solved, critique.model_copy(update={"actions": actions}), hard, soft)}
     desk = {n.id: n.item_id for n in source_scene(store, after)["scene_graph"].nodes}["desk"]
     assert desk != {n.id: n.item_id for n in first["scene_graph"].nodes}["desk"]
 
