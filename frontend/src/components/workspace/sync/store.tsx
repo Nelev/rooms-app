@@ -4,6 +4,7 @@ import { createContext, type ReactNode, use, useEffect, useState } from "react";
 import { mention } from "@/components/chat/chat-panel";
 import { ApiError, path, request, type ThreadState } from "@/lib/api";
 import type { components } from "@/lib/api/generated/schema";
+import { useRunStream } from "@/lib/hooks/use-run-stream";
 import { runEnded, useThread } from "@/lib/hooks/use-threads";
 
 export const HIGHLIGHT_MS = 4000; // how long the items a chat edit changed stay highlighted
@@ -28,6 +29,7 @@ type Sync = {
 
 function useWorkspaceStore(threadId: string) {
   const thread = useThread(threadId); // fetched again when a run on the thread ends: a chat turn sent from the chat panel, say
+  const run = useRunStream(threadId); // the thread's run, one stream for the chat panel and the run timeline
   const [sync, setSync] = useState<Sync>({ highlight: false });
   const [draft, setDraft] = useState("");
   const [reverts, setReverts] = useState(0);
@@ -71,6 +73,8 @@ function useWorkspaceStore(threadId: string) {
   return {
     threadId,
     values: sync.seen?.values,
+    status: sync.seen?.status,
+    run,
     error: thread.error,
     edit: edit?.diff,
     highlighted: edit && sync.highlight ? [...edit.diff.added, ...edit.diff.changed] : [],
@@ -90,7 +94,7 @@ export type Workspace = ReturnType<typeof useWorkspaceStore>;
 const WorkspaceContext = createContext<Workspace | null>(null);
 
 // One store for a project's workspace: the thread's state the plan, the results and the 3D view show, the latest chat edit with the
-// items it changed and its undo, and the chat's draft.
+// items it changed and its undo, the chat's draft, and the thread's run.
 export function WorkspaceProvider({ threadId, children }: { threadId: string; children: ReactNode }) {
   return <WorkspaceContext value={useWorkspaceStore(threadId)}>{children}</WorkspaceContext>;
 }

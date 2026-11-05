@@ -4,6 +4,7 @@ import { join } from "node:path";
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { ChatPanel, chatTurn } from "@/components/chat/chat-panel";
+import { useRunStream } from "@/lib/hooks/use-run-stream";
 import { stubApi } from "@/lib/mocks/stub-api";
 
 // the stub's chat turns: an applied edit, then a refused one
@@ -23,6 +24,11 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
+// the page: it streams the thread's run for the chat panel
+function Chat({ suggestions }: { suggestions?: string[] }) {
+  return <ChatPanel threadId={api.thread.thread_id} suggestions={suggestions} run={useRunStream(api.thread.thread_id)} />;
+}
+
 const log = () => screen.getByRole("log", { name: "Messages" });
 // once the run being read is over (the design run the panel rejoins, say)
 async function send(text: string, then = () => {}) {
@@ -35,7 +41,7 @@ async function send(text: string, then = () => {}) {
 const stateFetches = () => vi.mocked(fetch).mock.calls.filter(([url]) => String(url).endsWith("/state")).length;
 
 it("plays the fixture conversation: an applied edit with its step chips, then a refused one with its reason", async () => {
-  render(<ChatPanel threadId={api.thread.thread_id} />);
+  render(<Chat />);
   await screen.findByRole("button", { name: "desk chair" }); // the design's items, to mention
   expect(within(log()).queryAllByRole("listitem")).toHaveLength(0); // the design run it rejoined is not a chat turn
 
@@ -65,7 +71,7 @@ it("plays the fixture conversation: an applied edit with its step chips, then a 
 }, 15_000);
 
 it("inserts an item reference, shown as a chip, and sends a suggested reply", async () => {
-  render(<ChatPanel threadId={api.thread.thread_id} suggestions={["Make it cheaper"]} />);
+  render(<Chat suggestions={["Make it cheaper"]} />);
   fireEvent.click(await screen.findByRole("button", { name: "desk chair" }));
   const input = screen.getByRole("textbox", { name: "Message" }) as HTMLInputElement;
   expect(input.value).toBe("@desk_chair ");
