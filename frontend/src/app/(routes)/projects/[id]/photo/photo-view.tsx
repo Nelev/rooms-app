@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { CameraMatch } from "@/components/scene3d/camera-match/camera-match";
 import { PhotoComposite } from "@/components/scene3d/composite";
 import { Button } from "@/components/ui/button";
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from "@/components/ui/empty";
@@ -25,6 +26,21 @@ export function PhotoView({ threadId }: { threadId: string }) {
     );
   if (!thread.data) return <Skeleton role="status" aria-label="Loading the design" className="aspect-4/3 w-full" />;
   const scene = thread.data.values.scene;
+  const first = thread.data.values.photo_keys?.[0];
+  if (scene && !scene.cameras.length && first)
+    return (
+      <div className="flex flex-col gap-3">
+        <p className="text-muted-foreground text-sm">
+          The design is shown in a photo once the photo's camera is matched to the room: click the room's corners on it.
+        </p>
+        <CameraMatch
+          threadId={threadId}
+          photo={{ key: first, url: photoUrl(first) }}
+          room={scene.room.dimensions}
+          onConfirm={() => thread.refetch()}
+        />
+      </div>
+    );
   if (!scene?.cameras.length)
     return (
       <Empty>
