@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.store.memory import InMemoryStore
 
-from app.api import catalog, deps, runs, threads, uploads
+from app.api import camera, catalog, deps, runs, threads, uploads
 from app.graph.graph import build_graph, serde
 
 
@@ -18,7 +18,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
 
 
 app = FastAPI(title="rooms-app", lifespan=lifespan)
-for module in (threads, runs, uploads, catalog):
+for module in (threads, camera, runs, uploads, catalog):
     app.include_router(module.router)
 
 
