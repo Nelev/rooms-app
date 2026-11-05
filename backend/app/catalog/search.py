@@ -5,9 +5,10 @@ similarity to the query; the hard filters are applied here, in code. The aspect-
 of the requested box: an item scaled to fit a box of another shape looks distorted (I-Design's resize distortion).
 """
 
+from collections.abc import Iterable
 from typing import NamedTuple
 
-from langgraph.store.base import BaseStore
+from langgraph.store.base import BaseStore, SearchItem
 
 from app.catalog.embed import NAMESPACE
 from app.schemas import CatalogItem
@@ -43,8 +44,18 @@ def fits(item: CatalogItem, filters: Filters) -> bool:
     )
 
 
+def _fitting(hits: Iterable[SearchItem], filters: Filters, limit: int) -> list[CatalogItem]:
+    items = (CatalogItem.model_validate({k: v for k, v in hit.value.items() if k != "text"}) for hit in hits)
+    return [item for item in items if fits(item, filters)][:limit]
+
+
 async def search(store: BaseStore, query: str, filters: Filters, limit: int = 5) -> list[CatalogItem]:
     """The `limit` items of `filters.category` most similar to `query` that pass the hard filters, the most similar first."""
     hits = await store.asearch(NAMESPACE, query=query, filter={"category": filters.category}, limit=CANDIDATES)
-    items = (CatalogItem.model_validate({k: v for k, v in hit.value.items() if k != "text"}) for hit in hits)
-    return [item for item in items if fits(item, filters)][:limit]
+    return _fitting(hits, filters, limit)
+
+
+def search_sync(store: BaseStore, query: str, filters: Filters, limit: int = 5) -> list[CatalogItem]:
+    """`search` for sync nodes, which run in a worker thread where the store's sync API works."""
+    hits = store.search(NAMESPACE, query=query, filter={"category": filters.category}, limit=CANDIDATES)
+    return _fitting(hits, filters, limit)

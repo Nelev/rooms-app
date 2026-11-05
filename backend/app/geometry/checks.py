@@ -12,12 +12,12 @@ from app.schemas.layout import Layout, ValidationIssue
 EPS = 1e-6
 
 
-def _overlap(a: Solid, b: Solid) -> bool:
+def overlap(a: Solid, b: Solid) -> bool:
     return min(a.top, b.top) - max(a.bottom, b.bottom) > EPS and a.shape.intersection(b.shape).area > EPS
 
 
 def _issues(pairs: Iterable[tuple[Solid, Solid]], code: str, verb: str) -> list[ValidationIssue]:
-    return [ValidationIssue(code=code, message=f"{a.id} {verb} {b.id}", node_ids=[a.id, b.id]) for a, b in pairs if _overlap(a, b)]
+    return [ValidationIssue(code=code, message=f"{a.id} {verb} {b.id}", node_ids=[a.id, b.id]) for a, b in pairs if overlap(a, b)]
 
 
 def _against(layout: Layout, zones: list[Solid], code: str, verb: str) -> list[ValidationIssue]:

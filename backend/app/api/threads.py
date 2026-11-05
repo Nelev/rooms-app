@@ -1,30 +1,31 @@
-"""Threads (projects) and their state, stubbed on an in-memory checkpointer."""
+"""Threads (projects): a row in the projects registry each, their state and history in the checkpointer."""
 
-from datetime import UTC, datetime
 from uuid import uuid4
 
 from fastapi import APIRouter, HTTPException
 from langchain_core.runnables import RunnableConfig
 from langgraph.types import StateSnapshot
 
-from app.api.deps import THREADS, Graph, ThreadConfig
+from app.api.deps import Graph, ProjectsDep, ThreadConfig
 from app.api.models import Revert, Thread, ThreadCreate, ThreadState, ThreadStatus
-from app.api.runs import interrupts, running
+from app.db.projects import Project
+from app.runs import interrupts, running
 
 router = APIRouter(prefix="/threads", tags=["threads"])
 
 
-def _status(snapshot: StateSnapshot, running: bool) -> ThreadStatus:
+def _status(snapshot: StateSnapshot, running: bool | None) -> ThreadStatus:
+    """`running` is None for a history entry, whose pending `next` is just the run moving on."""
     if running:
         return "running"
     if snapshot.interrupts:
         return "needs_input"
-    if any(task.error for task in snapshot.tasks):
-        return "error"
+    if any(task.error for task in snapshot.tasks) or (running is not None and snapshot.next):
+        return "error"  # failed, or cut off by a restart: input null continues it
     return "done" if snapshot.values else "new"
 
 
-def _state(snapshot: StateSnapshot, running: bool = False) -> ThreadState:
+def _state(snapshot: StateSnapshot, running: bool | None = None) -> ThreadState:
     return ThreadState.model_validate(
         {
             "values": snapshot.values,
@@ -46,19 +47,21 @@ def idle(config: ThreadConfig) -> None:
         raise HTTPException(409, "A run is active on this thread")
 
 
+def _thread(project: Project, status: ThreadStatus) -> Thread:
+    return Thread(thread_id=project["thread_id"], created_at=project["created_at"], metadata={"title": project["title"]}, status=status)
+
+
 @router.post("")
-async def create_thread(body: ThreadCreate) -> Thread:
-    """Create a project."""
-    thread = Thread(thread_id=uuid4().hex, created_at=datetime.now(UTC), metadata=body.metadata, status="new")
-    THREADS[thread.thread_id] = thread
-    return thread
+async def create_thread(body: ThreadCreate, registry: ProjectsDep) -> Thread:
+    """Create a project; only `metadata.title` is kept."""
+    title = body.metadata.get("title")
+    return _thread(await registry.create(uuid4().hex, title if isinstance(title, str) else ""), "new")
 
 
 @router.get("")
-async def list_threads(graph: Graph) -> list[Thread]:
-    """The caller's projects, newest first."""  # stub: every thread; the auth task adds an owner to filter on
-    threads = sorted(THREADS.values(), key=lambda t: t.created_at, reverse=True)
-    return [t.model_copy(update={"status": (await _current(graph, {"configurable": {"thread_id": t.thread_id}})).status}) for t in threads]
+async def list_threads(graph: Graph, registry: ProjectsDep) -> list[Thread]:
+    """The caller's projects, most recently updated first."""  # every project: the auth task adds an owner to filter on
+    return [_thread(p, (await _current(graph, {"configurable": {"thread_id": p["thread_id"]}})).status) for p in await registry.list()]
 
 
 @router.get("/{thread_id}/state")
