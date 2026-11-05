@@ -30,7 +30,7 @@ afterEach(() => {
 it("composes the design over the camera's photo, as the API serves it, or one the user opens", async () => {
   render(<PhotoView threadId={api.thread.thread_id} />);
   const input = await screen.findByLabelText("Or open the photo photo-1.jpg from your device");
-  expect(screen.getByTestId("composite").textContent).toBe("4 items, camera 0, http://localhost:8000/uploads/fixtures%2Fsmall-bedroom%2Fphoto-1.jpg");
+  expect(screen.getByTestId("composite").textContent).toBe("4 items, camera 0, http://localhost:8000/uploads/fixtures/small-bedroom/photo-1.jpg");
   fireEvent.change(input, { target: { files: [new File(["jpg"], "photo-1.jpg", { type: "image/jpeg" })] } });
   expect(screen.getByTestId("composite").textContent).toBe("4 items, camera 0, blob:photo-1");
 });
