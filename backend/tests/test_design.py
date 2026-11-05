@@ -10,7 +10,9 @@ from langgraph.types import Command
 from pydantic import TypeAdapter
 
 from app import llm
+from app.graph import graph as graph_module
 from app.graph.graph import build_graph, serde
+from app.graph.nodes import architect
 from app.graph.nodes import design as node
 from app.graph.stub import CASE, fixture
 from app.llm.fake import CALL_USAGE, FakeLLM
@@ -130,6 +132,7 @@ def test_the_brief_must_haves_stay_when_they_overfill_the_room() -> None:
 def test_the_node_designs_with_the_model_once_a_key_is_set(fake_llm: Callable[..., FakeLLM], monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("OPENROUTER_API_KEY", "test-key")
     fake = fake_llm(NICE_ONLY.model_dump_json())
+    monkeypatch.setattr(graph_module, "architect", architect.replay)  # only the designer is real
     graph, config = build_graph(InMemorySaver(serde=serde())), {"configurable": {"thread_id": "t1"}}
     graph.invoke(design_input(), config)
     graph.invoke(Command(resume=fixture("room_spec")), config)
