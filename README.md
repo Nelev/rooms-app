@@ -352,7 +352,6 @@ Every model call goes through this gateway (B-02), ported from CoA's tools.
   | `analyze_room` | `openai/gpt-6.1-sol` | 16 000 | 180 s | the Room Analyst (vision) |
   | `design` | `openai/gpt-5-mini` | 8 000 | 90 s | the Designer |
   | `architect` | `openai/gpt-6.1-sol` | 16 000 | 180 s | the Architect, and the eval's single-LLM baseline |
-  | `refine` | `openai/gpt-5-mini` | 8 000 | 90 s | nothing: the Refiner is deterministic |
   | `critic` | `openai/gpt-6.1-sol` | 16 000 | 180 s | the eval's VLM judge (the graph's Critic is rule-based) |
   | `chat_edit` | `openai/gpt-5-mini` | 8 000 | 90 s | the chat edit |
 
@@ -425,7 +424,7 @@ LangGraph cannot search threads, so a `projects` table (one row per thread: id, 
 | `POST /threads/{id}/camera-pose` | Solve a photo's camera from at least 4 clicked corners and save it in the scene |
 | `POST /uploads` | Store a room photo, return its key |
 | `GET /uploads/{key}` | A photo by its key |
-| `GET /catalog/items/{item_id}` | A catalog item (stub: only the items of the fixture scenes) |
+| `GET /catalog/items/{item_id}` | A catalog item, from the real catalog (`data/catalog/`) |
 | `GET /health` | `{"status": "ok"}` |
 
 **The stream.** Each Server-Sent Event's name is the part's kind and its data is JSON (`StreamPart` in `app/api/models.py`):
@@ -672,7 +671,7 @@ VLM judge. It lives in `eval/` and shares the backend's environment, so every co
 | Piece | Where | What it does |
 |---|---|---|
 | Dataset (E-01) | `eval/data/<case>/case.json`, `eval/dataset.py` | 25 cases: 20 briefs, 5 per I-Design brief category (functionality, layout, color scheme, atmosphere), on the three fixture rooms, plus 5 hard cases (`hard-tiny-room` 1.8 x 2.1 m, `hard-three-doors`, `hard-wrong-dimensions`, `hard-impossible-brief`, `hard-budget-too-low` at EUR 150). Each case is a run input plus a hand-labeled `RoomSpec` ([eval/data/README.md](eval/data/README.md)) |
-| Metrics (E-02) | `eval/metrics/layout.py`, `analyst.py` | Layout: out of bounds, overlap volume, clearance pass rate (share of items a person can reach), blocked openings, cost, budget fit, must-have coverage, item count; I-Design's out-of-bounds rate and bbox loss over a set. Room Analyst: feature precision and recall against the labels, position error |
+| Metrics (E-02) | `eval/metrics/layout.py`, `analyst.py` | Layout: out of bounds, overlap volume, clearance pass rate (share of items a person can reach), blocked openings, cost, budget fit, must-have coverage, item count; the reports' per-variant means of out of bounds and overlap volume are I-Design's out-of-bounds rate and bbox loss. Room Analyst: feature precision and recall against the labels, position error |
 | Single-LLM baseline (E-03) | `eval/baselines/single_llm.py` | LayoutGPT-style: one call (the `architect` role) places the furniture directly as absolute positions, from the room, the brief and a catalog subset. It returns the same `Layout`, so every metric applies |
 | VLM judge (E-04) | `eval/judge/vlm.py` | I-Design's protocol: a vision model (the `critic` role) sees the two corner renders and the brief, comments first, then grades functionality, layout, color scheme, atmosphere and realism from 0 to 10, asked 3 times (mean and standard deviation). A pairwise mode asks which of two designs fits the brief better, 4 times, each shown first equally often |
 | Runner (E-05) | `eval/runner.py` | Runs every case `--repeats` times on a variant, in process (in-memory checkpointer and store), resumes `confirm_room` with the case's labeled room so every variant is scored on the same room, and writes `runs.csv`, `report.md` and each run's final state. Tracing and object storage are turned off on import |
@@ -681,8 +680,7 @@ VLM judge. It lives in `eval/` and shares the backend's environment, so every co
 | Catalog search | `eval/catalog_search.py` | precision@5 of the Sourcer's search on 20 hand-labeled queries (needs a key) |
 
 Variants: `baseline`, `full` (the agent graph), `no_critic` (`solve` goes straight to `present`) and `analyst_mode` (the Room
-Analyst reads the photos once instead of voting over three readings). The `single_agent` flag exists in `RunConfigurable`, but no
-node reads it, so the ablation leaves it out.
+Analyst reads the photos once instead of voting over three readings).
 
 ```sh
 cd backend
@@ -789,11 +787,10 @@ opening. The full graph costs about 70% more than the single call and takes abou
 - **The bucket needs CORS.** The composite loads the photo with `crossOrigin="anonymous"` to export it, so the bucket behind the
   signed URLs must allow the frontend's origin. The E2E suite checks it on compose's MinIO; another bucket (R2, S3) needs a CORS rule.
 - **Human ratings are pending**, so the VLM judge's agreement with people is not measured, and the pilot is 12 runs.
-- **Unused pieces.** The `refine` role in `ROLES` is never called (the Refiner has no model), the `single_agent` flag is read by no
-  node, `GET /threads/{id}/runs/{run_id}/result` is not used by the frontend (it reads the thread state and sums the total itself),
-  and `GET /catalog/items/{id}` only knows the items of the fixture scenes.
-- **The registry and the checkpoints are not cleaned up.** `app/db/projects.delete` exists but no route calls it; projects, their
-  checkpoints and their photos are kept until removed by hand.
+- **Routes without a frontend caller.** `GET /threads/{id}/runs/{run_id}/result` (the frontend reads the thread state and sums the
+  total itself) and `GET /catalog/items/{id}` are served but not used by the UI.
+- **The registry and the checkpoints are not cleaned up.** There is no delete: projects, their checkpoints and their photos
+  are kept until removed by hand.
 
 ## Contributing
 
