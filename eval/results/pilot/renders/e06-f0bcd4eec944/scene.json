@@ -1,0 +1,232 @@
+{
+  "room": {
+    "dimensions": {
+      "width": 3.2,
+      "length": 3.4,
+      "height": 2.6
+    },
+    "walls": [
+      {
+        "wall": "A",
+        "color": "#f2efe9"
+      },
+      {
+        "wall": "B",
+        "color": "#f2efe9"
+      },
+      {
+        "wall": "C",
+        "color": "#f2efe9"
+      },
+      {
+        "wall": "D",
+        "color": "#f2efe9"
+      }
+    ],
+    "floor_material": "oak",
+    "features": [
+      {
+        "id": "door_1",
+        "type": "door",
+        "wall": "A",
+        "offset": 0.75,
+        "width": 0.8,
+        "height": 2.1,
+        "sill_height": 0.0,
+        "swing": null,
+        "hinge": null,
+        "confidence": 0.95
+      },
+      {
+        "id": "window_1",
+        "type": "window",
+        "wall": "C",
+        "offset": 0.5,
+        "width": 1.0,
+        "height": 1.3,
+        "sill_height": 0.9,
+        "swing": null,
+        "hinge": null,
+        "confidence": 0.9
+      },
+      {
+        "id": "radiator_1",
+        "type": "radiator",
+        "wall": "C",
+        "offset": 0.5,
+        "width": 0.8,
+        "height": 0.6,
+        "sill_height": 0.1,
+        "swing": null,
+        "hinge": null,
+        "confidence": 0.7
+      }
+    ],
+    "kept_furniture": [
+      {
+        "id": "kept_1",
+        "name": "wardrobe",
+        "x": 0.3,
+        "y": 0.9,
+        "rotation": 270.0,
+        "size": {
+          "width": 1.0,
+          "depth": 0.6,
+          "height": 2.0
+        }
+      }
+    ],
+    "warnings": [
+      "Radiator width estimated from one photo"
+    ]
+  },
+  "items": [
+    {
+      "node_id": "bed_rug",
+      "item_id": "beige-rug-160x230",
+      "x": 2.05,
+      "y": 1.652,
+      "z": 0.0,
+      "rotation": 90.0,
+      "size": {
+        "width": 1.6,
+        "depth": 2.3,
+        "height": 0.01
+      },
+      "item": {
+        "id": "beige-rug-160x230",
+        "name": "Beige wool medium rug",
+        "category": "rug",
+        "size": {
+          "width": 1.6,
+          "depth": 2.3,
+          "height": 0.01
+        },
+        "price": 139.0,
+        "style_tags": [
+          "japandi",
+          "minimalist"
+        ],
+        "color": "beige",
+        "front": "+z",
+        "glb_url": null,
+        "license": null,
+        "url": null,
+        "image_url": null,
+        "description": "Low-pile rug, 160 x 230 cm"
+      }
+    },
+    {
+      "node_id": "low_double_bed",
+      "item_id": "oak-bed-140",
+      "x": 2.088,
+      "y": 1.632,
+      "z": 0.01,
+      "rotation": 90.0,
+      "size": {
+        "width": 1.46,
+        "depth": 2.06,
+        "height": 0.95
+      },
+      "item": {
+        "id": "oak-bed-140",
+        "name": "Oak double bed",
+        "category": "bed",
+        "size": {
+          "width": 1.46,
+          "depth": 2.06,
+          "height": 0.95
+        },
+        "price": 329.0,
+        "style_tags": [
+          "scandinavian",
+          "japandi"
+        ],
+        "color": "oak",
+        "front": "+z",
+        "glb_url": null,
+        "license": null,
+        "url": null,
+        "image_url": null,
+        "description": "Slatted base for a 140 x 200 cm mattress"
+      }
+    },
+    {
+      "node_id": "nightstand",
+      "item_id": "ash-nightstand",
+      "x": 1.907,
+      "y": 2.747,
+      "z": 0.0,
+      "rotation": 90.0,
+      "size": {
+        "width": 0.4,
+        "depth": 0.35,
+        "height": 0.5
+      },
+      "item": {
+        "id": "ash-nightstand",
+        "name": "Light ash nightstand",
+        "category": "nightstand",
+        "size": {
+          "width": 0.4,
+          "depth": 0.35,
+          "height": 0.5
+        },
+        "price": 89.0,
+        "style_tags": [
+          "japandi",
+          "minimalist"
+        ],
+        "color": "ash",
+        "front": "+z",
+        "glb_url": null,
+        "license": null,
+        "url": null,
+        "image_url": null,
+        "description": "One drawer"
+      }
+    },
+    {
+      "node_id": "table_lamp",
+      "item_id": "rattan-table-lamp",
+      "x": 1.879,
+      "y": 2.688,
+      "z": 0.5,
+      "rotation": 90.0,
+      "size": {
+        "width": 0.25,
+        "depth": 0.25,
+        "height": 0.45
+      },
+      "item": {
+        "id": "rattan-table-lamp",
+        "name": "Rattan table lamp",
+        "category": "lamp",
+        "size": {
+          "width": 0.25,
+          "depth": 0.25,
+          "height": 0.45
+        },
+        "price": 39.0,
+        "style_tags": [
+          "boho"
+        ],
+        "color": "natural",
+        "front": "+z",
+        "glb_url": null,
+        "license": null,
+        "url": null,
+        "image_url": null,
+        "description": "Table lamp, E27 socket"
+      }
+    }
+  ],
+  "lights": [
+    {
+      "kind": "area",
+      "window_id": "window_1",
+      "intensity": 5.0
+    }
+  ],
+  "cameras": []
+}
