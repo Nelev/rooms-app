@@ -10,6 +10,7 @@ import os
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from functools import cache
+from typing import Any
 
 from langchain_core.embeddings import Embeddings
 from langchain_openai import OpenAIEmbeddings
@@ -19,6 +20,7 @@ from langgraph.store.postgres import AsyncPostgresStore
 from langgraph.store.postgres.base import PostgresIndexConfig
 
 from app.catalog.loader import load_catalog
+from app.llm import recorded
 from app.schemas import CatalogItem
 
 logger = logging.getLogger(__name__)
@@ -30,12 +32,14 @@ DIMS = 1536  # text-embedding-3-small's; another model needs its own
 
 @cache
 def get_embeddings() -> OpenAIEmbeddings:
-    return OpenAIEmbeddings(
-        model=EMBEDDING_MODEL,
-        api_key=os.environ["OPENROUTER_API_KEY"],  # type: ignore[arg-type]  # a str is accepted and kept as a SecretStr
-        base_url="https://openrouter.ai/api/v1",
-        check_embedding_ctx_length=False,  # the length check sends token ids, which OpenRouter's other providers do not take
-    )
+    settings: dict[str, Any] = {
+        "model": EMBEDDING_MODEL,
+        "base_url": "https://openrouter.ai/api/v1",
+        "check_embedding_ctx_length": False,  # the length check sends token ids, which OpenRouter's other providers do not take
+    }
+    if recorded.directory():  # LLM_RECORDINGS: answered from recordings (app/llm/recorded.py)
+        return recorded.RecordedEmbeddings(api_key=os.environ.get("OPENROUTER_API_KEY") or "replay", **settings)  # type: ignore[arg-type]
+    return OpenAIEmbeddings(api_key=os.environ["OPENROUTER_API_KEY"], **settings)  # type: ignore[arg-type]  # a str is kept as a SecretStr
 
 
 def index_config(embed: Embeddings | None = None) -> PostgresIndexConfig:
@@ -62,9 +66,10 @@ async def seed(store: BaseStore) -> None:
 async def open_store(database_url: str | None) -> AsyncIterator[BaseStore]:
     """The graph's store: Postgres (pgvector) at `database_url`, set up and seeded.
 
-    Without a database URL or an OpenRouter key (the seed needs embeddings), the stub graph's empty in-memory store.
+    Without a database URL or an OpenRouter key (the seed needs embeddings; recorded ones, LLM_RECORDINGS, do too), the stub graph's
+    empty in-memory store.
     """
-    if not (database_url and os.getenv("OPENROUTER_API_KEY")):
+    if not (database_url and (os.getenv("OPENROUTER_API_KEY") or recorded.directory())):
         if database_url:
             logger.warning("OPENROUTER_API_KEY is unset: the catalog store stays in memory, empty")
         yield InMemoryStore()

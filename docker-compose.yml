@@ -1,5 +1,5 @@
-# The whole stack: Postgres with pgvector, the API and the frontend. `docker compose up -d --build`, then open http://localhost:3000.
-# The API reads the root .env (copy .env.example); DATABASE_URL is set here, for the db service.
+# The whole stack: Postgres with pgvector, MinIO, the API and the frontend. `docker compose up -d --build`, then open http://localhost:3000.
+# The API reads the root .env (copy .env.example); DATABASE_URL and STORAGE_* are set here, for the db and minio services.
 # `docker compose up -d db` alone starts just the database, for running the API and the frontend from source (`make dev`).
 services:
   db:
@@ -17,6 +17,27 @@ services:
       timeout: 5s
       retries: 10
 
+  # Object storage for the photos (the community build of MinIO, as in CI), with its development default credentials
+  minio:
+    image: pgsty/minio:RELEASE.2026-08-04T00-00-00Z
+    command: server /data
+    ports:
+      - "127.0.0.1:${MINIO_PORT:-9000}:9000"  # the browser reads the photos from signed URLs
+    volumes:
+      - minio-data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:9000/minio/health/live"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  minio-init: # the bucket, once
+    image: pgsty/minio:RELEASE.2026-08-04T00-00-00Z
+    entrypoint: ["sh", "-c", "mc alias set local http://minio:9000 minioadmin minioadmin && mc mb --ignore-existing local/rooms"]
+    depends_on:
+      minio:
+        condition: service_healthy
+
   backend:
     build: ./backend
     env_file:
@@ -24,14 +45,28 @@ services:
         required: false
     environment:
       DATABASE_URL: postgresql://postgres:postgres@db:5432/rooms
+      STORAGE_ENDPOINT_URL: http://minio:9000
+      STORAGE_PUBLIC_URL: http://localhost:${MINIO_PORT:-9000}  # what signed URLs name: the published port, not the service name
+      STORAGE_BUCKET: rooms
+      STORAGE_ACCESS_KEY_ID: minioadmin
+      STORAGE_SECRET_ACCESS_KEY: minioadmin
+      CORS_ORIGINS: http://localhost:${FRONTEND_PORT:-3000}
     ports:
       - "${BACKEND_PORT:-8000}:8000"
+    volumes: # what the API reads from the repo at runtime, outside its build context: the fixtures and the catalog
+      - ./fixtures:/fixtures:ro
+      - ./data/catalog:/data/catalog:ro
     depends_on:
       db:
         condition: service_healthy
+      minio-init:
+        condition: service_completed_successfully
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      args: # what the browser calls: the published port, not the service name
+        NEXT_PUBLIC_API_URL: http://localhost:${BACKEND_PORT:-8000}
     ports:
       - "${FRONTEND_PORT:-3000}:3000"
     depends_on:
@@ -39,3 +74,4 @@ services:
 
 volumes:
   db-data:
+  minio-data:

@@ -64,21 +64,27 @@ def put_local(key: str, data: bytes, content_type: str) -> str:
 class Storage:
     """One bucket. The frontend reads objects through signed URLs, so the bucket stays private."""
 
-    def __init__(self, endpoint_url: str, bucket: str, access_key_id: str, secret_access_key: str) -> None:
+    def __init__(self, endpoint_url: str, bucket: str, access_key_id: str, secret_access_key: str, public_url: str | None = None) -> None:
+        """`public_url`: the endpoint as the browser reaches it, for signed URLs, when the API reaches it at another address (MinIO in
+        docker compose: http://minio:9000 for the API, a published port on localhost for the browser)."""
         self.bucket = bucket
-        self.client = boto3.client(
-            "s3",
-            endpoint_url=endpoint_url,
-            aws_access_key_id=access_key_id,
-            aws_secret_access_key=secret_access_key,
-            region_name="auto",  # what R2 expects; MinIO accepts any
-            config=Config(signature_version="s3v4", s3={"addressing_style": "path"}),  # path style: MinIO has no bucket subdomains
+        self.client, self.signer = (  # signing is offline: the signer never connects to public_url
+            boto3.client(
+                "s3",
+                endpoint_url=url,
+                aws_access_key_id=access_key_id,
+                aws_secret_access_key=secret_access_key,
+                region_name="auto",  # what R2 expects; MinIO accepts any
+                config=Config(signature_version="s3v4", s3={"addressing_style": "path"}),  # path style: MinIO has no bucket subdomains
+            )
+            for url in (endpoint_url, public_url or endpoint_url)
         )
 
     @classmethod
     def from_env(cls) -> "Storage":
         env = os.environ
-        return cls(env["STORAGE_ENDPOINT_URL"], env["STORAGE_BUCKET"], env["STORAGE_ACCESS_KEY_ID"], env["STORAGE_SECRET_ACCESS_KEY"])
+        keys = env["STORAGE_ACCESS_KEY_ID"], env["STORAGE_SECRET_ACCESS_KEY"]
+        return cls(env["STORAGE_ENDPOINT_URL"], env["STORAGE_BUCKET"], *keys, env.get("STORAGE_PUBLIC_URL") or None)
 
     def put(self, key: str, data: bytes, content_type: str) -> str:
         """Store `data` at `key` and return the key it was stored at: a HEIC photo is stored as a JPEG, its key ending in .jpg."""
@@ -91,7 +97,7 @@ class Storage:
 
     def url(self, key: str, expires_in: int = 3600) -> str:
         """A URL that reads the object for `expires_in` seconds, for the frontend."""
-        return self.client.generate_presigned_url("get_object", Params={"Bucket": self.bucket, "Key": key}, ExpiresIn=expires_in)
+        return self.signer.generate_presigned_url("get_object", Params={"Bucket": self.bucket, "Key": key}, ExpiresIn=expires_in)
 
     def delete(self, key: str) -> None:
         """Delete the object; deleting a missing key is not an error."""

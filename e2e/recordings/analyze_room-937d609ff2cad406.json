@@ -1,0 +1,70 @@
+{
+ "type": "ai",
+ "data": {
+  "content": "",
+  "additional_kwargs": {
+   "refusal": null
+  },
+  "response_metadata": {
+   "token_usage": {
+    "cost": 0.0056915,
+    "cost_estimated": "backfilled from OpenRouter list prices and the recorded tokens"
+   }
+  },
+  "type": "ai",
+  "name": null,
+  "id": null,
+  "tool_calls": [
+   {
+    "name": "RoomReading",
+    "args": {
+     "walls": [
+      {
+       "wall": "A",
+       "color": null,
+       "features": []
+      },
+      {
+       "wall": "B",
+       "color": null,
+       "features": []
+      },
+      {
+       "wall": "C",
+       "color": null,
+       "features": []
+      },
+      {
+       "wall": "D",
+       "color": null,
+       "features": []
+      }
+     ],
+     "floor_material": null,
+     "notes": [
+      "The supplied image is explicitly labeled as a synthetic placeholder, not a real room photograph. It provides no reliable evidence of the room's fixed features, wall colors, or floor material.",
+      "Walls A, B, C, and D cannot be reliably identified or surveyed from this placeholder. Empty feature lists mean unknown, not confirmation that no features exist.",
+      "The exact supplied room dimensions are A/C 3.2 m, B/D 3.4 m, and ceiling height 2.6 m; no feature dimensions can be estimated from the placeholder."
+     ]
+    },
+    "id": "call_wGtAZ4Q8iRPt3KfymO4fF1R3",
+    "type": "tool_call"
+   }
+  ],
+  "invalid_tool_calls": [],
+  "usage_metadata": {
+   "input_tokens": 1583,
+   "output_tokens": 180,
+   "total_tokens": 1763,
+   "input_token_details": {
+    "audio": 0,
+    "cache_read": 0,
+    "cache_creation": 1451
+   },
+   "output_token_details": {
+    "audio": 0,
+    "reasoning": 0
+   }
+  }
+ }
+}

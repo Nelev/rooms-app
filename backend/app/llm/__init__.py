@@ -1,7 +1,8 @@
 """The LLM gateway: every model call goes through this module (ported from CoA's react_agent/tools.py).
 
-get_llm(role) is a role's model on OpenRouter. ask_structured asks it for a schema's result and returns the result with the call's
-usage, which the node adds to its state update (RunState's reducers sum cost and tokens). Tests put a FakeLLM (fake.py) in get_llm's place.
+get_llm(role) is a role's model on OpenRouter (its recorded replies with LLM_RECORDINGS: recorded.py). ask_structured asks it for a
+schema's result and returns the result with the call's usage, which the node adds to its state update (RunState's reducers sum cost
+and tokens). Tests put a FakeLLM (fake.py) in get_llm's place.
 """
 
 import os
@@ -13,6 +14,8 @@ from langchain_core.language_models import BaseChatModel
 from langchain_core.messages import AIMessage, BaseMessage, HumanMessage
 from langchain_openai import ChatOpenAI
 from pydantic import BaseModel
+
+from app.llm import recorded
 
 Role = Literal["analyze_room", "design", "architect", "refine", "critic", "chat_edit"]  # the nodes that call a model
 
@@ -50,15 +53,17 @@ class TruncatedReply(Exception):
 @cache
 def get_llm(role: Role) -> BaseChatModel:
     config = ROLES[role]
-    return ChatOpenAI(
-        model=config.model,
-        api_key=os.environ["OPENROUTER_API_KEY"],  # type: ignore[arg-type]  # a str is accepted and kept as a SecretStr
-        base_url="https://openrouter.ai/api/v1",
-        max_tokens=config.max_tokens,  # type: ignore[call-arg]  # an alias of max_completion_tokens
-        timeout=config.timeout,
+    settings: dict[str, Any] = {
+        "model": config.model,
+        "base_url": "https://openrouter.ai/api/v1",
+        "max_tokens": config.max_tokens,  # an alias of max_completion_tokens
+        "timeout": config.timeout,
         # a streamed reply carries no OpenRouter cost; LangGraph's "messages" stream still gets the whole reply
-        disable_streaming=True,
-    )
+        "disable_streaming": True,
+    }
+    if recorded.directory():  # recorded calls: replaying needs no key; with one, the calls not recorded yet are made and recorded
+        return recorded.RecordedChatOpenAI(role=role, api_key=os.environ.get("OPENROUTER_API_KEY") or "replay", **settings)  # type: ignore[arg-type]  # a str is accepted and kept as a SecretStr
+    return ChatOpenAI(api_key=os.environ["OPENROUTER_API_KEY"], **settings)  # type: ignore[arg-type]
 
 
 def call_usage(message: AIMessage) -> Usage:

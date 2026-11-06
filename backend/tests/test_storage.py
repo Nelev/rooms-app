@@ -75,3 +75,10 @@ def test_upload_endpoint_stores_the_photo(storage: Storage, monkeypatch: pytest.
     assert storage.get(key) == PHOTO.read_bytes()
     assert redirect.status_code == 307  # to a signed URL of the photo
     assert httpx.get(redirect.headers["location"]).content == PHOTO.read_bytes()
+
+
+def test_signed_urls_name_the_public_endpoint() -> None:
+    """Offline: signing needs no connection. The browser gets the public endpoint, the API keeps its own (docker compose's MinIO)."""
+    storage = Storage("http://minio:9000", "rooms", "minioadmin", "minioadmin", public_url="http://localhost:19000")
+    assert storage.url("uploads/a.jpg").startswith("http://localhost:19000/rooms/uploads/a.jpg?")
+    assert storage.client.meta.endpoint_url == "http://minio:9000"

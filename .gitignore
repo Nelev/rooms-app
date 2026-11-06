@@ -12,3 +12,5 @@ eval/results/*
 !eval/results/pilot/
 eval/results/pilot/runs/
 backend/.uploads/
+e2e/test-results/
+e2e/playwright-report/
