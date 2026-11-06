@@ -88,8 +88,8 @@ make dev               # Postgres in Docker, then the API on :8000 and the front
 - `STORAGE_*` is optional. Without it, photos are saved in `backend/.uploads/`. `LANGSMITH_*` is optional tracing.
 
 > **Live runs cost money.** With a key, every design run calls real models through OpenRouter (the larger model for the Room
-> Analyst and the Architect). The paid pilot measured $0.025 (single LLM) and $0.033 (graph without the Critic) per run; a full run with the Critic loop
-> (up to 3 rounds) was not measured live and likely costs more. `make eval` and `make ablate` also read `.env`, so with a
+> Analyst and the Architect). The paid pilot measured $0.025 (single LLM), $0.033 (graph without the Critic) and $0.042 (full graph with the Critic
+> loop) per run. `make eval` and `make ablate` also read `.env`, so with a
 > key they run live over many cases. Use `--fake` to stay offline (see [evaluation](docs/evaluation.md)).
 
 ### 3. Everything in containers
@@ -124,18 +124,18 @@ make gen    # regenerate contracts/ and the frontend's API types after changing 
 
 The agent graph is compared with a LayoutGPT-style single-LLM baseline and with ablations, on 25 room cases. It uses
 deterministic layout metrics (I-Design's out-of-bounds and overlap, clearance, blocked openings, budget, must-haves) and
-I-Design's VLM judge. A small paid pilot ($0.27, [eval/results/pilot/](eval/results/pilot/)) has run so far:
+I-Design's VLM judge. A small paid pilot ($0.58, [eval/results/pilot/](eval/results/pilot/)) has run so far:
 
 | Variant | Runs | Cost / run | Time / run | Clearance pass | Budget fit | Must-haves | Judge layout (0-10) |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | `baseline` (single LLM) | 3 | $0.025 | 17 s | 0.97 | 1 | 1 | 4.1 |
 | `no_critic` | 3 | $0.033 | 56 s | 0.92 | 1 | 1 | 4.4 |
-| `full` | failed (fixed since, offline only) | n/a | n/a | n/a | n/a | n/a | n/a |
-| `analyst_mode` | not run | n/a | n/a | n/a | n/a | n/a | n/a |
+| `full` | 3 | $0.042 | 57 s | 0.92 | 1 | 1 | 4.7 |
+| `analyst_mode` | 3 | $0.027 | 47 s | 1.00 | 1 | 1 | 4.4 |
 
 <img src="eval/results/pilot/charts/cost_usd.svg" alt="Model cost per run by variant" width="420">
 
-**Caveats.** These are 3 rooms with 1 repeat, and only 2 of the 4 variants ran. The photos are synthetic placeholders, so the
+**Caveats.** These are 3 rooms with 1 repeat. The photos are synthetic placeholders, so the
 analyst finds nothing. The judge graded grey box renders, and the human ratings for judge-human agreement are still pending. The
 numbers check that the pipeline works. They do not show that one variant is better. Details and the full table:
 [docs/evaluation.md](docs/evaluation.md).

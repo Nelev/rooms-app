@@ -140,16 +140,16 @@ Click 4+ room corners → camera pose (OpenCV `solvePnP`) → the new furniture 
 
 ---
 
-# Pilot results ($0.27 total)
+# Pilot results ($0.58 total)
 
 | Variant | Runs | Cost/run | Time/run | Clearance | Budget fit | Must-haves | Judge layout |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | baseline | 3 | $0.025 | 17 s | 0.97 | 1 | 1 | 4.1 |
 | no_critic | 3 | $0.033 | 56 s | 0.92 | 1 | 1 | 4.4 |
-| full | crashed (fixed, unverified live) | | | | | | |
-| analyst_mode | not run | | | | | | |
+| full | 3 | $0.042 | 57 s | 0.92 | 1 | 1 | 4.7 |
+| analyst_mode | 3 | $0.027 | 47 s | 1.00 | 1 | 1 | 4.4 |
 
-**Caveats:** 3 rooms × 1 repeat · 2 of 4 variants · synthetic placeholder photos (analyst recall 0) · the judge saw grey box renders · human ratings pending. These numbers check the pipeline. They are not a result.
+**Caveats:** 3 rooms × 1 repeat · synthetic placeholder photos (analyst recall 0) · the judge saw grey box renders · human ratings pending. These numbers check the pipeline. They are not a result.
 
 ---
 
