@@ -70,7 +70,7 @@ def test_a_run_is_one_trace_with_nested_node_spans_and_costs() -> None:
     assert root.get("parent_run_id") is None
     assert {r["trace_id"] for r in runs.values()} == {run_id}  # one trace
     assert "no_critic" in root["tags"]
-    assert root["extra"]["metadata"] | {"thread_id": "t1", "no_critic": True, "single_agent": False} == root["extra"]["metadata"]
+    assert root["extra"]["metadata"] | {"thread_id": "t1", "no_critic": True, "analyst_mode": False} == root["extra"]["metadata"]
 
     nodes = {r["name"]: r for r in runs.values() if r.get("parent_run_id") == run_id and r["name"] in ("first", "second")}
     assert set(nodes) == {"first", "second"}

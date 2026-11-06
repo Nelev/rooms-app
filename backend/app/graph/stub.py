@@ -1,7 +1,7 @@
 """What the stub nodes share: the fixture case they replay, the fake model, and the fixture's stream events.
 
 Every stub node replays fixtures/small-bedroom: its output, and the custom stream events of its step (those of the
-design run, or of the chat turn the thread is on). Real nodes replace each stub in graph/nodes/.
+design run, or of the chat turn the thread is on). The nodes that call a model do so only when `live` says so.
 """
 
 import json
@@ -17,7 +17,6 @@ from pydantic import TypeAdapter
 
 from app.graph.state import RunState
 from app.llm.fake import FakeLLM
-from app.schemas import CatalogItem, Scene
 
 CASE = Path(__file__).resolve().parents[3] / "fixtures" / "small-bedroom"
 PACE = float(os.environ.get("STUB_PACE", "0"))  # seconds slept per second of a step's fixture duration_s; `make dev-stub` slows runs down
@@ -104,10 +103,3 @@ def stub_node(fn: Callable[[RunState], dict[str, Any]]) -> Callable[..., dict[st
         return {**update, "cost": cost}
 
     return node
-
-
-@cache
-def catalog() -> dict[str, CatalogItem]:
-    """The catalog items of every fixture case's scene, by id."""
-    scenes = [TypeAdapter(Scene).validate_json(p.read_bytes()) for p in CASE.parent.glob("*/scene.json")]
-    return {i.item.id: i.item for s in scenes for i in s.items if i.item}

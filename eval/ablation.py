@@ -16,7 +16,7 @@ eval/scripts/capture.ts (headless Chromium, F-14's render route; set BASE_URL to
 the scene and the judge's replies are copied to `<out>/renders/<render>/` for the human raters (agreement.py). It needs live models.
 
 Variants: `baseline`, `no_critic`, `full` and `analyst_mode` (the Room Analyst reads the photos once instead of voting RUNS readings)
-by default. `single_agent` is a RunConfigurable flag no node reads yet, so it would run the full graph: it is left out.
+by default.
 """
 
 import runner  # first: it turns tracing off before langchain is imported

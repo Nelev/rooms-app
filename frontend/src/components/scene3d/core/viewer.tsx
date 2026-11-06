@@ -143,7 +143,7 @@ function Camera({ view, scene }: { view: View; scene: Scene }) {
 }
 
 // The design in 3D: the room with its openings and every item, a GLB where the catalog has one and a box otherwise.
-// Renders on demand only. Load it through `SceneViewer` (index.tsx), which skips server rendering.
+// Renders on demand only. Load it through `LitSceneViewer` (scene3d/look), which skips server rendering.
 // `lights` replace the default lights and `floor` the floor's plain material: see scene3d/look.
 // With `corner`, it shows only that fixed view, without buttons or credits (the headless render, F-14).
 // `highlighted` items are outlined, and a click on an item calls `onPick` with its node id (F-13).

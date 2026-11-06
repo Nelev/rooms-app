@@ -1,6 +1,6 @@
 "use client";
 
-import type { Corner } from "@/components/scene3d/core";
+import type { Corner } from "@/components/scene3d/core/viewer";
 import { LitSceneViewer } from "@/components/scene3d/look";
 import { useThread } from "@/lib/hooks/use-threads";
 

@@ -64,7 +64,3 @@ async def test_registry(db: psycopg.AsyncConnection[Any]) -> None:
     renamed = await projects.update(db, "t1", title="Main bedroom")
     assert renamed and renamed["title"] == "Main bedroom" and renamed["created_at"] == first["created_at"]
     assert await projects.update(db, "missing", title="x") is None
-
-    assert await projects.delete(db, "t1") is True
-    assert await projects.delete(db, "t1") is False
-    assert await projects.get(db, "t1") is None

@@ -215,7 +215,7 @@ export interface paths {
         };
         /**
          * Get Item
-         * @description A catalog item. Stub: the items of the fixture scenes.
+         * @description A catalog item.
          */
         get: operations["get_item_catalog_items__item_id__get"];
         put?: never;
@@ -1253,7 +1253,6 @@ export interface components {
             /**
              * @default {
              *       "no_critic": false,
-             *       "single_agent": false,
              *       "analyst_mode": false
              *     }
              */
@@ -1269,11 +1268,6 @@ export interface components {
              * @default false
              */
             no_critic: boolean;
-            /**
-             * Single Agent
-             * @default false
-             */
-            single_agent: boolean;
             /**
              * Analyst Mode
              * @default false
