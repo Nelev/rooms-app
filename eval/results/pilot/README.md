@@ -30,7 +30,7 @@ the pipeline works end to end with live models, and what a full run would cost.
 
 ## Cost
 
-**$0.2732 in total**, as OpenRouter reported it in the runs' usage:
+**About $0.58 in total** (two sittings: $0.3834 for the runs plus $0.1981 for the judge), as OpenRouter reported it in the runs' usage:
 
 | | pipeline | judge (3 asks per run, each with both renders) | total |
 | --- | --- | --- | --- |

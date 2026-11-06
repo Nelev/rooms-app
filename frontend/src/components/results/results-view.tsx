@@ -54,7 +54,7 @@ export function Results({ values, highlighted = [], onPick }: { values: RunState
   const items = (values.scene?.items ?? []).filter((i): i is typeof i & { item: CatalogItem } => !!i.item);
   const total = items.reduce((sum, i) => sum + i.item.price, 0);
   const budget = values.brief?.budget;
-  // A design run sets no rationale yet (only chat edits do), so fall back to the design brief's summary.
+  // the Presenter sets the rationale; an older thread without one falls back to the design brief's summary
   const rationale = values.rationale ?? values.design_brief?.summary;
   const critique = values.critique;
   const select = (id: string) => setSelectedId((current) => (current === id ? undefined : id));
