@@ -20,7 +20,7 @@ the pipeline works end to end with live models, and what a full run would cost.
 - **The photos are synthetic placeholders** (`fixtures/README.md`). The Room Analyst found no doors, windows or other features in
   any room: feature recall is 0. Precision is 1 only because the analyst predicted nothing. So the analyst variants measure nothing
   real yet. The design itself is scored on the hand-labeled room, because confirm_room is resumed with it.
-- **The judge graded block-outs.** Only 4 of the 223 catalog items have a 3D model, and none of the pilot's 31 placed items had one, so every item rendered as a plain grey box. The judge said so in every
+- **The judge graded block-outs.** Only 4 of the 223 catalog items have a 3D model, and none of the pilot's 62 placed items (22 distinct catalog items) had one, so every item rendered as a plain grey box. The judge said so in every
   comment ("placeholder geometry", "block-model proposal"). Its realism (about 2/10) and atmosphere grades reflect the renders
   more than the designs. The renders were captured headless with F-14's capture script (Playwright Chromium, software WebGL); the
   top-down stand-ins were not needed.
