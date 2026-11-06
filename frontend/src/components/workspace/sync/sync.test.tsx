@@ -3,8 +3,10 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { act, cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
+import type { ThreadState } from "@/lib/api";
+import { runEnded } from "@/lib/hooks/use-threads";
 import { stubApi } from "@/lib/mocks/stub-api";
-import { chatEdit, HIGHLIGHT_MS, WorkspaceProvider } from "./store";
+import { chatEdit, HIGHLIGHT_MS, useWorkspace, WorkspaceProvider } from "./store";
 import { WorkspaceChat, WorkspaceResults, WorkspaceScene } from "./views";
 
 // three.js needs WebGL: the 3D view shows the data it was given, and its items can be clicked
@@ -124,4 +126,28 @@ it("inserts a reference to an item clicked in the plan or the 3D view into the c
   expect(input().value).toBe("@bed ");
   fireEvent.click(screen.getByText("3D desk: birch-desk-100"));
   expect(input().value).toBe("@bed @desk ");
+});
+
+// LangGraph saves an interrupt on the checkpoint the run stopped at: the state read while it ran and the one read after share it
+it("takes the status of a checkpoint read again once the run stopped there for input", async () => {
+  const interrupted = api.states[1];
+  let answer: ThreadState = { ...interrupted, status: "running" };
+  vi.stubGlobal(
+    "fetch",
+    vi.fn((input: string, init?: RequestInit) =>
+      String(input).endsWith("/state") ? Promise.resolve(Response.json(answer)) : api.fetch(input, init),
+    ),
+  );
+  function Status() {
+    return <p>status: {useWorkspace().status}</p>;
+  }
+  render(
+    <WorkspaceProvider threadId={api.thread.thread_id}>
+      <Status />
+    </WorkspaceProvider>,
+  );
+  await screen.findByText("status: running");
+  answer = interrupted;
+  act(() => runEnded(api.thread.thread_id));
+  await screen.findByText("status: needs_input");
 });

@@ -38,9 +38,12 @@ function useWorkspaceStore(threadId: string) {
 
   // a new state of the thread: a chat edit can be undone, and its items are highlighted. Set while rendering, as React advises for
   // state derived from a change (react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes): the checkpoint
-  // guard makes it run once per state, and the views never draw the new layout without its highlight.
+  // guard makes it run once per state, and the views never draw the new layout without its highlight. An interrupt is saved on the
+  // checkpoint it stops at: the same checkpoint, read again with a new status (running, then needs_input), is the same layout.
   const state = thread.data;
-  if (state && state.checkpoint_id !== sync.seen?.checkpoint_id) {
+  const seen = sync.seen;
+  if (state && seen && state.checkpoint_id === seen.checkpoint_id && state.status !== seen.status) setSync({ ...sync, seen: state });
+  else if (state && state.checkpoint_id !== seen?.checkpoint_id) {
     const diff = sync.seen && chatEdit(sync.seen, state);
     const undoTo = sync.seen?.checkpoint_id;
     setSync({ seen: state, edit: diff && undoTo ? { diff, undoTo } : undefined, highlight: !!diff });
