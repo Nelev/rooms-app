@@ -96,14 +96,17 @@ make dev               # Postgres in Docker, then the API on :8000 and the front
 
 ```sh
 cp .env.example .env
-docker compose up -d --build   # Postgres, API and frontend; open http://localhost:3000
+docker compose up -d --build --wait   # Postgres, MinIO (photos), API and frontend; open http://localhost:3000
 ```
 
-`DB_PORT`, `BACKEND_PORT` and `FRONTEND_PORT` change the host ports. The frontend image calls the API at `http://localhost:8000`,
-so keep `BACKEND_PORT` at 8000. On main the backend image is built from `backend/` alone, without `fixtures/` and `data/catalog/`
-at the repo root, so design runs inside it fail. Use `make dev-stub` or `make dev` for now. Task I-01 is finishing the compose
-stack: MinIO, and an end-to-end Playwright suite that replays recorded LLM responses. Once it lands, the demo can also be
-re-recorded on that stack.
+The API container mounts `fixtures/` and `data/catalog/` read-only, and photos go to MinIO, whose bucket a one-shot
+`minio-init` service creates. `DB_PORT`, `MINIO_PORT`, `BACKEND_PORT` and `FRONTEND_PORT` change the host ports (the frontend
+image is built for `BACKEND_PORT`, so rebuild after changing it). The API reads the root `.env`: with an `OPENROUTER_API_KEY`
+there, design runs call real models and cost money; without one, the nodes replay the fixtures.
+
+`make e2e` runs the Playwright suite (`e2e/`) on this stack, replaying recorded model calls (`e2e/recordings/`), so it needs no
+key and costs nothing. A change to a prompt, a tool, a role's model or the catalog invalidates the recordings: `make e2e-record`
+re-records them with a key (it costs money). The demo video can be re-recorded on this stack too.
 
 ## Testing
 
