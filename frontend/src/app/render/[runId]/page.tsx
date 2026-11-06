@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import type { Corner } from "@/components/scene3d/core";
+import type { Corner } from "@/components/scene3d/core/viewer";
 import { RenderScene } from "./render-scene";
 
 export const metadata: Metadata = { title: "Render", robots: { index: false } };
