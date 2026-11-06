@@ -1,0 +1,16 @@
+%% The agent graph for the slides: `npx @mermaid-js/mermaid-cli -i docs/img/graph.mmd -o docs/img/graph.png -s 2 -b white`
+flowchart LR
+  route_input -->|new design| analyze_room["analyze_room<br/>Room Analyst"]
+  analyze_room --> confirm_room{{"confirm_room<br/>user checks the room"}}
+  confirm_room --> design["design<br/>Designer"]
+  design --> architect["architect<br/>scene graph"]
+  architect --> refine["refine<br/>sibling order"]
+  refine --> source["source<br/>catalog, budget"]
+  source --> solve["solve<br/>backtracking"]
+  solve -->|design run| critic["critic<br/>rules"]
+  critic -->|relation fixes| architect
+  critic -->|item swaps| source
+  critic -->|pass or round 3:<br/>best layout| present
+  route_input -->|chat message| chat_edit["chat_edit<br/>tool calls"]
+  chat_edit -->|edit applied| solve
+  solve -->|chat run| present
