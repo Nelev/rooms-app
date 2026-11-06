@@ -26,10 +26,11 @@ Event = dict[str, Any]
 
 
 def live(node: str) -> bool:
-    """Whether a node calls the model: with OPENROUTER_API_KEY every real node does, without it they all replay the fixture.
+    """Whether a node calls the model: with OPENROUTER_API_KEY or recorded model calls (LLM_RECORDINGS, app/llm/recorded.py) every
+    real node does, without either they all replay the fixture.
 
     Nodes call it as `stub.live(name)`, so a test can make a single node real (monkeypatch `stub.live`)."""
-    return bool(os.environ.get("OPENROUTER_API_KEY"))
+    return bool(os.environ.get("OPENROUTER_API_KEY") or os.environ.get("LLM_RECORDINGS"))
 
 
 @cache
