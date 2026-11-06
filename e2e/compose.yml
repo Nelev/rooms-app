@@ -1,0 +1,23 @@
+# The E2E stack (`make e2e`): docker-compose.yml with the real graph on recorded model calls (backend/app/llm/recorded.py).
+# The API replays recordings/ and never calls a model (CI); only `make e2e-record` passes a key (E2E_OPENROUTER_API_KEY), to record
+# the calls missing from recordings/. OPENROUTER_API_KEY is overridden here, so a key in the root .env (the API's env_file) never records.
+services:
+  backend:
+    environment:
+      LLM_RECORDINGS: /recordings
+      OPENROUTER_API_KEY: ${E2E_OPENROUTER_API_KEY:-}
+      LLM_REPLAY_DELAY: 1 # seconds per replayed reply: the suite reloads the page while a run runs
+    volumes:
+      - ./e2e/recordings:/recordings
+    healthcheck: # the API is up once its lifespan has migrated the database and seeded the catalog
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 2s
+      timeout: 5s
+      retries: 60
+
+  frontend:
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3000').then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))"]
+      interval: 2s
+      timeout: 5s
+      retries: 30

@@ -20,6 +20,8 @@ cp .env.example .env
 make dev    # Postgres in Docker, API on :8000 (/health), frontend on :3000
 make test   # backend and frontend tests
 make lint   # ruff, mypy, Biome, tsc
+make e2e    # the Playwright suite (e2e/) on the docker compose stack, replaying the recorded model calls (no key needed)
+            # a change to a prompt, a tool, a role's model or the catalog needs `make e2e-record` (a key: it costs money)
 ```
 
 `docker compose up -d --build` runs the whole stack in containers.

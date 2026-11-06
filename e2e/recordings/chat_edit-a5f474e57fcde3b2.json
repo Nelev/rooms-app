@@ -1,0 +1,29 @@
+{
+ "type": "ai",
+ "data": {
+  "content": "Swapped the double bed for a smaller single bed (Oak single bed, 0.97 x 2.06 m).",
+  "additional_kwargs": {
+   "refusal": null
+  },
+  "response_metadata": {},
+  "type": "ai",
+  "name": null,
+  "id": null,
+  "tool_calls": [],
+  "invalid_tool_calls": [],
+  "usage_metadata": {
+   "input_tokens": 1273,
+   "output_tokens": 30,
+   "total_tokens": 1303,
+   "input_token_details": {
+    "audio": 0,
+    "cache_read": 1152,
+    "cache_creation": 0
+   },
+   "output_token_details": {
+    "audio": 0,
+    "reasoning": 0
+   }
+  }
+ }
+}
