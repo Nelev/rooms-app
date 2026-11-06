@@ -1,1 +1,1 @@
-"""One module per graph node. Each is a stub that replays fixtures (see graph/stub.py) until its real node lands."""
+"""One module per graph node. Without a model key or recordings, the nodes that call a model replay fixtures instead (see graph/stub.py)."""

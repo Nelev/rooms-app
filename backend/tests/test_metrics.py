@@ -3,7 +3,6 @@
 import pytest
 from metrics.analyst import FeatureScores, feature_scores
 from metrics.layout import (
-    bbox_loss,
     blocked_openings,
     budget_fit,
     clearance_pass_rate,
@@ -11,7 +10,6 @@ from metrics.layout import (
     layout_metrics,
     must_have_coverage,
     out_of_bounds,
-    out_of_bounds_rate,
     overlap_volume,
 )
 
@@ -66,13 +64,6 @@ def test_overlap_with_a_wall_named_item_is_not_out_of_bounds() -> None:
     assert not out_of_bounds(room(), layout(item("box", 1.5, 1.5), item("wall_shelf", 1.6, 1.5)))
 
 
-def test_out_of_bounds_rate_is_the_share_of_invalid_scenes() -> None:
-    scenes = [(f["room_spec"], f["layout"]) for f in FIXTURES.values()]
-    assert out_of_bounds_rate(scenes) == 0
-    assert out_of_bounds_rate([*scenes, (room(), layout(item("bench", 0.1, 1.5)))]) == 0.25
-    assert out_of_bounds_rate([]) == 0
-
-
 def test_overlap_volume() -> None:
     assert overlap_volume(room(), layout(item("a", 1, 1, 1, 1, 1), item("b", 2.5, 1, 1, 1, 1))) == 0  # side by side, apart
     assert overlap_volume(room(), layout(item("a", 1, 1, 1, 1, 1), item("b", 1.5, 1, 1, 1, 1))) == pytest.approx(0.5)
@@ -82,12 +73,6 @@ def test_overlap_volume() -> None:
     # the small bedroom's kept wardrobe spans x 0-0.6, y 0.4-1.4, up to 2 m
     on_wardrobe = with_items(BEDROOM["layout"], item("box", 0.3, 0.9, 0.4, 0.4, 0.5))
     assert overlap_volume(BEDROOM["room_spec"], on_wardrobe) == pytest.approx(0.08)
-
-
-def test_bbox_loss_is_the_mean_overlap_volume() -> None:
-    overlapping = layout(item("a", 1, 1, 1, 1, 1), item("b", 1.5, 1, 1, 1, 1))
-    assert bbox_loss([(room(), overlapping), (room(), layout())]) == pytest.approx(0.25)
-    assert bbox_loss([]) == 0
 
 
 def test_clearance_pass_rate() -> None:

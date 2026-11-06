@@ -1,14 +1,12 @@
 """Deterministic metrics of a Layout in its room and against its brief, on top of the B-04 checks in app/geometry/checks.py.
 
 Per layout: `out_of_bounds`, `overlap_volume`, `clearance_pass_rate`, `blocked_openings`, `cost`, `budget_fit` and
-`must_have_coverage`; `layout_metrics` computes them all (plus the item count). Over a set of layouts: I-Design's
-`out_of_bounds_rate` and `bbox_loss`.
+`must_have_coverage`; `layout_metrics` computes them all (plus the item count). Their mean over a set of layouts (the reports') is
+I-Design's (Celen et al. 2024, arXiv:2404.02838) out-of-bounds rate for `out_of_bounds` and its bbox loss for `overlap_volume`.
 """
 
 import re
-from collections.abc import Iterable
 from itertools import combinations, product
-from statistics import fmean
 
 from app.catalog.loader import load_catalog
 from app.geometry import checks
@@ -28,14 +26,6 @@ def out_of_bounds(spec: RoomSpec, layout: Layout) -> bool:
     return through_wall or bool(checks.above_ceiling(room, layout))
 
 
-def out_of_bounds_rate(scenes: Iterable[tuple[RoomSpec, Layout]]) -> float:
-    """I-Design's Out-of-Boundary rate (OOB, Celen et al. 2024, arXiv:2404.02838, section 4.2): "if any bounding boxes are outside
-    the designated room boundaries within a scene, that scene is deemed invalid"; OOB is "the ratio of invalid scenes to the total
-    number of generated scenes"; 0 for no scenes."""
-    invalid = [out_of_bounds(spec, layout) for spec, layout in scenes]
-    return fmean(invalid) if invalid else 0.0
-
-
 def _intersection_volume(a: Solid, b: Solid) -> float:
     return a.shape.intersection(b.shape).area * max(0.0, min(a.top, b.top) - max(a.bottom, b.bottom))
 
@@ -47,13 +37,6 @@ def overlap_volume(spec: RoomSpec, layout: Layout) -> float:
     items = [solid(p) for p in layout.placements]
     pairs = [*combinations(items, 2), *product(items, room_model(spec).obstacles)]
     return sum(_intersection_volume(a, b) for a, b in pairs)
-
-
-def bbox_loss(scenes: Iterable[tuple[RoomSpec, Layout]]) -> float:
-    """I-Design's Bounding Box Loss (BBL, Celen et al. 2024, arXiv:2404.02838, section 4.2): "the average volume of bounding box
-    intersections across generated scenes", here in m3 (see `overlap_volume`); 0 for no scenes."""
-    volumes = [overlap_volume(spec, layout) for spec, layout in scenes]
-    return fmean(volumes) if volumes else 0.0
 
 
 def clearance_pass_rate(spec: RoomSpec, layout: Layout, min_walkway: float = WALKWAY) -> float:

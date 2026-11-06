@@ -56,7 +56,6 @@ class RunConfigurable(Model):
     """Ablation flags, read by the nodes from the run's `configurable`."""
 
     no_critic: bool = False
-    single_agent: bool = False
     analyst_mode: bool = False
 
 

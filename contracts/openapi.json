@@ -609,7 +609,7 @@
           "catalog"
         ],
         "summary": "Get Item",
-        "description": "A catalog item. Stub: the items of the fixture scenes.",
+        "description": "A catalog item.",
         "operationId": "get_item_catalog_items__item_id__get",
         "parameters": [
           {
@@ -2442,7 +2442,6 @@
             "$ref": "#/components/schemas/RunConfigurable",
             "default": {
               "no_critic": false,
-              "single_agent": false,
               "analyst_mode": false
             }
           }
@@ -2456,11 +2455,6 @@
           "no_critic": {
             "type": "boolean",
             "title": "No Critic",
-            "default": false
-          },
-          "single_agent": {
-            "type": "boolean",
-            "title": "Single Agent",
             "default": false
           },
           "analyst_mode": {

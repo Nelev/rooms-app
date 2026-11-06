@@ -41,8 +41,3 @@ async def update(db: AsyncConnection[Any], thread_id: str, title: str | None = N
     query = f"UPDATE projects SET title = COALESCE(%s, title), updated_at = now() WHERE thread_id = %s RETURNING {COLUMNS}"
     rows = await _rows(db, query, (title, thread_id))
     return rows[0] if rows else None
-
-
-async def delete(db: AsyncConnection[Any], thread_id: str) -> bool:
-    """Remove the project's row (its checkpoints and stored files are the caller's to delete). False if there was none."""
-    return (await db.execute("DELETE FROM projects WHERE thread_id = %s", (thread_id,))).rowcount > 0

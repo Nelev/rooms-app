@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 
 from app.catalog.loader import CATALOG_DIR, CORE_CATEGORIES, load_catalog
-from app.graph.stub import catalog as fixture_catalog
+from app.schemas import Scene
 
 FIXTURES = Path(__file__).resolve().parents[2] / "fixtures"
 
@@ -27,7 +27,9 @@ def test_catalog_validates_and_covers_core_categories() -> None:
 
 def test_catalog_agrees_with_fixtures() -> None:
     catalog = load_catalog()
-    assert {id_: catalog.get(id_) for id_ in fixture_catalog()} == fixture_catalog()
+    scenes = [Scene.model_validate_json(p.read_bytes()) for p in FIXTURES.glob("*/scene.json")]
+    scene_items = {i.item.id: i.item for s in scenes for i in s.items if i.item}
+    assert {id_: catalog.get(id_) for id_ in scene_items} == scene_items
     item_ids = {m for p in FIXTURES.glob("*/*.json") for m in re.findall(r'"item_id": "([^"]+)"', p.read_text())}
     assert item_ids - catalog.keys() == set()
 

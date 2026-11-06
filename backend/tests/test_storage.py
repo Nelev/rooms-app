@@ -26,11 +26,11 @@ def storage() -> Iterator[Storage]:
     yield storage
     for page in storage.client.get_paginator("list_objects_v2").paginate(Bucket=storage.bucket):
         for item in page.get("Contents", []):
-            storage.delete(item["Key"])
+            storage.client.delete_object(Bucket=storage.bucket, Key=item["Key"])
     storage.client.delete_bucket(Bucket=storage.bucket)
 
 
-def test_upload_signed_read_and_delete(storage: Storage) -> None:
+def test_upload_and_signed_read(storage: Storage) -> None:
     data = PHOTO.read_bytes()
     key = storage.put("uploads/t1/photo-1.jpg", data, "image/jpeg")
     assert key == "uploads/t1/photo-1.jpg"
@@ -40,10 +40,6 @@ def test_upload_signed_read_and_delete(storage: Storage) -> None:
     assert response.status_code == 200
     assert (response.content, response.headers["content-type"]) == (data, "image/jpeg")
     assert httpx.get(storage.url(key).replace("Signature=", "Signature=0")).status_code == 403  # the signature is checked
-
-    storage.delete(key)
-    assert httpx.get(storage.url(key)).status_code == 404
-    storage.delete(key)  # already gone: no error
 
 
 def test_heic_upload_is_stored_as_jpeg(storage: Storage) -> None:

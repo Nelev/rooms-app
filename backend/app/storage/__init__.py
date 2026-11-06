@@ -98,7 +98,3 @@ class Storage:
     def url(self, key: str, expires_in: int = 3600) -> str:
         """A URL that reads the object for `expires_in` seconds, for the frontend."""
         return self.signer.generate_presigned_url("get_object", Params={"Bucket": self.bucket, "Key": key}, ExpiresIn=expires_in)
-
-    def delete(self, key: str) -> None:
-        """Delete the object; deleting a missing key is not an error."""
-        self.client.delete_object(Bucket=self.bucket, Key=key)

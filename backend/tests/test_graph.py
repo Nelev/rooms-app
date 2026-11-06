@@ -82,11 +82,7 @@ def test_critic_rounds_are_capped() -> None:
 
 
 def test_flags_come_from_the_configurable() -> None:
-    assert flags({"configurable": {"thread_id": "t1", "single_agent": True}}).model_dump() == {
-        "no_critic": False,
-        "single_agent": True,
-        "analyst_mode": False,
-    }
+    assert flags({"configurable": {"thread_id": "t1", "analyst_mode": True}}).model_dump() == {"no_critic": False, "analyst_mode": True}
     assert not flags({}).no_critic
 
 
